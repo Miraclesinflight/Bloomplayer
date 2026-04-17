@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+<meta http-equiv="Pragma" content="no-cache"/>
+<meta http-equiv="Expires" content="0"/>
+<title>EarlyTube — Our Story</title>
+<meta name="description" content="Why EarlyTube exists. One parent, one night, one big idea."/>
+<link rel="apple-touch-icon" href="icon.png"/>
+<link rel="icon" type="image/png" href="icon.png"/>
+<link rel="stylesheet" href="theme.css"/>
+<script>
+  (function(){
+    var t=localStorage.getItem('et_theme')||(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');
+    document.documentElement.setAttribute('data-theme',t);
+  })();
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2DFE2R37G1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-2DFE2R37G1');
+</script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',-apple-system,sans-serif;line-height:1.7;}
+
+/* ── Single width token used everywhere ── */
+.wrap{width:100%;max-width:900px;margin-left:auto;margin-right:auto;padding-left:clamp(16px,4vw,40px);padding-right:clamp(16px,4vw,40px);}
+
+nav{display:flex;align-items:center;justify-content:space-between;padding-top:20px;padding-bottom:20px;}
+.nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text);}
+.nav-name{font-size:17px;font-weight:700;color:var(--text);}
+.nav-link{font-size:14px;color:var(--red);font-weight:600;text-decoration:none;background:var(--red-light);padding:8px 16px;border-radius:20px;}
+
+.hero{padding-top:32px;}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:6px;background:var(--red-light);color:var(--red);font-size:12px;font-weight:700;padding:5px 12px;border-radius:20px;margin-bottom:20px;text-transform:uppercase;letter-spacing:0.5px;}
+.hero h1{font-size:clamp(28px,5vw,52px);font-weight:800;letter-spacing:-1.5px;line-height:1.1;margin-bottom:20px;color:var(--text);}
+.hero h1 span{color:var(--red);}
+.hero-sub{font-size:18px;color:var(--text-2);line-height:1.7;margin-bottom:0;}
+
+.story{padding-top:24px;}
+.story p{font-size:17px;color:var(--text-2);margin-bottom:20px;line-height:1.8;}
+.story p strong{color:var(--text);font-weight:600;}
+.story .highlight{background:var(--red-light);border-left:3px solid var(--red);padding:16px 20px;border-radius:0 10px 10px 0;margin:28px 0;}
+.story .highlight p{color:var(--text);font-size:18px;font-style:italic;margin:0;}
+
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:40px;margin-bottom:40px;}
+.stat{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;text-align:center;}
+.stat-number{font-size:28px;font-weight:800;color:var(--red);letter-spacing:-1px;}
+.stat-label{font-size:12px;color:var(--text-3);margin-top:4px;line-height:1.4;}
+
+.why-section{padding-top:0;}
+.why-grid{display:flex;flex-direction:column;gap:12px;margin-top:20px;}
+.why-item{display:flex;gap:16px;align-items:flex-start;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:18px;}
+.why-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;background:var(--red-light);}
+.why-title{font-size:15px;font-weight:600;margin-bottom:4px;color:var(--text);}
+.why-text{font-size:13px;color:var(--text-2);line-height:1.6;}
+
+.night-banner{margin-top:40px;}
+.night-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:28px;}
+.night-card h3{font-size:20px;font-weight:800;margin-bottom:10px;letter-spacing:-0.5px;color:var(--text);}
+.night-card p{font-size:14px;color:var(--text-2);line-height:1.7;}
+
+.donate-section{margin-top:40px;padding-bottom:60px;}
+.donate-card{background:var(--card);border:2px dashed var(--border);border-radius:var(--radius);padding:28px;text-align:center;}
+.donate-emoji{font-size:40px;margin-bottom:12px;}
+.donate-card h3{font-size:20px;font-weight:700;margin-bottom:8px;color:var(--text);}
+.donate-card p{font-size:14px;color:var(--text-2);margin-bottom:20px;line-height:1.6;}
+.donate-btn{display:inline-block;background:var(--red);color:white;font-size:15px;font-weight:600;padding:14px 28px;border-radius:12px;text-decoration:none;font-family:inherit;}
+.donate-note{font-size:12px;color:var(--text-3);margin-top:12px;}
+
+.cta-section{margin-top:40px;margin-bottom:40px;text-align:center;}
+.cta-btn{display:inline-block;background:var(--red);color:white;font-size:17px;font-weight:700;padding:18px 48px;border-radius:14px;text-decoration:none;letter-spacing:-0.3px;}
+.cta-note{font-size:12px;color:var(--text-3);margin-top:10px;}
+
+footer{border-top:1px solid var(--border);padding:24px;text-align:center;font-size:12px;color:var(--text-3);}
+footer a{color:var(--red);text-decoration:none;}
+
+@media(max-width:480px){
+  .stats{grid-template-columns:1fr;}
+  .hero h1{letter-spacing:-0.5px;}
+}
+</style>
+</head>
+<body>
+
+<div style="position:fixed;bottom:16px;right:12px;z-index:999;">
+  <a href="https://translate.google.com/translate?sl=en&tl=auto&u=https://earlytube.github.io/about.html" target="_blank" style="display:flex;align-items:center;gap:6px;background:var(--card);border:1px solid var(--border);border-radius:20px;padding:8px 14px;font-size:12px;font-weight:600;color:var(--text);text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,0.1);">&#127760; Translate</a>
+</div>
+
+<nav class="wrap">
+  <a class="nav-brand" href="index.html">
+    <img src="icon.png" style="width:36px;height:36px;border-radius:9px;flex-shrink:0;"/>
+    <span class="nav-name">EarlyTube</span>
+  </a>
+  <a class="nav-link" href="index.html">Open app</a>
+</nav>
+
+<div class="hero wrap">
+  <div class="hero-eyebrow">Our story</div>
+  <h1>Same videos they love.<br/><span>But</span> no rewind. No forward. Just a video, played from start to finish.</h1>
+  <p class="hero-sub" style="font-size:22px;font-weight:600;color:var(--text);margin-bottom:8px;">I have always wondered — what if he never knew?</p>
+  <p class="hero-sub">Fifteen years of watching. Now a tool for every family starting out — before the habit forms.</p>
+</div>
+
+<div class="story wrap">
+  <p>My son is 16 now. When he was 11 months old, he picked up a phone at a family party and everyone gasped at how fast his little fingers moved across the screen. <strong>They wowed. We all did.</strong> Fifteen years later, people still say it. But it doesn't feel the same anymore.</p>
+
+  <p>He is on the autism spectrum. And somewhere along the way, YouTube became something more than entertainment. The rewind button — that tiny, innocent slider — became a loop he couldn't escape. The same one second, over and over. Not watching. <strong>Stimming. For hours.</strong> And if I didn't intervene — who knows. Maybe all day.</p>
+
+  <p>I want to be careful here. I know stimming serves a purpose. I know he can't simply choose to stop. I'm not angry at him — I never was. But I've spent fifteen years watching those fast fingers pull him further from the world around him. And I've wondered, quietly and constantly: <strong>what if he'd never been introduced to it?</strong></p>
+
+  <div class="highlight">
+    <p>"What if the rewind button simply didn't exist for him? Would he be more present? More available? Would things be different? I'll never know. And yes — he might still be stimming. But maybe in the real world. With real people. And that would have been everything. He is too smart and it is too late for him — but if this helps even one other child, it was worth every sleepless night."</p>
+  </div>
+
+  <p>About seven or eight years ago, so frustrated I couldn't sleep, I tried to build this app myself. I failed. I'm not a developer. Around the same time I watched a video of Sundar Pichai — the CEO of Google — talking about accountability. About how Google was taking responsibility in the world. And I thought: <strong>someone should tell him about this.</strong></p>
+
+  <p>But then I thought about what it's actually like to be a parent of a child with profound autism. You are not writing emails to CEOs. You are surviving. Every single day is triage — therapies, schools, meltdowns, paperwork, fighting for services that should just exist. <strong>The small things never make it to the top of the list.</strong> And this — a rewind button, a stimming behaviour, a screen habit — probably sounds small to anyone who hasn't lived it.</p>
+
+  <p>It isn't small. But I understand why it was never considered. Parents like us are too exhausted to advocate for the things that seem invisible. And large companies never had to look closely enough to see it. We have always been invisible — in waiting rooms, in school meetings, in policy decisions, in product roadmaps. In so many facets of life, we are the afterthought. If we are thought of at all.</p>
+
+  <p><strong>That email is still sitting in my drafts folder.</strong> Last night, with the help of AI, I finally built what I couldn't build alone. EarlyTube is that email to Sundar, finally sent. Just not to him.</p>
+
+  <p>It's not a cure. It's not therapy. It's a small tool — a player that simply <strong>removes the controls</strong>. No rewind. No skip. No progress bar. Just the video, playing forward. For every child diagnosed today, tomorrow, next year — before the habit forms. <strong>Before they know there's anything else.</strong></p>
+</div>
+
+<div class="stats wrap">
+  <div class="stat"><div class="stat-number">Mom</div><div class="stat-label">Built this for your child<br/>and for hopefully mine.</div></div>
+  <div class="stat"><div class="stat-number">Pure</div><div class="stat-label">"What if they never knew?"<br/>A distraction-free habit.</div></div>
+  <div class="stat"><div class="stat-number">0</div><div class="stat-label">Ads or hidden tracking.<br/>Core tools are free.</div></div>
+</div>
+
+<div class="cta-section wrap">
+  <a class="cta-btn" href="index.html">Open EarlyTube</a>
+  <div class="cta-note">No download. No sign up. Works on any device.</div>
+</div>
+
+<div class="why-section wrap">
+  <div class="why-grid">
+    <div class="why-item">
+      <div class="why-icon">&#128274;</div>
+      <div>
+        <div class="why-title">No controls. Ever.</div>
+        <div class="why-text">No rewind, no skip, no progress bar. An invisible layer blocks all interaction with the player. The video just plays.</div>
+      </div>
+    </div>
+    <div class="why-item">
+      <div class="why-icon">&#128204;</div>
+      <div>
+        <div class="why-title">Parent PIN to exit</div>
+        <div class="why-text">Closing a video requires a 4-digit PIN. The child stays in a safe, controlled viewing experience until a parent decides otherwise. Default PIN is <strong>1234</strong> — change it in Settings.</div>
+      </div>
+    </div>
+    <div class="why-item">
+      <div class="why-icon">&#128203;</div>
+      <div>
+        <div class="why-title">Curated educational videos</div>
+        <div class="why-text">Age-appropriate suggestions from trusted channels. Parents can also paste any YouTube link directly — they stay the gatekeeper of what gets watched.</div>
+      </div>
+    </div>
+    <div class="why-item">
+      <div class="why-icon">&#128155;</div>
+      <div>
+        <div class="why-title">Built by a mom</div>
+        <div class="why-text">EarlyTube is what I wished existed the day he was diagnosed. From one mom to another — ironically built while mine was rewinding and forwarding the same 1 second, in the hopes yours never knows it's an option.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="night-banner wrap">
+  <div class="night-card">
+    <h3>Built by a mom. Still building.</h3>
+    <p>No team, no funding. Just a mom who refused to let the idea die—and the tool that finally made the build possible.<br><br><strong>You don't have the excuse I had then — or now. Try it.</strong></p>
+  </div>
+</div>
+
+<div class="donate-section wrap">
+  <div class="donate-card">
+    <div class="donate-emoji">&#128155;</div>
+    <h3>This exists because I refused to give up.</h3>
+    <p>Seven years ago I tried to build this and couldn't. This time, with the help of AI as a tool, it finally came to life — through real effort, real conversations, and a lot of late nights. Any support goes towards the domain and keeping it running and improving. The goal is simple: to make this unnecessary the day YouTube builds it themselves. <strong>For free.</strong> That would be the win. Because no parent should have to pay to help their child.</p>
+    <a class="donate-btn" href="https://ko-fi.com/earlytube" target="_blank">Support if you want to</a>
+    <div class="donate-note">No pressure. Seriously. Go use the app instead.</div>
+  </div>
+</div>
+
+<footer>
+  Made with love by a mom. &nbsp;·&nbsp;
+  <a href="index.html">Open EarlyTube</a> &nbsp;·&nbsp;
+  <a href="faq.html">FAQ</a> &nbsp;·&nbsp;
+  <a href="contact.html">Contact us</a> &nbsp;·&nbsp;
+  <a href="privacy.html">Privacy</a> &nbsp;·&nbsp;
+  <a href="mailto:earlytubeapp@gmail.com">earlytubeapp@gmail.com</a>
+</footer>
+
+</body>
+</html>
