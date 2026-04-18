@@ -1324,7 +1324,7 @@ function savePersonalVideo(){
   var url=document.getElementById('add-url').value.trim();
   var category=document.getElementById('add-category').value.trim()||'My Videos';
   var id=extractId(url);
-  if(!id){alert('Please paste a valid YouTube link.');return;}
+  if(!id){showToast('Please paste a valid YouTube link.',true);return;}
 var token=localStorage.getItem('et_gtoken');
 if(!currentUser){alert('Please sign in again.');return;}
 if(!token){
