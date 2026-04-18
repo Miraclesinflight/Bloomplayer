@@ -170,6 +170,7 @@ footer a{color:var(--red);text-decoration:none;}
 <button class="btn-send" onclick="sendMessage()">Send message</button>
 <div class="privacy">Your email will only be used to reply to your message. We will never share it.</div>
 
+
   </div>
 
 </div>
@@ -184,13 +185,29 @@ footer a{color:var(--red);text-decoration:none;}
 </footer>
 
 <script>
+  function showToast(msg,isError){
+  var t=document.getElementById('app-toast');
+  if(!t){
+    t=document.createElement('div');
+    t.id='app-toast';
+    t.style.cssText='position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1E293B;color:#F8FAFC;font-size:13px;font-weight:600;padding:12px 20px;border-radius:20px;z-index:9999;white-space:nowrap;box-shadow:0 4px 16px rgba(0,0,0,0.4);border:1px solid #334155;transition:opacity 0.3s;';
+    document.body.appendChild(t);
+  }
+  t.textContent=msg;
+  t.style.borderColor=isError?'var(--red)':'#334155';
+  t.style.opacity='1';
+  clearTimeout(t._timer);
+  t._timer=setTimeout(function(){t.style.opacity='0';},2800);
+}
+function sendMessage(){
+
 function sendMessage(){
   var name=document.getElementById('f-name').value.trim();
   var email=document.getElementById('f-email').value.trim();
   var type=document.getElementById('f-type').value;
   var msg=document.getElementById('f-message').value.trim();
-  if(!email){alert('Please enter your email so we can reply.');return;}
-  if(!msg){alert('Please enter a message.');return;}
+  if(!email){showToast('Please enter your email so we can reply.',true);return;}
+  if(!msg){showToast('Please enter a message.',true);return;}
   var subject=encodeURIComponent('BloomPlayer — '+type+(name?' from '+name:''));
   var body=encodeURIComponent((name?'From: '+name+'\n':'')+'Email: '+email+'\n\n'+msg);
   window.location.href='mailto:hello@bloomplayer.com?subject='+subject+'&body='+body;
