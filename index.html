@@ -948,10 +948,26 @@ auth.onAuthStateChanged(function(user){
     startInactivityWatch();
 
     auth.getRedirectResult().then(function(result){
-      if(result&&result.credential&&result.credential.accessToken){
-        localStorage.setItem('et_gtoken',result.credential.accessToken);
+      if(!result||!result.credential)return;
+      var token=result.credential.accessToken;
+      if(token)localStorage.setItem('et_gtoken',token);
+      var intent=localStorage.getItem('et_redirect_intent');
+      localStorage.removeItem('et_redirect_intent');
+      if(intent==='forgot_pin'){
+        parentPin='1234';
+        localStorage.setItem('et_pin','1234');
+        db.collection('users').doc(result.user.uid).set({pin:'1234'},{merge:true});
+        document.getElementById('pin-overlay').style.display='none';
+        showToast('PIN has been reset to 1234. Change it in Settings.');
+      } else if(intent==='recover_token'){
+        if(token&&currentUser)setupUserProfile(currentUser,token);
+      } else if(intent==='welcome_google'){
+        document.getElementById('welcome-modal').style.display='none';
       }
-    }).catch(function(){});
+    }).catch(function(e){
+      localStorage.removeItem('et_redirect_intent');
+      console.error('getRedirectResult error:',e);
+    });
 
     db.collection('users').doc(user.uid).get().then(function(doc){
       if(!doc.exists){
