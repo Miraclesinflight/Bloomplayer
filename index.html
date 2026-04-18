@@ -1347,6 +1347,7 @@ function writeVideoToSheet(id,title,category,token){
       return createAndSaveSheet(currentUser,token).then(function(){
         setTimeout(function(){showAddVideoModal();},600);
    }).catch(function(){showToast('Could not set up your video list. Please sign out and try again.',true);});
+      return;
     }
     var sheetId=doc.data().sheetId;
     return fetch(
