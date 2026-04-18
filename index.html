@@ -827,7 +827,7 @@ if(!codes[code]){
 
 function submitBetaWaitlist(){
   var email=document.getElementById('beta-waitlist-email').value.trim();
-  if(!email){alert('Please enter your email.');return;}
+  if(!email){showToast('Please enter your email.',true);return;}
  db.collection('waitlist').add({
   email:email,
   source:'beta-strip',
@@ -1476,7 +1476,7 @@ function closeReportModal(){document.getElementById('report-modal').style.displa
 function submitReport(){
   var email=document.getElementById('report-email').value.trim();
   var link=document.getElementById('report-link').value.trim();
-  if(!email){alert('Please enter your email.');return;}
+  if(!email){showToast('Please enter your email.',true);return;}
   if(!link){alert('Please paste a YouTube link.');return;}
   var age=document.getElementById('age-select').value;
   var sub=encodeURIComponent('EarlyTube suggestion — '+age);
