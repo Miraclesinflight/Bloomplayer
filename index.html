@@ -531,8 +531,23 @@ Hidden by default. Never shown to anonymous/email-only users.             */
   </div>
 </div>
 
-<script>
+<script>function showToast(msg,isError){
+  var t=document.getElementById('app-toast');
+  if(!t){
+    t=document.createElement('div');
+    t.id='app-toast';
+    t.style.cssText='position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1E293B;color:#F8FAFC;font-size:13px;font-weight:600;padding:12px 20px;border-radius:20px;z-index:9999;white-space:nowrap;box-shadow:0 4px 16px rgba(0,0,0,0.4);border:1px solid #334155;transition:opacity 0.3s;';
+    document.body.appendChild(t);
+  }
+  t.textContent=msg;
+  t.style.borderColor=isError?'var(--red)':'#334155';
+  t.style.opacity='1';
+  clearTimeout(t._timer);
+  t._timer=setTimeout(function(){t.style.opacity='0';},2800);
+}
+
 var firebaseConfig={
+
   apiKey:'AIzaSyAwMKzuEiBXJdLpFJRCBcStypx7rEvZkJk',
   authDomain:'earlytube.firebaseapp.com',
   projectId:'earlytube',
