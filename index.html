@@ -1151,7 +1151,7 @@ function showNoVideosState(sheetUrl){
 function createFreshSetup(token,user){
   var name=user.displayName||'My';
   return fetch(
-    'https://www.googleapis.com/drive/v3/files?q=name%3D%27EarlyTube%27+and+mimeType%3D%27application%2Fvnd.google-apps.folder%27+and+trashed%3Dfalse',
+   'https://www.googleapis.com/drive/v3/files?q=name%3D%27BloomPlayer%27+and+mimeType%3D%27application%2Fvnd.google-apps.folder%27+and+trashed%3Dfalse'
     {headers:{'Authorization':'Bearer '+token}}
   ).then(function(r){
     if(r.status===403)throw{code:'SCOPE_DENIED'};
@@ -1162,7 +1162,7 @@ function createFreshSetup(token,user){
     return fetch('https://www.googleapis.com/drive/v3/files',{
       method:'POST',
       headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json'},
-      body:JSON.stringify({name:'EarlyTube',mimeType:'application/vnd.google-apps.folder'})
+      body:JSON.stringify({name:'BloomPlayer',mimeType:'application/vnd.google-apps.folder'})
     }).then(function(r){if(r.status===403)throw{code:'SCOPE_DENIED'};return r.json();})
     .then(function(f){return f.id;});
   }).then(function(folderId){
@@ -1189,7 +1189,7 @@ function createFreshSetup(token,user){
         method:'POST',
         headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json'},
         body:JSON.stringify({
-          properties:{title:'EarlyTube — '+name},
+          properties:{title:'BloomPlayer — '+name}
           sheets:[{properties:{title:'Videos'},data:[{rowData:[{values:[
             {userEnteredValue:{stringValue:'title'}},
             {userEnteredValue:{stringValue:'channel'}},
