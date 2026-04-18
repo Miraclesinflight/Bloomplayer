@@ -1083,7 +1083,7 @@ function recoverWithFreshToken(user){
   auth.signInWithPopup(cp).then(function(result){
   if(result&&result.credential&&result.credential.accessToken){
       if(result.user.email!==user.email){
-        alert('Please use the same Google account you signed in with ('+user.email+').');
+        showToast('Please use the same Google account you signed in with ('+user.email+').',true);
         showNoVideosState(null);
         return;
       }
@@ -1557,17 +1557,17 @@ function saveSettings(){
  if(!/^\d{4}$/.test(np)){showToast('Please enter exactly 4 digits.',true);return;}
   parentPin=np;localStorage.setItem('et_pin',np);
   if(currentUser){db.collection('users').doc(currentUser.uid).set({pin:np},{merge:true});}
-  alert('PIN updated!');showHome();
+showToast('PIN updated!');showHome();
 }
 function forgotPin(){
-  if(!currentUser){alert('Please sign in first, then use Forgot PIN.');return;}
+  if(!currentUser){showToast('Please sign in first, then use Forgot PIN.',true);return;}
   var p=new firebase.auth.GoogleAuthProvider();
   auth.signInWithPopup(p).then(function(){
     parentPin='1234';localStorage.setItem('et_pin','1234');
     db.collection('users').doc(currentUser.uid).set({pin:'1234'},{merge:true});
     document.getElementById('pin-overlay').style.display='none';
-    alert('PIN has been reset to 1234. Please change it in Settings.');
-  }).catch(function(){alert('Could not verify your identity. Please try again.');});
+   showToast('PIN has been reset to 1234. Change it in Settings.');
+  }).catch(function(){showToast('Could not verify your identity. Please try again.',true);});
 }
 
 var logoTimer;
