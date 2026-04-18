@@ -883,9 +883,26 @@ function stopInactivityWatch(){
 
 /* ── TOKEN REFRESH ──────────────────────────────────────────────────────── */
 function refreshTokenAndRetry(callback){
-  localStorage.setItem('et_redirect_intent','recover_token');
-  auth.signInWithRedirect(driveProvider);
+  var cp=new firebase.auth.GoogleAuthProvider();
+  cp.addScope('https://www.googleapis.com/auth/drive.file');
+  cp.addScope('https://www.googleapis.com/auth/spreadsheets');
+  cp.setCustomParameters({prompt:'consent'});
+  auth.signInWithPopup(cp).then(function(result){
+    if(result&&result.credential&&result.credential.accessToken){
+      var token=result.credential.accessToken;
+      localStorage.setItem('et_gtoken',token);
+      if(callback)callback(token);
+    }
+  }).catch(function(e){
+    if(e.code==='auth/popup-blocked'){
+      localStorage.setItem('et_redirect_intent','recover_token');
+      auth.signInWithRedirect(cp);
+    } else {
+      console.error('refreshTokenAndRetry failed:',e);
+    }
+  });
 }
+
 
 /* ── SIGN IN / OUT ──────────────────────────────────────────────────────── */
 function signOut(){
