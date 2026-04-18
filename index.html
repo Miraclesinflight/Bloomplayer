@@ -954,28 +954,10 @@ auth.onAuthStateChanged(function(user){
     updateAuthUI(user);
     showInstallPopupIfNeeded(); 
     startInactivityWatch();
-
-    auth.getRedirectResult().then(function(result){
-      if(!result||!result.credential)return;
-      var token=result.credential.accessToken;
-      if(token)localStorage.setItem('et_gtoken',token);
-      var intent=localStorage.getItem('et_redirect_intent');
-      localStorage.removeItem('et_redirect_intent');
-      if(intent==='forgot_pin'){
-        parentPin='1234';
-        localStorage.setItem('et_pin','1234');
-        db.collection('users').doc(result.user.uid).set({pin:'1234'},{merge:true});
-        document.getElementById('pin-overlay').style.display='none';
-        showToast('PIN has been reset to 1234. Change it in Settings.');
-      } else if(intent==='recover_token'){
-        if(token&&currentUser)setupUserProfile(currentUser,token);
-      } else if(intent==='welcome_google'){
-        document.getElementById('welcome-modal').style.display='none';
-      }
-    }).catch(function(e){
-      localStorage.removeItem('et_redirect_intent');
-      console.error('getRedirectResult error:',e);
-    });
+      var storedToken=localStorage.getItem('et_gtoken');
+    if(storedToken&&currentUser){
+      setupUserProfile(currentUser,storedToken);
+    }
 
     db.collection('users').doc(user.uid).get().then(function(doc){
       if(!doc.exists){
@@ -1598,10 +1580,31 @@ function trackVideoPlayed(id,source,grade,subject){etSession.videosPlayed++;gtag
 function trackTabSwitch(tab){if(tab==='educational'&&etSession.tabUsed==='leisure')etSession.tabUsed='both';else if(etSession.tabUsed!=='both')etSession.tabUsed=tab;gtag('event','et_tab_switched',{device_id:getDeviceId(),tab:tab});}
 function trackCurriculumSelected(grade,subject){etSession.gradeSelected=grade;etSession.subjectSelected=subject;gtag('event','et_curriculum_selected',{device_id:getDeviceId(),grade:grade,subject:subject});}
 
+
 /* ── BOOT ───────────────────────────────────────────────────────────────── */
-loadAppConfig();
-loadVideos();
-switchTab('educational'); 
+auth.getRedirectResult().then(function(result){
+  if(result&&result.credential&&result.credential.accessToken){
+    var token=result.credential.accessToken;
+    localStorage.setItem('et_gtoken',token);
+    var intent=localStorage.getItem('et_redirect_intent');
+    localStorage.removeItem('et_redirect_intent');
+    if(intent==='forgot_pin'){
+      parentPin='1234';
+      localStorage.setItem('et_pin','1234');
+      if(result.user){
+        db.collection('users').doc(result.user.uid).set({pin:'1234'},{merge:true});
+      }
+    }
+  }
+}).catch(function(e){
+  localStorage.removeItem('et_redirect_intent');
+  console.error('boot getRedirectResult error:',e);
+}).finally(function(){
+  loadAppConfig();
+  loadVideos();
+  switchTab('educational');
+});
+
 
 if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('/sw.js');});}
 
