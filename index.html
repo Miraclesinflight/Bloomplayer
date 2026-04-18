@@ -1326,7 +1326,7 @@ function savePersonalVideo(){
   var id=extractId(url);
   if(!id){showToast('Please paste a valid YouTube link.',true);return;}
 var token=localStorage.getItem('et_gtoken');
-if(!currentUser){alert('Please sign in again.');return;}
+  if(!currentUser){showToast('Please sign in again.',true);return;}
 if(!token){
   // No Drive token yet — request it now
   recoverWithFreshToken(currentUser);
