@@ -1359,7 +1359,7 @@ function writeVideoToSheet(id,title,category,token){
       closeAddVideoModal();loadPersonalVideos(sheetId,token);
     }).catch(function(e){
       if(e&&e.status===401){refreshTokenAndRetry(function(t){writeVideoToSheet(id,title,category,t);});}
-      else{console.error('writeVideoToSheet error:',e);alert('Failed to save. Please try again.');
+      else{console.error('writeVideoToSheet error:',e);showToast('Failed to save. Please try again.',true);
         var btn=document.getElementById('add-video-submit');btn.textContent='Save video';btn.disabled=false;}
     });
   });
