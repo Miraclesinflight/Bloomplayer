@@ -895,13 +895,13 @@ function refreshTokenAndRetry(callback){
     }
   }).catch(function(e){
     if(e.code==='auth/popup-blocked'){
-      localStorage.setItem('et_redirect_intent','recover_token');
-      auth.signInWithRedirect(cp);
+      showToast('Please allow pop-ups to reconnect Google Drive.',true);
     } else {
       console.error('refreshTokenAndRetry failed:',e);
     }
   });
 }
+
 
 
 /* ── SIGN IN / OUT ──────────────────────────────────────────────────────── */
@@ -1128,13 +1128,8 @@ function createAndSaveSheet(user,token){
       createdAt:firebase.firestore.FieldValue.serverTimestamp()
     },{merge:true}).then(function(){showNoVideosState(sheetUrl);});
   }).catch(function(e){
-    if(e&&e.code==='SCOPE_DENIED'){
-      localStorage.setItem('et_redirect_intent','recover_token');
-      var cp=new firebase.auth.GoogleAuthProvider();
-      cp.addScope('https://www.googleapis.com/auth/drive.file');
-      cp.addScope('https://www.googleapis.com/auth/spreadsheets');
-      cp.setCustomParameters({prompt:'consent'});
-      auth.signInWithRedirect(cp);
+      if(e&&e.code==='SCOPE_DENIED'){
+      showReconnectBanner();
     } else {
       console.error('createAndSaveSheet failed:',e);
       showNoVideosState(null);
