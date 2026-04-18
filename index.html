@@ -1476,8 +1476,8 @@ function closeReportModal(){document.getElementById('report-modal').style.displa
 function submitReport(){
   var email=document.getElementById('report-email').value.trim();
   var link=document.getElementById('report-link').value.trim();
-  if(!email){showToast('Please enter your email.',true);return;}
-  if(!link){alert('Please paste a YouTube link.');return;}
+if(!email){showToast('Please enter your email.',true);return;}
+if(!link){showToast('Please paste a YouTube link.',true);return;}
   var age=document.getElementById('age-select').value;
   var sub=encodeURIComponent('EarlyTube suggestion — '+age);
   var body=encodeURIComponent('Reporting: '+(reportingVideo?reportingVideo.title+' ('+reportingVideo.id+')':'')+'\nReplacement: '+link+'\nAge: '+age+'\nFrom: '+email);
