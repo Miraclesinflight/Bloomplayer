@@ -1168,7 +1168,7 @@ function createFreshSetup(token,user){
   }).then(function(folderId){
     // ── CHECK FOR EXISTING MY VIDEOS SHEET ──────────────────────────────
     return fetch(
-      'https://www.googleapis.com/drive/v3/files?q=properties+has+%7B+key%3D%27earlytube%27+and+value%3D%27my-videos%27+%7D+and+%27'+folderId+'%27+in+parents+and+trashed%3Dfalse',
+      'https://www.googleapis.com/drive/v3/files?q=properties+has+%7B+key%3D%27bloomplayer%27+and+value%3D%27my-videos%27+%7D+and+%27'+folderId+'%27+in+parents+and+trashed%3Dfalse',
       {headers:{'Authorization':'Bearer '+token}}
     ).then(function(r){return r.json();})
     .then(function(data){
@@ -1206,7 +1206,8 @@ function createFreshSetup(token,user){
           'https://www.googleapis.com/drive/v3/files/'+sheet.spreadsheetId,{
           method:'PATCH',
           headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json'},
-          body:JSON.stringify({properties:{earlytube:'my-videos'}})
+            body:JSON.stringify({properties:{bloomplayer:'my-videos'}})
+
         }).then(function(){
           // Move sheet into EarlyTube folder
           return fetch(
