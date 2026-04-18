@@ -821,7 +821,7 @@ if(!codes[code]){
     });
   }).catch(function(){
     btn.textContent='Unlock';btn.disabled=false;
-    alert('Could not validate code. Please try again.');
+    showToast('Could not validate code. Please try again.',true);
   });
 }
 
