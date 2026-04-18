@@ -181,35 +181,7 @@ flex-direction:column;align-items:center;justify-content:center;gap:18px;
 </head>
 <body>
 
-<!-- ── PIN SCREEN ── -->
-
-<div id="pin-screen">
-  <div class="pin-icon"><svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg></div>
-  <h2>Parent Mode</h2>
-  <p>Enter your PIN to continue</p>
-  <div class="pin-dots">
-    <div class="dot" id="d0"></div>
-    <div class="dot" id="d1"></div>
-    <div class="dot" id="d2"></div>
-    <div class="dot" id="d3"></div>
-  </div>
-  <div class="pin-error" id="pin-error"></div>
-  <div class="pin-grid">
-    <button class="pin-btn" onclick="pinPress('1')">1</button>
-    <button class="pin-btn" onclick="pinPress('2')">2</button>
-    <button class="pin-btn" onclick="pinPress('3')">3</button>
-    <button class="pin-btn" onclick="pinPress('4')">4</button>
-    <button class="pin-btn" onclick="pinPress('5')">5</button>
-    <button class="pin-btn" onclick="pinPress('6')">6</button>
-    <button class="pin-btn" onclick="pinPress('7')">7</button>
-    <button class="pin-btn" onclick="pinPress('8')">8</button>
-    <button class="pin-btn" onclick="pinPress('9')">9</button>
-    <button class="pin-btn" onclick="pinClear()" style="font-size:18px;color:#94A3B8;">&#9003;</button>
-    <button class="pin-btn" onclick="pinPress('0')">0</button>
-    <button class="pin-btn" onclick="goBack()" style="font-size:11px;color:#94A3B8;">Cancel</button>
-  </div>
-  <div class="pin-hint">Default PIN is 1234 · Change in Parent Mode</div>
-</div>
+<!-- PIN screen removed — access gated by index.html PIN -->
 
 <!-- ── CHANGE PIN MODAL ── -->
 
@@ -439,7 +411,7 @@ var db=firebase.firestore();
 var currentUser=null;
 var parentPin=localStorage.getItem('et_pin')||'1234';
 var userTier=localStorage.getItem('et_tier')||'general';
-var pinBuffer='';
+var pinBuffer=''; // kept for changePinBuffer compatibility
 var changePinBuffer='';
 var changePinNewPin='';
 var changePinStep=1;
@@ -451,12 +423,8 @@ auth.onAuthStateChanged(function(user){
     return;
   }
   currentUser=user;
-  if(sessionStorage.getItem('pin_verified')==='1'){
-    sessionStorage.removeItem('pin_verified');
-    document.getElementById('pin-screen').style.display='none';
-    document.getElementById('parent-content').style.display='flex';
-    renderParentMode();
-  }
+  document.getElementById('parent-content').style.display='flex';
+  renderParentMode();
   loadParentMode(user);
 });
 
@@ -471,37 +439,6 @@ function loadParentMode(user){
       localStorage.setItem('et_tier',userTier);
     }
   }).catch(function(){});
-}
-
-/* ── PIN ENTRY ── */
-function pinPress(d){
-  if(pinBuffer.length>=4)return;
-  pinBuffer+=d;
-  updateDots();
-  if(pinBuffer.length===4)setTimeout(checkPin,120);
-}
-
-function pinClear(){
-  pinBuffer=pinBuffer.slice(0,-1);
-  updateDots();
-}
-
-function updateDots(){
-  for(var i=0;i<4;i++){
-    document.getElementById('d'+i).className='dot'+(i<pinBuffer.length?' filled':'');
-  }
-}
-
-function checkPin(){
-  if(pinBuffer===parentPin){
-    document.getElementById('pin-screen').style.display='none';
-    document.getElementById('parent-content').style.display='flex';
-    renderParentMode();
-  } else {
-    document.getElementById('pin-error').textContent='Incorrect PIN — try again';
-    pinBuffer='';
-    updateDots();
-  }
 }
 
 /* ── RENDER PARENT MODE ── */
