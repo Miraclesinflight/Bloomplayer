@@ -1562,10 +1562,11 @@ function forgotPin(){
 
 var logoTimer;
 var logo=document.getElementById('logo');
-logo.addEventListener('touchstart',function(){logoTimer=setTimeout(requestSettings,800);});
+logo.addEventListener('touchstart',function(e){
+  e.preventDefault();
+  logoTimer=setTimeout(requestSettings,800);
+},{passive:false});
 logo.addEventListener('touchend',function(){clearTimeout(logoTimer);});
-logo.addEventListener('mousedown',function(){logoTimer=setTimeout(requestSettings,800);});
-logo.addEventListener('mouseup',function(){clearTimeout(logoTimer);});
 
 history.pushState(null,'','#');history.pushState(null,'','#');
 window.addEventListener('popstate',function(){
