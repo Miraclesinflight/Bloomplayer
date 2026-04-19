@@ -1152,7 +1152,7 @@ function showNoVideosState(sheetUrl){
 function createFreshSetup(token,user){
   var name=user.displayName||'My';
   return fetch(
-   'https://www.googleapis.com/drive/v3/files?q=name%3D%27BloomPlayer%27+and+mimeType%3D%27application%2Fvnd.google-apps.folder%27+and+trashed%3Dfalse'
+   'https://www.googleapis.com/drive/v3/files?q=name%3D%27BloomPlayer%27+and+mimeType%3D%27application%2Fvnd.google-apps.folder%27+and+trashed%3Dfalse',
     {headers:{'Authorization':'Bearer '+token}}
   ).then(function(r){
     if(r.status===403)throw{code:'SCOPE_DENIED'};
