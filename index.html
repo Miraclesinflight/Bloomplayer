@@ -1081,12 +1081,15 @@ function loadUserProfile(user){
 }
 
 /* ── RECOVER WITH FRESH TOKEN ───────────────────────────────────────────── */
-function recoverWithFreshToken(user){
+  function recoverWithFreshToken(user){
   var cp=new firebase.auth.GoogleAuthProvider();
   cp.addScope('https://www.googleapis.com/auth/drive.file');
   cp.addScope('https://www.googleapis.com/auth/spreadsheets');
   cp.setCustomParameters({login_hint:user.email,prompt:'consent'});
   auth.signInWithPopup(cp).then(function(result){
+    console.log('recoverWithFreshToken result:', result);
+    console.log('credential:', result&&result.credential);
+    console.log('accessToken:', result&&result.credential&&result.credential.accessToken);
     if(result&&result.credential&&result.credential.accessToken){
       var token=result.credential.accessToken;
       localStorage.setItem('et_gtoken',token);
