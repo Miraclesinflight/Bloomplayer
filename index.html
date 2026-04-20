@@ -1081,31 +1081,14 @@ function loadUserProfile(user){
 }
 
 /* ── RECOVER WITH FRESH TOKEN ───────────────────────────────────────────── */
-  function recoverWithFreshToken(user){
+ function recoverWithFreshToken(user){
   var cp=new firebase.auth.GoogleAuthProvider();
   cp.addScope('https://www.googleapis.com/auth/drive.file');
   cp.addScope('https://www.googleapis.com/auth/spreadsheets');
   cp.setCustomParameters({login_hint:user.email,prompt:'consent'});
-  auth.signInWithPopup(cp).then(function(result){
-    console.log('recoverWithFreshToken result:', result);
-    console.log('credential:', result&&result.credential);
-    console.log('accessToken:', result&&result.credential&&result.credential.accessToken);
-    if(result&&result.credential&&result.credential.accessToken){
-      var token=result.credential.accessToken;
-      localStorage.setItem('et_gtoken',token);
-      setupUserProfile(user,token);
-    }
-  }).catch(function(e){
-    if(e.code==='auth/popup-blocked'){
-      localStorage.setItem('et_redirect_intent','recover_token');
-      auth.signInWithRedirect(cp);
-    } else {
-      console.error('recoverWithFreshToken failed:',e);
-      showNoVideosState(null);
-    }
-  });
+  localStorage.setItem('et_redirect_intent','recover_token');
+  auth.signInWithRedirect(cp);
 }
-
 
 function setupUserProfile(user,token,docData){
   if(docData&&docData.sheetId){
@@ -1630,6 +1613,10 @@ auth.getRedirectResult().then(function(result){
       localStorage.setItem('et_pin','1234');
       if(result.user){
         db.collection('users').doc(result.user.uid).set({pin:'1234'},{merge:true});
+      }
+    } else if(intent==='recover_token'){
+      if(result.user){
+        setupUserProfile(result.user,token);
       }
     }
   }
