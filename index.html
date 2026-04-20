@@ -1085,9 +1085,17 @@ function loadUserProfile(user){
   var cp=new firebase.auth.GoogleAuthProvider();
   cp.addScope('https://www.googleapis.com/auth/drive.file');
   cp.addScope('https://www.googleapis.com/auth/spreadsheets');
-  cp.setCustomParameters({login_hint:user.email,prompt:'consent'});
-  localStorage.setItem('et_redirect_intent','recover_token');
-  auth.signInWithRedirect(cp);
+  cp.setCustomParameters({login_hint:user.email});
+  auth.signInWithPopup(cp).then(function(result){
+    if(result&&result.credential&&result.credential.accessToken){
+      var token=result.credential.accessToken;
+      localStorage.setItem('et_gtoken',token);
+      setupUserProfile(user,token);
+    }
+  }).catch(function(e){
+    console.error('recoverWithFreshToken failed:',e);
+    showNoVideosState(null);
+  });
 }
 
 function setupUserProfile(user,token,docData){
