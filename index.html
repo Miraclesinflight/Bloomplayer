@@ -1614,6 +1614,9 @@ function trackCurriculumSelected(grade,subject){etSession.gradeSelected=grade;et
 
 /* ── BOOT ───────────────────────────────────────────────────────────────── */
 auth.getRedirectResult().then(function(result){
+  if(result&&result.user){
+    document.getElementById('welcome-modal').style.display='none';
+  }
   if(result&&result.credential&&result.credential.accessToken){
     var token=result.credential.accessToken;
     localStorage.setItem('et_gtoken',token);
