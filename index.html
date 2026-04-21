@@ -679,18 +679,22 @@ auth.onAuthStateChanged(function(user){
     updateAuthUI(user);
     showInstallPopupIfNeeded();
     startInactivityWatch();
-    db.collection('users').doc(user.uid).get().then(function(doc){
-      if(!doc.exists){
-        saveUserTier(user,'general',function(){loadUserProfile(user);});
-      } else {
-        var data=doc.data();
-        userTier=data.tier||'general';
-        localStorage.setItem('et_tier',userTier);
-        if(data.pin){parentPin=data.pin;localStorage.setItem('et_pin',data.pin);}
-        updateBetaUI();
-        loadUserProfile(user);
-      }
-    }).catch(function(){loadUserProfile(user);});
+   db.collection('users').doc(user.uid).get().then(function(doc){
+  if(!doc.exists){
+    saveUserTier(user,'general',function(){
+      loadUserProfile(user);
+      window.location.href='parent.html?setup=true';
+    });
+  } else {
+    var data=doc.data();
+    userTier=data.tier||'general';
+    localStorage.setItem('et_tier',userTier);
+    if(data.pin){parentPin=data.pin;localStorage.setItem('et_pin',data.pin);}
+    updateBetaUI();
+    loadUserProfile(user);
+    if(!data.onboarded){window.location.href='parent.html?setup=true';}
+  }
+}).catch(function(){loadUserProfile(user);});
   } else {
     currentUser=null;
     updateAuthUI(null);
