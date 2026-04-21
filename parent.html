@@ -307,19 +307,22 @@ input:checked+.slider:before{transform:translateX(18px);}
           <span class="chevron">&#8250;</span>
         </div>
       </div>
-      <div class="setting-row" style="cursor:default;">
-        <div class="setting-left">
-          <div class="setting-name">Hide age selector</div>
-          <div class="setting-desc">Removes the age group dropdown from the home screen</div>
-        </div>
-        <div class="setting-right">
-          <label class="toggle" onclick="event.stopPropagation();">
-            <input type="checkbox" id="hide-age-toggle" onchange="saveHideAge()"/>
-            <span class="slider"></span>
-          </label>
-        </div>
-      </div>
-    </div>
+     <div class="setting-row" style="cursor:default;">
+  <div class="setting-left">
+    <div class="setting-name">Default age group</div>
+    <div class="setting-desc">Sets which age group loads by default on the home screen</div>
+  </div>
+  <div class="setting-right">
+    <select id="default-age-select" onchange="saveDefaultAge()" style="padding:6px 10px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:var(--text);font-size:13px;font-family:inherit;outline:none;cursor:pointer;">
+      <option value="teenplus">Teen+</option>
+      <option value="teen">Teen</option>
+      <option value="junior">Junior</option>
+      <option value="primary">Primary</option>
+      <option value="prek">Pre-K</option>
+      <option value="toddler">Toddler</option>
+    </select>
+  </div>
+</div>
 
     <div id="children-section" style="display:none;">
       <div class="section-label">Children</div>
@@ -453,8 +456,8 @@ function renderParentMode(){
   else{av.textContent=user.displayName?user.displayName.substring(0,2).toUpperCase():'U';}
   document.getElementById('parent-name').textContent=user.displayName||'Parent';
   document.getElementById('parent-email').textContent=user.email||'';
-  var hideAge=localStorage.getItem('et_hide_age')==='true';
-  document.getElementById('hide-age-toggle').checked=hideAge;
+ var defaultAge=localStorage.getItem('et_default_age')||'primary';
+document.getElementById('default-age-select').value=defaultAge;
   var isGamma=userTier==='gamma';
   document.getElementById('children-section').style.display=isGamma?'block':'none';
   if(isGamma)loadProfiles();
@@ -648,12 +651,12 @@ function deleteProfile(){
   });
 }
 
-/* ── HIDE AGE SELECTOR ── */
-function saveHideAge(){
-  var val=document.getElementById('hide-age-toggle').checked;
-  localStorage.setItem('et_hide_age',val?'true':'false');
+/* ── AGE SELECTOR ── */
+function saveDefaultAge(){
+  var val=document.getElementById('default-age-select').value;
+  localStorage.setItem('et_default_age',val);
   if(currentUser){
-    db.collection('users').doc(currentUser.uid).set({hideAge:val},{merge:true}).catch(function(){});
+    db.collection('users').doc(currentUser.uid).set({defaultAge:val},{merge:true}).catch(function(){});
   }
 }
 
