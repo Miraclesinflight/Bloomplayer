@@ -709,6 +709,14 @@ auth.onAuthStateChanged(function(user){
 
 /* ── LOAD USER PROFILE ── */
 function loadUserProfile(user){
+  db.collection('users').doc(user.uid).get().then(function(doc){
+    if(doc.exists&&doc.data().defaultAge){
+      var defaultAge=doc.data().defaultAge;
+      localStorage.setItem('et_default_age',defaultAge);
+      var sel=document.getElementById('age-select');
+      if(sel){sel.value=defaultAge;renderVideos();}
+    }
+  }).catch(function(){});
   var isBeta=userTier==='beta'||userTier==='gamma';
   if(isBeta){loadPersonalVideosFromFirestore(user);}
   else{showNoVideosState();}
