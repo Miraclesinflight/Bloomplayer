@@ -765,7 +765,7 @@ function goBack(){
   window.location.href='index.html';
 }
 
-  function loadParentVideos(){
+ function loadParentVideos(){
   db.collection('users').doc(currentUser.uid).collection('videos')
   .orderBy('addedAt','asc').get()
   .then(function(snap){
@@ -786,7 +786,7 @@ function goBack(){
         +'<div class="setting-desc">'+escHtml(cat)+'</div>'
         +'</div>'
         +'<div class="setting-right">'
-        +'<button onclick="deleteParentVideo(\''+doc.id+'\')"'
+        +'<button onclick="deleteParentVideo(\''+doc.id+'\')" '
         +'style="background:var(--red-dim);color:var(--red);border:1px solid #FECACA;border-radius:8px;padding:6px 12px;font-size:12px;font-weight:600;font-family:inherit;cursor:pointer;">Remove</button>'
         +'</div></div></div>';
     });
@@ -796,6 +796,7 @@ function goBack(){
     showToast('Could not load videos.',true);
   });
 }
+
 
 function deleteParentVideo(docId){
   showConfirm('Remove this video?','It will be removed from your list.','Remove',function(){
