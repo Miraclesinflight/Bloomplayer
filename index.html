@@ -344,8 +344,8 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',-apple-system,sa
     <button class="pin-btn" onclick="pinPress('0')">0</button>
     <button class="pin-btn" onclick="pinCancel()" style="font-size:12px;color:#94A3B8">Cancel</button>
   </div>
-  <div class="pin-hint">Default PIN is 1234 &middot; Change in Settings</div>
-  <button class="pin-forgot" onclick="forgotPin()">Forgot PIN?</button>
+ <div class="pin-hint">Forgotten your PIN? We'll send a reset link to your email.</div>
+<button class="pin-forgot" onclick="forgotPin()">Send reset link</button>
 </div>
 
 <!-- WELCOME MODAL -->
@@ -556,6 +556,11 @@ if(auth.isSignInWithEmailLink(window.location.href)){
       localStorage.setItem('et_email',result.user.email);
       localStorage.removeItem('et_email_for_signin');
       window.history.replaceState(null,'',window.location.pathname);
+      var intent=localStorage.getItem('et_redirect_intent');
+      if(intent==='reset_pin'){
+        localStorage.removeItem('et_redirect_intent');
+        window.location.href='parent.html?setup=true';
+      }
     }).catch(function(e){console.error('Email link sign-in failed:',e);});
   }
 }
@@ -1075,11 +1080,17 @@ function saveSettings(){
 }
 
 function forgotPin(){
-  if(!currentUser){showToast('Please sign in, then use Forgot PIN.',true);return;}
-  parentPin='1234';localStorage.setItem('et_pin','1234');
-  db.collection('users').doc(currentUser.uid).set({pin:'1234'},{merge:true});
-  showToast('PIN reset to 1234.');
-  document.getElementById('pin-overlay').style.display='none';
+  if(!currentUser){showToast('Please sign in first.',true);return;}
+  var actionCodeSettings={url:window.location.href,handleCodeInApp:true};
+  auth.sendSignInLinkToEmail(currentUser.email,actionCodeSettings)
+  .then(function(){
+    localStorage.setItem('et_email_for_signin',currentUser.email);
+    localStorage.setItem('et_redirect_intent','reset_pin');
+    showToast('Check your email for a reset link.');
+    document.getElementById('pin-overlay').style.display='none';
+  }).catch(function(){
+    showToast('Could not send reset email. Please try again.',true);
+  });
 }
 
 /* ── LOGO LONG PRESS ── */
@@ -1122,6 +1133,11 @@ function trackCurriculumSelected(grade,subject){etSession.gradeSelected=grade;et
 document.addEventListener('DOMContentLoaded',function(){trackSessionStart();});
 auth.getRedirectResult().then(function(result){
   if(result&&result.user){document.getElementById('welcome-modal').style.display='none';}
+  var intent=localStorage.getItem('et_redirect_intent');
+  if(intent==='reset_pin'){
+    localStorage.removeItem('et_redirect_intent');
+    window.location.href='parent.html?setup=true';
+  }
 }).catch(function(e){console.error('boot redirect error:',e);}).finally(function(){
   loadAppConfig();
   loadVideos();
