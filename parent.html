@@ -314,6 +314,12 @@ flex-direction:column;align-items:center;justify-content:center;gap:18px;
   <button class="btn-add-profile" onclick="openAddProfileModal()">+ Add a child</button>
 </div>
 
+    <!-- MY VIDEOS -->
+<div id="my-videos-section" style="display:none;">
+  <div class="section-label">My Videos</div>
+  <div id="parent-video-list"></div>
+</div>
+
 <!-- ACCOUNT -->
 <div class="section-label">Account</div>
 <div class="settings-card">
@@ -457,6 +463,8 @@ function renderParentMode(){
   var isGamma=userTier==='gamma';
 var isBetaOrAbove=userTier==='beta'||userTier==='gamma';
 document.getElementById('children-section').style.display=isGamma?'block':'none';
+document.getElementById('my-videos-section').style.display=isBetaOrAbove?'block':'none';
+if(isBetaOrAbove)loadParentVideos();
 if(isGamma)loadProfiles();
 
   var editingProfileId=null;
@@ -755,6 +763,51 @@ function deleteAccount(){
 /* ── BACK ── */
 function goBack(){
   window.location.href='index.html';
+}
+
+  function loadParentVideos(){
+  db.collection('users').doc(currentUser.uid).collection('videos')
+  .orderBy('addedAt','asc').get()
+  .then(function(snap){
+    if(snap.empty){
+      document.getElementById('parent-video-list').innerHTML=
+        '<div class="no-profiles">No videos yet — add them from the main screen.</div>';
+      return;
+    }
+    var html='';
+    snap.forEach(function(doc){
+      var d=doc.data();
+      var title=d.title||d.videoId||'Untitled';
+      var cat=d.category||'My Videos';
+      html+='<div class="settings-card" style="margin-bottom:8px;">'
+        +'<div class="setting-row" style="cursor:default;">'
+        +'<div class="setting-left">'
+        +'<div class="setting-name">'+escHtml(title)+'</div>'
+        +'<div class="setting-desc">'+escHtml(cat)+'</div>'
+        +'</div>'
+        +'<div class="setting-right">'
+        +'<button onclick="deleteParentVideo(\''+doc.id+'\')" '
+        +'style="background:var(--red-dim);color:var(--red);border:1px solid #FECACA;border-radius:8px;padding:6px 12px;font-size:12px;font-weight:600;font-family:inherit;cursor:pointer;">Remove</button>'
+        +'</div></div></div>';
+    });
+    document.getElementById('parent-video-list').innerHTML=html;
+  }).catch(function(e){
+    console.error('loadParentVideos error:',e);
+    showToast('Could not load videos.',true);
+  });
+}
+
+function deleteParentVideo(docId){
+  showConfirm('Remove this video?','It will be removed from your list.','Remove',function(){
+    db.collection('users').doc(currentUser.uid).collection('videos').doc(docId)
+    .delete()
+    .then(function(){
+      showToast('Video removed.');
+      loadParentVideos();
+    }).catch(function(){
+      showToast('Could not remove. Please try again.',true);
+    });
+  });
 }
 </script>
 
