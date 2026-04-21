@@ -695,6 +695,7 @@ auth.onAuthStateChanged(function(user){
     userTier=data.tier||'general';
     localStorage.setItem('et_tier',userTier);
     if(data.pin){parentPin=data.pin;localStorage.setItem('et_pin',data.pin);}
+    if(data.betaInvited){localStorage.setItem('et_beta_invited','true');}
     updateBetaUI();
     loadUserProfile(user);
     if(!data.onboarded){window.location.href='parent.html?setup=true';}
@@ -809,7 +810,7 @@ function closeAddVideoModal(){
 /* ── BETA UI ── */
 function updateBetaUI(){
   var isBeta=userTier==='beta'||userTier==='gamma';
-  var showStrip=appConfig.betaFeaturesEnabled&&currentUser&&!isBeta;
+  var showStrip=appConfig.betaFeaturesEnabled&&currentUser&&!isBeta&&localStorage.getItem('et_beta_invited')==='true';
   var showAdd=appConfig.betaFeaturesEnabled&&isBeta;
   var strip=document.getElementById('beta-strip');
   if(strip)strip.style.display=showStrip?'flex':'none';
