@@ -1,0 +1,62 @@
+/* ============================================================
+   BloomPlayer — Theme File
+   Edit this file to change the look of the entire app.
+   ============================================================ */
+
+:root {
+  /* Primary action (buttons, links) — Calming Sage Green */
+  --red:        #8BB8A1;   /* Sage Green */
+  --red-dark:   #6FA396;   /* Darker Sage */
+  --red-light:  #EAF2F0;   /* Very Light Sage */
+
+  /* Page */
+  --bg:         #EDE8DF;   /* Warm Mist Grey */
+  --card:       #F5F1EA;   /* Warm Cream */
+  --border:     #D8CFC4;   /* Earthy Border */
+
+  /* Text */
+  --text:       #2C2318;   /* Deep Umber */
+  --text-2:     #4A3D30;   /* Warm Brown */
+  --text-3:     #8C7D6E;   /* Muted Earth Grey */
+
+  /* Accent — Yellow Ochre (logo, highlights) */
+  --accent:     #CC9544;   /* Golden Ochre */
+
+  /* Misc surfaces */
+  --badge-bg:   #D8CFC4;
+  --video-bg:   #000000;
+  --input-bg:   #F5F1EA;
+
+  --shadow:     0 1px 3px rgba(0,0,0,0.06), 0 4px 12px rgba(0,0,0,0.04);
+  --radius:     14px;
+
+  /* Info / warning box */
+  --info-bg:      #F5EAE6;
+  --info-border:  #D8CFC4;
+  --info-text:    #A0604A;
+
+  /* Video cards */
+  --video-card-bg:     #FDFCFA;
+  --video-card-border: #D8CFC4;
+  --video-card-radius: 20px;
+
+  /* Player screen */
+  --player-bg:         #1C1A18;
+  --player-btn-bg:     #252320;
+  --player-btn-border: #3A3733;
+}
+
+/* ── Dark mode ── */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg:     #1C1A18;   /* Warm Dark Charcoal */
+    --card:   #252320;
+    --border: #3A3733;
+    
+    --text:   #F0EDE8;
+    --text-2: #C4BFB8;
+    --text-3: #8C8480;
+    
+    --input-bg: #121110;
+  }
+}
