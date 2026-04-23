@@ -724,15 +724,14 @@ function loadUserProfile(user){
 
 /* ── FIRESTORE VIDEO STORAGE ── */
 function loadPersonalVideosFromFirestore(user){
-  db.collection('users').doc(user.uid).collection('videos')
-  .orderBy('addedAt','asc').get()
-  .then(function(snap){
+  db.collection('users').doc(user.uid).get()
+  .then(function(doc){
+    var videos=(doc.exists&&doc.data().videos)?doc.data().videos:[];
     var freshData={};
-    snap.forEach(function(doc){
-      var d=doc.data();
-      var cat=d.category||'My Videos';
+    videos.forEach(function(v){
+      var cat=v.category||'My Videos';
       if(!freshData[cat])freshData[cat]=[];
-      freshData[cat].push({id:d.videoId,title:d.title||'',docId:doc.id});
+      freshData[cat].push({id:v.videoId,title:v.title||''});
     });
     personalVideosData=freshData;
     if(!Object.keys(freshData).length){showNoVideosState();return;}
@@ -756,13 +755,18 @@ function loadPersonalVideosFromFirestore(user){
 }
 
 function savePersonalVideoToFirestore(videoId,title,category){
-  return db.collection('users').doc(currentUser.uid).collection('videos').add({
+  var video={
+    id:crypto.randomUUID(),
     videoId:videoId,
     title:title,
     category:category||'My Videos',
-    addedAt:firebase.firestore.FieldValue.serverTimestamp()
+    addedAt:new Date().toISOString()
+  };
+  return db.collection('users').doc(currentUser.uid).update({
+    videos:firebase.firestore.FieldValue.arrayUnion(video)
   });
 }
+
 
 /* ── SAVE PERSONAL VIDEO ── */
 function savePersonalVideo(){
