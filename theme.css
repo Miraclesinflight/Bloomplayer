@@ -1,49 +1,50 @@
 /* ============================================================
-   BloomPlayer — Theme File: "Archival Clarity"
-   Optimized for high readability and sensory-friendly focus.
+   BloomPlayer — Theme File: Ochre & Sage Natural
+   Matches the high-end cloud-shadow mockup exactly.
    ============================================================ */
 
 :root {
-  /* ── PRIMARY ACTIONS (Sage Green) ── */
-  /* Using Sage for "Watch" buttons and active filters */
-  --red:           #6FA396;   /* Sage Green - Solid contrast */
-  --red-dark:      #527D73;   /* Deep Sage for Hover/Press */
-  --red-light:     #EAF2F0;   /* Tinted background for active states */
+  /* ── PRIMARY ACTIONS (Ochre) ── */
+  /* This is the "Watch" button and primary brand anchor */
+  --red:           #CC9544;   /* Golden Ochre */
+  --red-dark:      #B37E36;   /* Deepened Ochre for Hover */
+  --red-light:     #F5EAE6;   /* Soft glow */
 
-  /* ── PAGE SURFACES (Beige/Cream) ── */
-  --bg:            #EDE8DF;   /* Warm Mist base - eliminates blue glare */
-  --card:          #F5F1EA;   /* Soft Paper surface */
+  /* ── PAGE SURFACES (The "Mist" Look) ── */
+  --bg:            #EDE8DF;   /* Warm Mist Grey base */
+  --card:          #F5F1EA;   /* Lifted Paper surface */
   --border:        #D8CFC4;   /* Earthy divider */
 
-  /* ── TEXT HIERARCHY (Umber/Brown) ── */
-  /* Increased contrast for accessibility */
-  --text:          #2C2318;   /* Deep Umber: Primary Headers & Input text */
-  --text-2:        #4A3D30;   /* Warm Brown: Instructions & Main body */
-  --text-3:        #6B5F52;   /* Medium Earth: Metadata & Support text */
+  /* ── TEXT READABILITY (The Fix) ── */
+  --text:          #2C2318;   /* Deep Umber (Bold Headers) */
+  --text-2:        #4A3D30;   /* Warm Brown (Instructions) */
+  --text-3:        #6B5F52;   /* Earthy Grey (Metadata) */
 
-  /* ── BRAND ACCENT (Golden Ochre) ── */
-  /* Used for the Lotus logo and key highlights */
-  --accent:        #CC9544;   /* Golden Ochre */
+  /* ── SECONDARY ACCENT (Sage Green) ── */
+  /* Used for filters, video badges, and secondary buttons */
+  --accent:        #8BB8A1;   /* Calming Sage */
+  --accent-text:   #2D5C52;   /* Dark Green for text on pills */
 
   /* ── MISC SURFACES ── */
-  --badge-bg:      #D8CFC4;   /* Muted pill backgrounds */
-  --video-bg:      #000000;   /* Black stage for video immersion */
-  --input-bg:      #F5F1EA;   /* Match card surface */
+  --badge-bg:      #D8CFC4;   
+  --video-bg:      #000000;   
+  --input-bg:      #F5F1EA;   
 
-  /* ── SHADOWS & SHAPES ── */
-  --shadow:        0 1px 3px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.05);
+  /* ── THE "CLOUD" SHADOW ── */
+  /* This creates that organic, soft depth seen in the mockup */
+  --shadow:        0 10px 30px -5px rgba(0, 0, 0, 0.05), 0 20px 40px -10px rgba(0, 0, 0, 0.03);
   --radius:        14px;
+  --radius-lg:     32px;      /* For the large "Cloud" card */
 
   /* ── INFO / PARENT BOX ── */
-  /* Using Terracotta for parent-level instructions */
-  --info-bg:       #F5EAE6;
+  --info-bg:       #F5F1EA;
   --info-border:   #D8CFC4;
-  --info-text:     #7A3D2A;   /* Deep Terracotta - High contrast */
+  --info-text:     #2C2318;
 
   /* ── VIDEO CARDS ── */
-  --video-card-bg:      #FDFCFA; /* Slightly brighter for depth */
-  --video-card-border:  #D8CFC4;
-  --video-card-radius:  20px;
+  --video-card-bg:      #FDFCFA; 
+  --video-card-border:  #E2DDD6;
+  --video-card-radius:  24px;
 
   /* ── PLAYER SCREEN ── */
   --player-bg:          #1C1A18;
@@ -51,22 +52,29 @@
   --player-btn-border:  #3A3733;
 }
 
-/* ── Dark Mode (Warm & Low-Light) ── */
+/* ── Specific UI Overrides to match Mockup ── */
+
+/* Making the "Educational" tag stand out in Sage */
+.tag-sage {
+    background-color: var(--accent);
+    color: white;
+}
+
+/* Making instructions italic as seen in mockup */
+.tagline, .parent-note {
+    font-style: italic;
+    color: var(--text-2);
+}
+
+/* ── Dark Mode ── */
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg:          #1C1A18;   /* Warm Dark base */
+    --bg:          #1C1A18;
     --card:        #252320;
     --border:      #3A3733;
-
-    /* Text on Dark */
-    --text:        #F0EDE8;   /* Off-white parchment */
-    --text-2:      #C4BFB8;   /* Soft silver-tan */
-    --text-3:      #8C8480;   /* Muted grey */
-
+    --text:        #F0EDE8;
+    --text-2:      #C4BFB8;
+    --accent:      #6FA396;
     --input-bg:    #121110;
-    --accent:      #E8B66D;   /* Lighter ochre for dark visibility */
-    --red:         #7EB0A4;   /* Lighter sage for dark visibility */
-    
-    --shadow:      0 4px 20px rgba(0,0,0,0.5);
   }
 }
