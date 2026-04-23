@@ -320,97 +320,97 @@ input:checked+.slider:before{transform:translateX(18px);}
   </div>
 
   <div class="page-layout">
-  <div class="content left-col">
 
+    <!-- LEFT: Settings -->
+    <div class="left-col">
+      <div class="content">
 
-  <div class="content">
-
-    <div class="section-label">Parental Controls</div>
-    <div class="settings-card">
-      <div class="setting-row" onclick="showChangePinModal()">
-        <div class="setting-left">
-          <div class="setting-name">Parent PIN</div>
-          <div class="setting-desc">Required to open Parent Mode and exit videos</div>
-        </div>
-        <div class="setting-right">
-          <div class="pin-display">
-            <div class="pin-display-dot filled"></div>
-            <div class="pin-display-dot filled"></div>
-            <div class="pin-display-dot filled"></div>
-            <div class="pin-display-dot filled"></div>
+        <div class="section-label">Parental Controls</div>
+        <div class="settings-card">
+          <div class="setting-row" onclick="showChangePinModal()">
+            <div class="setting-left">
+              <div class="setting-name">Parent PIN</div>
+              <div class="setting-desc">Required to open Parent Mode and exit videos</div>
+            </div>
+            <div class="setting-right">
+              <div class="pin-display">
+                <div class="pin-display-dot filled"></div>
+                <div class="pin-display-dot filled"></div>
+                <div class="pin-display-dot filled"></div>
+                <div class="pin-display-dot filled"></div>
+              </div>
+              <span class="chevron">&#8250;</span>
+            </div>
           </div>
-          <span class="chevron">&#8250;</span>
+          <div class="setting-row" style="cursor:default;">
+            <div class="setting-left">
+              <div class="setting-name">Default age group</div>
+              <div class="setting-desc">Sets which age group loads by default</div>
+            </div>
+            <div class="setting-right">
+              <select id="default-age-select" onchange="saveDefaultAge()" style="padding:6px 10px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:var(--text);font-size:13px;font-family:inherit;outline:none;cursor:pointer;">
+                <option value="teenplus">Teen+</option>
+                <option value="teen">Teen</option>
+                <option value="junior">Junior</option>
+                <option value="primary">Primary</option>
+                <option value="prek">Pre-K</option>
+                <option value="toddler">Toddler</option>
+              </select>
+            </div>
+          </div>
         </div>
-      </div>
-     <div class="setting-row" style="cursor:default;">
-  <div class="setting-left">
-    <div class="setting-name">Default age group</div>
-    <div class="setting-desc">Sets which age group loads by default on the home screen</div>
-  </div>
-  <div class="setting-right">
-    <select id="default-age-select" onchange="saveDefaultAge()" style="padding:6px 10px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:var(--text);font-size:13px;font-family:inherit;outline:none;cursor:pointer;">
-      <option value="teenplus">Teen+</option>
-      <option value="teen">Teen</option>
-      <option value="junior">Junior</option>
-      <option value="primary">Primary</option>
-      <option value="prek">Pre-K</option>
-      <option value="toddler">Toddler</option>
-    </select>
-  </div>
-</div>
 
-    <div id="children-section" style="display:none;">
-      <div class="section-label">Children</div>
-      <div id="profiles-list"></div>
-      <button class="btn-add-profile" onclick="openAddProfileModal()">+ Add a child</button>
-    </div>
-
-    <div class="section-label">Account</div>
-    <div class="settings-card">
-      <div class="account-row">
-        <div class="auth-avatar account-avatar" id="parent-avatar"></div>
-        <div>
-          <div class="account-name" id="parent-name"></div>
-          <div class="account-email" id="parent-email"></div>
+        <div id="children-section" style="display:none;">
+          <div class="section-label">Children</div>
+          <div id="profiles-list"></div>
+          <button class="btn-add-profile" onclick="openAddProfileModal()">+ Add a child</button>
         </div>
-      </div>
-      <div class="danger-row" onclick="signOut()">
-        <div>
-          <div class="danger-name">Sign out</div>
-          <div class="danger-desc">You'll need to sign in again next visit</div>
+
+        <div class="section-label">Account</div>
+        <div class="settings-card">
+          <div class="account-row">
+            <div class="auth-avatar account-avatar" id="parent-avatar"></div>
+            <div>
+              <div class="account-name" id="parent-name"></div>
+              <div class="account-email" id="parent-email"></div>
+            </div>
+          </div>
+          <div class="setting-row" onclick="signOut()">
+            <div class="setting-left">
+              <div class="setting-name" style="color:var(--red);">Sign out</div>
+              <div class="setting-desc">You'll need to sign in again next visit</div>
+            </div>
+            <span class="chevron">&#8250;</span>
+          </div>
+          <div class="setting-row" onclick="deleteAccount()">
+            <div class="setting-left">
+              <div class="setting-name" style="color:var(--red);">Delete account</div>
+              <div class="setting-desc">Permanently deletes your account and all data</div>
+            </div>
+            <span class="chevron">&#8250;</span>
+          </div>
         </div>
-        <span class="chevron" style="color:#EF4444;">&#8250;</span>
+
+        <button class="btn-back-full" onclick="goBack()">&#8592; Back to BloomPlayer</button>
+        <div class="version">BloomPlayer</div>
+
       </div>
     </div>
 
-    <div class="section-label" style="margin-top:8px;">Danger Zone</div>
-    <div class="settings-card">
-      <div class="danger-row" onclick="deleteAccount()">
-        <div>
-          <div class="danger-name">Delete account</div>
-          <div class="danger-desc">Permanently deletes your account, PIN, video list and all data</div>
-        </div>
-        <span class="chevron" style="color:#EF4444;">&#8250;</span>
+    <!-- RIGHT: Dashboard -->
+    <div class="right-col">
+      <div class="section-label">Watch Dashboard</div>
+      <div class="dash-card" id="dashboard-card">
+        <div class="dash-loading" id="dash-loading">Loading...</div>
       </div>
     </div>
-
-    <button class="btn-back-full" onclick="goBack()">&#8592; Back to BloomPlayer</button>
-    <div class="version">BloomPlayer</div>
-
-  </div><!-- end left-col -->
-
-  <!-- ── DASHBOARD ── -->
-  <div class="right-col">
-    <div style="padding:16px 0 8px;">
-      <div class="section-label" style="padding:0 0 8px;">Watch Dashboard</div>
-    </div>
-    <div class="dash-card" id="dashboard-card">
-      <div class="dash-loading" id="dash-loading">Loading...</div>
-    </div>
-  </div>
 
   </div><!-- end page-layout -->
+
 </div><!-- end parent-content -->
+
+
+  </div><!-- end left-col -->
 
 <script>
 var isSetupMode=window.location.search.indexOf('setup=true')>-1;
