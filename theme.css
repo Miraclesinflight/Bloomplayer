@@ -20,8 +20,8 @@
   /* ── TEXT READABILITY (Deep Umber) ── */
   /* High contrast for punchy, easy-to-read headers */
   --text:               #2C2318;   /* Deep Umber */
-  --text-2:             #4A3D30;   /* Rich Brown */
-  --text-3:             #6B5F52;   /* Earthy Grey Metadata */
+  --text-2:             #2C2318;   /* Rich Brown */
+  --text-3:             #2C2318;   /* Earthy Grey Metadata */
 
   /* ── SECONDARY ACCENT (Sage Green) ── */
   /* Used for filters (Educational/Leisure) and video tags */
