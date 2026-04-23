@@ -1,62 +1,72 @@
 /* ============================================================
-   BloomPlayer — Theme File
-   Edit this file to change the look of the entire app.
+   BloomPlayer — Theme File: "Archival Clarity"
+   Optimized for high readability and sensory-friendly focus.
    ============================================================ */
 
 :root {
-  /* Primary action (buttons, links) — Calming Sage Green */
-  --red:        #8BB8A1;   /* Sage Green */
-  --red-dark:   #6FA396;   /* Darker Sage */
-  --red-light:  #EAF2F0;   /* Very Light Sage */
+  /* ── PRIMARY ACTIONS (Sage Green) ── */
+  /* Using Sage for "Watch" buttons and active filters */
+  --red:           #6FA396;   /* Sage Green - Solid contrast */
+  --red-dark:      #527D73;   /* Deep Sage for Hover/Press */
+  --red-light:     #EAF2F0;   /* Tinted background for active states */
 
-  /* Page */
-  --bg:         #EDE8DF;   /* Warm Mist Grey */
-  --card:       #F5F1EA;   /* Warm Cream */
-  --border:     #D8CFC4;   /* Earthy Border */
+  /* ── PAGE SURFACES (Beige/Cream) ── */
+  --bg:            #EDE8DF;   /* Warm Mist base - eliminates blue glare */
+  --card:          #F5F1EA;   /* Soft Paper surface */
+  --border:        #D8CFC4;   /* Earthy divider */
 
-  /* Text */
-  --text:       #2C2318;   /* Deep Umber */
-  --text-2:     #4A3D30;   /* Warm Brown */
-  --text-3:     #8C7D6E;   /* Muted Earth Grey */
+  /* ── TEXT HIERARCHY (Umber/Brown) ── */
+  /* Increased contrast for accessibility */
+  --text:          #2C2318;   /* Deep Umber: Primary Headers & Input text */
+  --text-2:        #4A3D30;   /* Warm Brown: Instructions & Main body */
+  --text-3:        #6B5F52;   /* Medium Earth: Metadata & Support text */
 
-  /* Accent — Yellow Ochre (logo, highlights) */
-  --accent:     #CC9544;   /* Golden Ochre */
+  /* ── BRAND ACCENT (Golden Ochre) ── */
+  /* Used for the Lotus logo and key highlights */
+  --accent:        #CC9544;   /* Golden Ochre */
 
-  /* Misc surfaces */
-  --badge-bg:   #D8CFC4;
-  --video-bg:   #000000;
-  --input-bg:   #F5F1EA;
+  /* ── MISC SURFACES ── */
+  --badge-bg:      #D8CFC4;   /* Muted pill backgrounds */
+  --video-bg:      #000000;   /* Black stage for video immersion */
+  --input-bg:      #F5F1EA;   /* Match card surface */
 
-  --shadow:     0 1px 3px rgba(0,0,0,0.06), 0 4px 12px rgba(0,0,0,0.04);
-  --radius:     14px;
+  /* ── SHADOWS & SHAPES ── */
+  --shadow:        0 1px 3px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.05);
+  --radius:        14px;
 
-  /* Info / warning box */
-  --info-bg:      #F5EAE6;
-  --info-border:  #D8CFC4;
-  --info-text:    #A0604A;
+  /* ── INFO / PARENT BOX ── */
+  /* Using Terracotta for parent-level instructions */
+  --info-bg:       #F5EAE6;
+  --info-border:   #D8CFC4;
+  --info-text:     #7A3D2A;   /* Deep Terracotta - High contrast */
 
-  /* Video cards */
-  --video-card-bg:     #FDFCFA;
-  --video-card-border: #D8CFC4;
-  --video-card-radius: 20px;
+  /* ── VIDEO CARDS ── */
+  --video-card-bg:      #FDFCFA; /* Slightly brighter for depth */
+  --video-card-border:  #D8CFC4;
+  --video-card-radius:  20px;
 
-  /* Player screen */
-  --player-bg:         #1C1A18;
-  --player-btn-bg:     #252320;
-  --player-btn-border: #3A3733;
+  /* ── PLAYER SCREEN ── */
+  --player-bg:          #1C1A18;
+  --player-btn-bg:      #252320;
+  --player-btn-border:  #3A3733;
 }
 
-/* ── Dark mode ── */
+/* ── Dark Mode (Warm & Low-Light) ── */
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg:     #1C1A18;   /* Warm Dark Charcoal */
-    --card:   #252320;
-    --border: #3A3733;
+    --bg:          #1C1A18;   /* Warm Dark base */
+    --card:        #252320;
+    --border:      #3A3733;
+
+    /* Text on Dark */
+    --text:        #F0EDE8;   /* Off-white parchment */
+    --text-2:      #C4BFB8;   /* Soft silver-tan */
+    --text-3:      #8C8480;   /* Muted grey */
+
+    --input-bg:    #121110;
+    --accent:      #E8B66D;   /* Lighter ochre for dark visibility */
+    --red:         #7EB0A4;   /* Lighter sage for dark visibility */
     
-    --text:   #F0EDE8;
-    --text-2: #C4BFB8;
-    --text-3: #8C8480;
-    
-    --input-bg: #121110;
+    --shadow:      0 4px 20px rgba(0,0,0,0.5);
   }
 }
