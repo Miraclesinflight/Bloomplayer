@@ -385,7 +385,7 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',-apple-system,s
       <input class="modal-input" id="beta-code-input" type="text" placeholder="Enter code..." style="text-transform:uppercase;letter-spacing:2px;"/>
       <div class="modal-btns">
         <button class="btn-cancel" onclick="closeBetaModal()">Cancel</button>
-        <button class="btn-submit" id="beta-submit-btn" onclick="validateBetaCode()">Unlock</button>
+     <button class="btn-submit" id="add-video-submit" onclick="savePersonalVideo()">Add video</button>
       </div>
     </div>
     <div id="beta-waitlist-section" style="display:none;">
@@ -425,7 +425,7 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',-apple-system,s
 </div>
     <div class="modal-btns">
       <button class="btn-cancel" onclick="closeAddVideoModal()">Cancel</button>
-     <button class="btn-submit" id="add-video-submit" onclick="savePersonalVideo()">Add video</button>
+     <button class="btn-submit" id="add-video-submit" onclick="savePersonalVideo()">Add another video</button>
     </div>
   </div>
 </div>
@@ -794,7 +794,8 @@ function savePersonalVideo(){
     document.getElementById('add-url').value='';
     document.getElementById('add-category').value=lastUsedCategory;
     var btn=document.getElementById('add-video-submit');
-    btn.textContent='Add video';btn.disabled=false;
+   showToast('Video added!');
+btn.textContent='Add to playlist';btn.disabled=false;
   }).catch(function(e){
     console.error('savePersonalVideo error:',e);
     showToast('Failed to save. Please try again.',true);
