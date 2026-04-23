@@ -419,8 +419,10 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',-apple-system,s
     <label class="modal-label">YouTube link</label>
     <input class="modal-input" id="add-url" type="url" inputmode="url" placeholder="youtube.com/watch?v=..."/>
  <label class="modal-label">Category (optional)</label>
-<input class="modal-input" id="add-category" type="text" placeholder="e.g. Animals, Science, Bedtime" list="category-suggestions" autocomplete="off"/>
-<datalist id="category-suggestions"></datalist>
+<div style="position:relative;">
+  <input class="modal-input" id="add-category" type="text" placeholder="e.g. Animals, Science, Bedtime" autocomplete="off" oninput="filterCategorySuggestions()" onfocus="showCategorySuggestions()" style="margin-bottom:0;"/>
+  <div id="category-suggestion-list" style="display:none;position:absolute;top:100%;left:0;right:0;background:var(--bg);border:1.5px solid var(--border);border-radius:10px;z-index:999;overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,0.15);"></div>
+</div>
     <div class="modal-btns">
       <button class="btn-cancel" onclick="closeAddVideoModal()">Cancel</button>
      <button class="btn-submit" id="add-video-submit" onclick="savePersonalVideo()">Add video</button>
@@ -820,23 +822,42 @@ function renderPersonalCategory(){
 }
 
 function showAddVideoModal(){
-  var dl=document.getElementById('category-suggestions');
-  dl.innerHTML='';
-  Object.keys(personalVideosData).forEach(function(cat){
-    var opt=document.createElement('option');
-    opt.value=cat;
-    dl.appendChild(opt);
-  });
+  document.getElementById('category-suggestion-list').style.display='none';
 document.getElementById('add-category').value=lastUsedCategory;
 document.getElementById('add-video-modal').style.display='flex';
 }
-  
+
+ function showCategorySuggestions(){
+  filterCategorySuggestions();
+}
+
+function filterCategorySuggestions(){
+  var input=document.getElementById('add-category');
+  var list=document.getElementById('category-suggestion-list');
+  var val=input.value.toLowerCase();
+  var cats=Object.keys(personalVideosData).filter(function(c){
+    return c.toLowerCase().indexOf(val)>-1;
+  });
+  if(!cats.length){list.style.display='none';return;}
+  list.innerHTML='';
+  cats.forEach(function(cat){
+    var item=document.createElement('div');
+    item.textContent=cat;
+    item.style.cssText='padding:12px 16px;font-size:15px;cursor:pointer;border-bottom:1px solid var(--border);color:var(--text);';
+    item.onmousedown=function(e){e.preventDefault();input.value=cat;list.style.display='none';};
+    item.ontouchend=function(e){e.preventDefault();input.value=cat;list.style.display='none';};
+    list.appendChild(item);
+  });
+  list.style.display='block';
+}
+ 
 function closeAddVideoModal(){
   document.getElementById('add-video-modal').style.display='none';
   document.getElementById('add-url').value='';
   document.getElementById('add-category').value='';
   document.getElementById('add-video-submit').textContent='Save video';
   document.getElementById('add-video-submit').disabled=false;
+  document.getElementById('category-suggestion-list').style.display='none';
 }
 
 /* ── BETA UI ── */
