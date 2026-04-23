@@ -666,7 +666,7 @@ function updateAuthUI(user){
     else{av.textContent=user.displayName?user.displayName[0].toUpperCase():'U';}
     document.getElementById('auth-name').textContent=user.displayName?user.displayName.split(' ')[0]:user.email;
     document.getElementById('pin-storage-note').textContent='You are signed in — your PIN is saved to your account.';
-    document.getElementById('info-card-text').innerHTML='<strong>For parents:</strong> Long press the logo to open Parent Mode. <a href="#" onclick="forgotPin();return false;" style="color:var(--red);font-weight:600;">Forgot PIN?</a> We\'ll email you a reset link — check your spam folder if it doesn\'t arrive.';
+   document.getElementById('info-card-text').closest('.info-card').style.display='none';
     updateBetaUI();
   } else {
     document.getElementById('auth-signed-in').style.display='none';
@@ -676,7 +676,7 @@ function updateAuthUI(user){
     document.getElementById('personal-card').style.display='none';
     document.getElementById('no-videos-card').style.display='none';
     document.getElementById('pin-storage-note').textContent='Sign in to save your PIN permanently.';
-    document.getElementById('info-card-text').innerHTML='<strong>For parents:</strong> Videos play with no controls visible. Closing requires the parent PIN. <strong>Default PIN is 1234.</strong> Long press the logo to open Settings.';
+    document.getElementById('info-card-text').closest('.info-card').style.display='none';
     updateBetaUI();
   }
 }
