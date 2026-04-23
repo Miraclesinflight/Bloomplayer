@@ -419,11 +419,11 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',-apple-system,s
     <label class="modal-label">YouTube link</label>
     <input class="modal-input" id="add-url" type="url" inputmode="url" placeholder="youtube.com/watch?v=..."/>
  <label class="modal-label">Category (optional)</label>
-<select class="modal-input" id="add-category-select" onchange="handleCategorySelectChange()"></select>
-<input class="modal-input" id="add-category-new" type="text" placeholder="New category name..." style="display:none;margin-top:8px;"/>
+<input class="modal-input" id="add-category" type="text" placeholder="e.g. Animals, Science, Bedtime" list="category-suggestions" autocomplete="off"/>
+<datalist id="category-suggestions"></datalist>
     <div class="modal-btns">
       <button class="btn-cancel" onclick="closeAddVideoModal()">Cancel</button>
-      <button class="btn-submit" id="add-video-submit" onclick="savePersonalVideo()">Save video</button>
+     <button class="btn-submit" id="add-video-submit" onclick="savePersonalVideo()">Add video</button>
     </div>
   </div>
 </div>
@@ -509,6 +509,8 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',-apple-system,s
 
 <script>
 /* ── UTILITIES ── */
+  var lastUsedCategory='';
+
 function showToast(msg,isError){
   var t=document.getElementById('app-toast');
   if(!t){t=document.createElement('div');t.id='app-toast';t.style.cssText='position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1E293B;color:#F8FAFC;font-size:13px;font-weight:600;padding:12px 20px;border-radius:20px;z-index:9999;white-space:nowrap;box-shadow:0 4px 16px rgba(0,0,0,0.4);border:1px solid #334155;transition:opacity 0.3s;';document.body.appendChild(t);}
@@ -772,10 +774,8 @@ function savePersonalVideoToFirestore(videoId,title,category){
 /* ── SAVE PERSONAL VIDEO ── */
 function savePersonalVideo(){
   if(!currentUser){showToast('Please sign in to save videos.',true);return;}
-  var url=document.getElementById('add-url').value.trim();var sel=document.getElementById('add-category-select');
-var category=sel.value==='__new__'
-  ?(document.getElementById('add-category-new').value.trim()||'My Videos')
-  :(sel.value||'My Videos');
+  var url=document.getElementById('add-url').value.trim();
+  var category=document.getElementById('add-category').value.trim()||'My Videos';
   var id=extractId(url);
   if(!id){showToast('Please paste a valid YouTube link.',true);return;}
   var btn=document.getElementById('add-video-submit');
@@ -785,10 +785,14 @@ var category=sel.value==='__new__'
   .then(function(r){if(!r.ok)throw new Error('oEmbed failed');return r.json();})
   .then(function(data){return savePersonalVideoToFirestore(id,data.title||'',category);})
   .catch(function(){return savePersonalVideoToFirestore(id,'',category);})
-  .then(function(){
-    closeAddVideoModal();
+ .then(function(){
+    lastUsedCategory=category;
     loadPersonalVideosFromFirestore(currentUser);
-    showToast('Video saved!');
+    showToast('Video added!');
+    document.getElementById('add-url').value='';
+    document.getElementById('add-category').value=lastUsedCategory;
+    var btn=document.getElementById('add-video-submit');
+    btn.textContent='Add video';btn.disabled=false;
   }).catch(function(e){
     console.error('savePersonalVideo error:',e);
     showToast('Failed to save. Please try again.',true);
@@ -816,51 +820,24 @@ function renderPersonalCategory(){
 }
 
 function showAddVideoModal(){
-  var sel=document.getElementById('add-category-select');
-  sel.innerHTML='';
-  var cats=Object.keys(personalVideosData);
-  if(cats.length){
-    cats.forEach(function(cat){
-      var opt=document.createElement('option');
-      opt.value=cat;opt.textContent=cat;
-      sel.appendChild(opt);
-    });
-  } else {
+  var dl=document.getElementById('category-suggestions');
+  dl.innerHTML='';
+  Object.keys(personalVideosData).forEach(function(cat){
     var opt=document.createElement('option');
-    opt.value='My Videos';opt.textContent='My Videos';
-    sel.appendChild(opt);
-  }
-  var newOpt=document.createElement('option');
-  newOpt.value='__new__';newOpt.textContent='+ New category...';
-  sel.appendChild(newOpt);
-  document.getElementById('add-category-new').style.display='none';
-  document.getElementById('add-category-new').value='';
-  document.getElementById('add-video-modal').style.display='flex';
+    opt.value=cat;
+    dl.appendChild(opt);
+  });
+document.getElementById('add-category').value=lastUsedCategory;
+document.getElementById('add-video-modal').style.display='flex';
 }
-
-function handleCategorySelectChange(){
-  var sel=document.getElementById('add-category-select');
-  var newInput=document.getElementById('add-category-new');
-  if(sel.value==='__new__'){
-    newInput.style.display='block';
-    newInput.focus();
-  } else {
-    newInput.style.display='none';
-    newInput.value='';
-  }
-}
-
   
 function closeAddVideoModal(){
   document.getElementById('add-video-modal').style.display='none';
   document.getElementById('add-url').value='';
-  document.getElementById('add-category-select').innerHTML='';
-  document.getElementById('add-category-new').value='';
-  document.getElementById('add-category-new').style.display='none';
+  document.getElementById('add-category').value='';
   document.getElementById('add-video-submit').textContent='Save video';
   document.getElementById('add-video-submit').disabled=false;
 }
-
 
 /* ── BETA UI ── */
 function updateBetaUI(){
