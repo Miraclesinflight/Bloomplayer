@@ -174,8 +174,10 @@ input:checked+.slider:before{transform:translateX(18px);}
   .right-col{flex:1;padding:16px 20px;min-width:0;}
 }
 .page-layout .content{max-width:none;margin:0;padding:16px 16px 0;}
-.left-col .settings-card{flex:1;}
-.left-col .content{display:flex;flex-direction:column;}
+.left-col{display:flex;flex-direction:column;}
+.left-col .content{display:flex;flex-direction:column;flex:1;}
+.left-col .settings-card{flex:1;display:flex;flex-direction:column;}
+.left-col .settings-card .setting-row:last-child{flex:1;}
 .full-width{width:100%;padding:16px 16px 16px;border-top:1px solid var(--border);margin-top:4px;}
 @media(min-width:700px){.full-width{padding:16px 20px 20px;}}
 
