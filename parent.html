@@ -169,11 +169,15 @@ input:checked+.slider:before{transform:translateX(18px);}
   /* ── TWO COLUMN LAYOUT ── */
 .page-layout{display:flex;flex-direction:column;width:100%;}
 @media(min-width:768px){
-  .page-layout{flex-direction:row;align-items:flex-start;gap:0;}
-  .left-col{flex:0 0 380px;max-width:380px;}
-  .right-col{flex:1;padding:16px;position:sticky;top:72px;}
+  .page-layout{flex-direction:row;align-items:flex-start;}
+  .left-col{flex:0 0 400px;max-width:400px;min-width:0;}
+  .right-col{flex:1;padding:16px;position:sticky;top:72px;min-width:0;}
 }
 .left-col{padding:0;}
+
+/* override .content constraints inside layout */
+.page-layout .content{max-width:none;margin:0;}
+
 
 /* ── DASHBOARD ── */
 .dash-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;}
