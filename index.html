@@ -546,6 +546,9 @@ var userTier=localStorage.getItem('et_tier')||'general';
 var userEmail=localStorage.getItem('et_email')||null;
 var currentVideoSource='leisure',currentVideoGrade=null,currentVideoSubject=null;
 var reportingVideo=null;
+var sessionStartTime=null;
+var currentVideoDuration=null;
+
 
 /* ── APP CONFIG ── */
 var appConfig={signinEnabled:false,inviteCodeEnabled:false,betaFeaturesEnabled:false,betaLimit:99,betaUsageCount:0};
@@ -1078,13 +1081,25 @@ function prepareVideo(id,source,grade,subject){
 }
 
 function lockControls(){
+  sessionStartTime=Date.now();
+  currentVideoDuration=null;
   try{document.getElementById('yt-iframe').contentWindow.postMessage(JSON.stringify({event:'command',func:'playVideo',args:''}),'https://www.youtube.com');}catch(e){}
+  try{document.getElementById('yt-iframe').contentWindow.postMessage(JSON.stringify({event:'listening'}),'https://www.youtube.com');}catch(e){}
   document.getElementById('player-overlay').style.display='block';document.getElementById('player-top').style.display='none';
   document.getElementById('player-bottom').style.display='block';document.getElementById('next-videos').style.display='none';
   document.querySelector('.next-title').style.display='none';
   var toast=document.getElementById('lock-toast');toast.classList.remove('hidden');toast.textContent='Locked';
   setTimeout(function(){toast.classList.add('hidden');},1500);
 }
+window.addEventListener('message',function(e){
+  if(e.origin!=='https://www.youtube.com')return;
+  try{
+    var data=JSON.parse(e.data);
+    if(data.event==='infoDelivery'&&data.info&&data.info.duration){
+      if(!currentVideoDuration)currentVideoDuration=data.info.duration;
+    }
+  }catch(ex){}
+});
 
 function buildNextVideos(currentId){
   var f=[];
@@ -1104,7 +1119,35 @@ function buildNextVideos(currentId){
   document.getElementById('next-videos').innerHTML=html||'<div style="font-size:12px;color:#888;">No more videos.</div>';
 }
 
-function closeVideo(){document.getElementById('yt-iframe').src='';document.getElementById('player-overlay').style.display='none';document.getElementById('player-top').style.display='block';document.getElementById('player-bottom').style.display='none';show('home');}
+function closeVideo(){
+  if(currentUser&&sessionStartTime&&pendingId){
+    var elapsed=Math.round((Date.now()-sessionStartTime)/1000);
+    var watchTime=currentVideoDuration?Math.min(elapsed,Math.round(currentVideoDuration)):elapsed;
+    if(watchTime>5){
+      var videoTitle='';
+      // find title from personalVideosData if available
+      Object.keys(personalVideosData).forEach(function(cat){
+        personalVideosData[cat].forEach(function(v){
+          if(v.id===pendingId)videoTitle=v.title;
+        });
+      });
+      db.collection('users').doc(currentUser.uid).collection('sessions').add({
+        videoId:pendingId,
+        title:videoTitle,
+        watchTime:watchTime,
+        source:currentVideoSource,
+        watchedAt:firebase.firestore.FieldValue.serverTimestamp()
+      }).catch(function(e){console.error('session write failed:',e);});
+    }
+  }
+  sessionStartTime=null;
+  currentVideoDuration=null;
+  document.getElementById('yt-iframe').src='';
+  document.getElementById('player-overlay').style.display='none';
+  document.getElementById('player-top').style.display='block';
+  document.getElementById('player-bottom').style.display='none';
+  show('home');
+}
 function showHome(){show('home');}
 function requestClose(){pinAction='close';showPin('Parent PIN required','Enter your PIN to close this video');}
 function requestSettings(){pinAction='settings';showPin('Parent PIN required','Enter your PIN to open Settings');}
