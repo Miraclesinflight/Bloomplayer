@@ -172,9 +172,12 @@ input:checked+.slider:before{transform:translateX(18px);}
 @media(min-width:700px){
   .page-layout{flex-direction:row;align-items:stretch;flex-wrap:nowrap;}
   .left-col{flex:0 0 360px;width:360px;min-width:0;border-right:1px solid var(--border);}
-  .right-col{flex:1;padding:16px 20px;min-width:0;}
+ .right-col{flex:1;padding:16px 20px 16px 20px;min-width:0;padding-top:16px;}
 }
 .page-layout .content{max-width:none;margin:0;padding:16px 16px 0;}
+.right-col .section-label{margin-top:0;}
+.right-col{padding-top:16px;padding-bottom:16px;}
+.right-col .dash-card{margin-top:0;}
 .left-col{display:flex;flex-direction:column;}
 .left-col .content{display:flex;flex-direction:column;flex:1;}
 .left-col .settings-card{flex:1;display:flex;flex-direction:column;}
