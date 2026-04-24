@@ -401,6 +401,18 @@ input:checked+.slider:before{transform:translateX(18px);}
           <div class="account-email" id="parent-email"></div>
         </div>
       </div>
+          <div class="setting-row" style="cursor:default;flex-direction:column;align-items:flex-start;gap:10px;">
+        <div>
+          <div class="setting-name">Export watch log</div>
+          <div class="setting-desc">Download a CSV of videos watched — useful for homeschool portfolios and progress tracking</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;width:100%;flex-wrap:wrap;">
+          <input type="date" id="export-from" style="padding:6px 10px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:var(--text);font-size:13px;font-family:inherit;outline:none;cursor:pointer;"/>
+          <span style="font-size:12px;color:var(--text-3);">to</span>
+          <input type="date" id="export-to" style="padding:6px 10px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:var(--text);font-size:13px;font-family:inherit;outline:none;cursor:pointer;"/>
+          <button onclick="exportSessions()" style="padding:7px 14px;border-radius:8px;background:var(--green-dim);color:var(--green-text);border:1px solid #A7F3D0;font-size:12px;font-weight:600;font-family:inherit;cursor:pointer;white-space:nowrap;">Export CSV</button>
+        </div>
+      </div>
       <div class="setting-row" onclick="signOut()">
         <div class="setting-left">
           <div class="setting-name" style="color:var(--red);">Sign out</div>
@@ -518,10 +530,12 @@ function renderParentMode(){
   document.getElementById('parent-email').textContent=user.email||'';
  var defaultAge=localStorage.getItem('et_default_age')||'primary';
 document.getElementById('default-age-select').value=defaultAge;
-   var isGamma=userTier==='gamma';
+  var isGamma=userTier==='gamma';
   document.getElementById('children-section').style.display=isGamma?'block':'none';
   if(isGamma)loadProfiles();
   loadDashboard();
+  initExportDates();
+
 
 }
 
@@ -784,6 +798,66 @@ function processChangePinStep(){
     }
   }
 }
+  function initExportDates(){
+  var now=new Date();
+  var today=now.toISOString().substring(0,10);
+  var ago30=new Date(now.getTime()-30*24*60*60*1000).toISOString().substring(0,10);
+  var created=currentUser.metadata.creationTime
+    ?new Date(currentUser.metadata.creationTime).toISOString().substring(0,10)
+    :'2024-01-01';
+  var fromEl=document.getElementById('export-from');
+  var toEl=document.getElementById('export-to');
+  if(!fromEl||!toEl)return;
+  fromEl.value=ago30;
+  fromEl.min=created;
+  fromEl.max=today;
+  toEl.value=today;
+  toEl.min=created;
+  toEl.max=today;
+}
+
+function exportSessions(){
+  var btn=event.target;
+  var fromVal=document.getElementById('export-from').value;
+  var toVal=document.getElementById('export-to').value;
+  if(!fromVal||!toVal){showToast('Please select a date range.',true);return;}
+  var fromDate=new Date(fromVal);
+  var toDate=new Date(toVal);
+  toDate.setHours(23,59,59,999);
+  if(fromDate>toDate){showToast('Start date must be before end date.',true);return;}
+  btn.textContent='Exporting...';btn.disabled=true;
+  db.collection('users').doc(currentUser.uid).collection('sessions')
+  .orderBy('watchedAt','desc').get()
+  .then(function(snap){
+    var rows=[['Date','Video Title','Video ID','Watch Time (mins)','Completion %','Source']];
+    snap.forEach(function(doc){
+      var d=doc.data();
+      var t=d.watchedAt?d.watchedAt.toDate():null;
+      if(!t||t<fromDate||t>toDate)return;
+      var dateStr=t.toISOString().substring(0,10);
+      var title=(d.title||d.videoId||'').replace(/"/g,"'");
+      var mins=d.watchTime?Math.round(d.watchTime/60*10)/10:0;
+      var completion=d.completionRate!=null?d.completionRate+'%':'—';
+      var source=d.source||'—';
+      rows.push([dateStr,title,d.videoId||'',mins,completion,source]);
+    });
+    if(rows.length<=1){showToast('No sessions found for this date range.',true);btn.textContent='Export CSV';btn.disabled=false;return;}
+    var csv=rows.map(function(r){return r.map(function(c){return'"'+c+'"';}).join(',');}).join('\n');
+    var blob=new Blob([csv],{type:'text/csv'});
+    var url=URL.createObjectURL(blob);
+    var a=document.createElement('a');
+    a.href=url;a.download='bloomplayer-watchlog-'+fromVal+'-to-'+toVal+'.csv';
+    document.body.appendChild(a);a.click();document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    showToast('Exported '+(rows.length-1)+' sessions.');
+    btn.textContent='Export CSV';btn.disabled=false;
+  }).catch(function(e){
+    console.error('exportSessions:',e);
+    showToast('Export failed. Please try again.',true);
+    btn.textContent='Export CSV';btn.disabled=false;
+  });
+}
+
 
 /* ── SIGN OUT ── */
 function signOut(){
@@ -933,9 +1007,6 @@ function renderDashboard(){
 +'<div class="dash-stat-value" id="dash-vc">'+d.videos.length+'</div>'
 +'<div class="dash-stat-label">Unique Videos</div>'
       +'</div>'
-       +'</div>'
-      +'<div style="padding:12px 16px;display:flex;justify-content:flex-end;">'
-      +'<button onclick="exportSessions(\''+dashTab+'\')" style="padding:7px 14px;border-radius:8px;background:var(--green-dim);color:var(--green-text);border:1px solid #A7F3D0;font-size:12px;font-weight:600;font-family:inherit;cursor:pointer;">Export CSV</button>'
       +'</div>';
   }
 
