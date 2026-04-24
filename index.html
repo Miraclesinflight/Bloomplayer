@@ -1144,6 +1144,7 @@ function closeVideo(){
       videoId:pendingId,
       title:currentVideoTitle,
       watchTime:watchTime,
+      completionRate:currentVideoDuration?Math.min(100,Math.round((watchTime/currentVideoDuration)*100)):null,
       source:currentVideoSource,
       watchedAt:firebase.firestore.FieldValue.serverTimestamp()
     }).catch(function(e){console.error('session write failed:',e);});
