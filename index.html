@@ -547,6 +547,7 @@ var userEmail=localStorage.getItem('et_email')||null;
 var currentVideoSource='leisure',currentVideoGrade=null,currentVideoSubject=null;
 var reportingVideo=null;
 var sessionStartTime=null;
+var currentVideoTitle='';
 var currentVideoDuration=null;
 
 
@@ -1072,6 +1073,18 @@ function handleWatch(){var id=extractId(document.getElementById('url-input').val
 
 function prepareVideo(id,source,grade,subject){
   pendingId=id;currentVideoSource=source||'leisure';currentVideoGrade=grade||null;currentVideoSubject=subject||null;
+  currentVideoTitle='';
+  if(currentVideoSource==='educational'){
+    var ev=allCurriculumVideos.find(function(v){return(v.id||v.youtube_id||'').trim()===id;});
+    if(ev)currentVideoTitle=ev.title||ev.chapter||'';
+  } else if(currentVideoSource==='leisure'){
+    var lv=allVideos.find(function(v){return v.id===id;});
+    if(lv)currentVideoTitle=lv.title||'';
+  } else {
+    Object.keys(personalVideosData).forEach(function(cat){
+      personalVideosData[cat].forEach(function(v){if(v.id===id)currentVideoTitle=v.title||'';});
+    });
+  }
   trackVideoPlayed(id,currentVideoSource,currentVideoGrade,currentVideoSubject);
   document.getElementById('url-error').textContent='';document.getElementById('url-input').value='';
   document.getElementById('player-overlay').style.display='none';document.getElementById('player-top').style.display='block';
@@ -1124,23 +1137,16 @@ function closeVideo(){
     var elapsed=Math.round((Date.now()-sessionStartTime)/1000);
     var watchTime=currentVideoDuration?Math.min(elapsed,Math.round(currentVideoDuration)):elapsed;
     if(watchTime>5){
-      var videoTitle='';
-      // find title from personalVideosData if available
-      Object.keys(personalVideosData).forEach(function(cat){
-        personalVideosData[cat].forEach(function(v){
-          if(v.id===pendingId)videoTitle=v.title;
-        });
-      });
-      db.collection('users').doc(currentUser.uid).collection('sessions').add({
-        videoId:pendingId,
-        title:videoTitle,
-        watchTime:watchTime,
+       db.collection('users').doc(currentUser.uid).collection('sessions').add({
+      videoId:pendingId,
+      title:currentVideoTitle,
+      watchTime:watchTime,
         source:currentVideoSource,
         watchedAt:firebase.firestore.FieldValue.serverTimestamp()
       }).catch(function(e){console.error('session write failed:',e);});
     }
   }
-  sessionStartTime=null;
+  sessionStartTime=null; 
   currentVideoDuration=null;
   document.getElementById('yt-iframe').src='';
   document.getElementById('player-overlay').style.display='none';
