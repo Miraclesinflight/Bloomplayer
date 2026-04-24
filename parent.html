@@ -851,38 +851,34 @@ function goBack(){
   /* ── DASHBOARD ── */
 var dashTab='month';
 var dashData={month:{watchTime:0,videos:[]},year:{watchTime:0,videos:[]},all:{watchTime:0,videos:[]}};
-
 function loadDashboard(){
-  document.getElementById('dash-loading').style.display='block';
-  db.collection('users').doc(currentUser.uid).collection('sessions')
-  .orderBy('watchedAt','desc').get()
-  .then(function(snap){
+  db.collection('users').doc(currentUser.uid).get()
+  .then(function(doc){
+    var stats=(doc.exists&&doc.data().stats)?doc.data().stats:{};
     var now=new Date();
-    var monthStart=new Date(now.getFullYear(),now.getMonth(),1);
-    var yearStart=new Date(now.getFullYear(),0,1);
-    dashData={month:{watchTime:0,videos:[]},year:{watchTime:0,videos:[]},all:{watchTime:0,videos:[]}};
-    snap.forEach(function(doc){
-      var d=doc.data();
-      var t=d.watchedAt?d.watchedAt.toDate():null;
-      var wt=d.watchTime||0;
-      var vid=d.videoId||'';
-      dashData.all.watchTime+=wt;
-      if(dashData.all.videos.indexOf(vid)===-1)dashData.all.videos.push(vid);
-      if(t&&t>=yearStart){
-        dashData.year.watchTime+=wt;
-        if(dashData.year.videos.indexOf(vid)===-1)dashData.year.videos.push(vid);
+    var month=now.toISOString().substring(0,7);
+    var year=String(now.getFullYear());
+    dashData={
+      month:{
+        watchTime:(stats[month]&&stats[month].watchTime)||0,
+        videos:(stats[month]&&stats[month].videos)||[]
+      },
+      year:{
+        watchTime:(stats[year]&&stats[year].watchTime)||0,
+        videos:(stats[year]&&stats[year].videos)||[]
+      },
+      all:{
+        watchTime:(stats.all&&stats.all.watchTime)||0,
+        videos:(stats.all&&stats.all.videos)||[]
       }
-      if(t&&t>=monthStart){
-        dashData.month.watchTime+=wt;
-        if(dashData.month.videos.indexOf(vid)===-1)dashData.month.videos.push(vid);
-      }
-    });
+    };
     renderDashboard();
   }).catch(function(e){
     console.error('loadDashboard:',e);
     document.getElementById('dash-loading').textContent='Could not load stats.';
   });
 }
+
 
 function getMilestone(totalVideos){
   if(totalVideos>=100)return{label:'Incredible progress',title:'You\'re doing amazing'};
