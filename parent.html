@@ -926,14 +926,12 @@ function renderDashboard(){
   } else {
     html+='<div class="dash-stats">'
       +'<div class="dash-stat">'
-      +'<div class="dash-stat-value" id="dash-wt">'+formatTime(d.watchTime)+'</div>'
-      +'<div class="dash-stat-label">Watch Time</div>'
-      +(d.watchTime>0?'<div class="dash-stat-sub">'+Math.round(d.watchTime/60)+' minutes</div>':'')
-      +'</div>'
-      +'<div class="dash-stat">'
-      +'<div class="dash-stat-value" id="dash-vc">'+d.videos.length+'</div>'
-      +'<div class="dash-stat-label">Unique Videos</div>'
-      +(d.videos.length>0?'<div class="dash-stat-sub">'+d.videos.length+' watched</div>':'')
+  +'<div class="dash-stat-value" id="dash-wt">'+formatTime(d.watchTime)+'</div>'
++'<div class="dash-stat-label">Watch Time</div>'
++'</div>'
++'<div class="dash-stat">'
++'<div class="dash-stat-value" id="dash-vc">'+d.videos.length+'</div>'
++'<div class="dash-stat-label">Unique Videos</div>'
       +'</div>'
       +'</div>';
   }
