@@ -1137,13 +1137,25 @@ function closeVideo(){
     var elapsed=Math.round((Date.now()-sessionStartTime)/1000);
     var watchTime=currentVideoDuration?Math.min(elapsed,Math.round(currentVideoDuration)):elapsed;
     if(watchTime>5){
-       db.collection('users').doc(currentUser.uid).collection('sessions').add({
+         var now=new Date();
+    var month=now.toISOString().substring(0,7);
+    var year=String(now.getFullYear());
+    var sessionRef=db.collection('users').doc(currentUser.uid).collection('sessions').add({
       videoId:pendingId,
       title:currentVideoTitle,
       watchTime:watchTime,
-        source:currentVideoSource,
-        watchedAt:firebase.firestore.FieldValue.serverTimestamp()
-      }).catch(function(e){console.error('session write failed:',e);});
+      source:currentVideoSource,
+      watchedAt:firebase.firestore.FieldValue.serverTimestamp()
+    }).catch(function(e){console.error('session write failed:',e);});
+    var statsUpdate={};
+    statsUpdate['stats.'+month+'.watchTime']=firebase.firestore.FieldValue.increment(watchTime);
+    statsUpdate['stats.'+year+'.watchTime']=firebase.firestore.FieldValue.increment(watchTime);
+    statsUpdate['stats.all.watchTime']=firebase.firestore.FieldValue.increment(watchTime);
+    statsUpdate['stats.'+month+'.videos']=firebase.firestore.FieldValue.arrayUnion(pendingId);
+    statsUpdate['stats.'+year+'.videos']=firebase.firestore.FieldValue.arrayUnion(pendingId);
+    statsUpdate['stats.all.videos']=firebase.firestore.FieldValue.arrayUnion(pendingId);
+    db.collection('users').doc(currentUser.uid).update(statsUpdate)
+    .catch(function(e){console.error('stats update failed:',e);});
     }
   }
   sessionStartTime=null; 
