@@ -1,52 +1,51 @@
 /* ============================================================
-   BloomPlayer — Theme File: Misty Sage & Ochre
-   Matches the high-end cloud-shadow mockup exactly.
+   BloomPlayer — Theme File: Misty Sage & Ink Black
+   Matches the organic, greenish background mockup exactly.
    ============================================================ */
 
 :root {
   /* ── PRIMARY ACTIONS (Golden Ochre) ── */
-  /* Matches the "Watch" button and the brand Logo */
+  /* Matches the "Watch" button and the Lotus Logo */
   --red:                #CC9544;   
   --red-dark:           #B37E36;   
-  --red-light:          #F5EAE6;   /* Warm glow for Ochre accents */
+  --red-light:          #F5EAE6;   
 
   /* ── PAGE SURFACES (Misty Sage Tint) ── */
-  /* This provides the "greenish" background from your image */
-  --bg:                 #E3E8E3;   /* Misty Sage Base */
-  --card:               #EEF2EE;   /* Light Mint surface */
-  --card2:              #F7FAF7;   /* Ultra-light surface for "Cloud" card */
-  --border:             #CBD2CB;   /* Muted Sage-Grey divider */
+  /* This provides that distinct greenish-grey background */
+  --bg:                 #C2CDC2;   /* Deepened Misty Sage Base */
+  --card:               #D6DDD6;   /* Muted Mint surface */
+  --card2:              #E2E8E2;   /* Highlighted surface for hero cards */
+  --border:             #A9B5A9;   /* Organic Sage divider */
 
-  /* ── TEXT READABILITY (Deep Umber) ── */
-  /* High contrast for punchy, easy-to-read headers */
-  --text:               #2C2318;   /* Deep Umber */
-  --text-2:             #2C2318;   /* Rich Brown */
-  --text-3:             #2C2318;   /* Earthy Grey Metadata */
+  /* ── MAXIMUM READABILITY TEXT (INK BLACK) ── */
+  --text:               #000000;   /* Primary Headers */
+  --text-2:             #000000;   /* Instructions & Body */
+  --text-3:             #000000;   /* Metadata & Captions */
 
   /* ── SECONDARY ACCENT (Sage Green) ── */
-  /* Used for filters (Educational/Leisure) and video tags */
-  --accent:             #8BB8A1;   /* Calming Sage */
-  --accent-text:        #2D5C52;   /* Deep Sage for text-on-pills */
+  /* Used for filters and the "Educational" pills */
+  --accent:             #7A9A88;   /* Darker Sage for readability */
+  --accent-text:        #FFFFFF;   /* White text on Sage pills */
 
   /* ── MISC SURFACES ── */
-  --badge-bg:           #D1D9D1;   
+  --badge-bg:           #B5C0B5;   
   --video-bg:           #000000;   
-  --input-bg:           #EEF2EE;   
+  --input-bg:           #E2E8E2;   
 
   /* ── THE "CLOUD" SHADOW ── */
-  /* Creates the soft, organic depth seen in the mockup */
-  --shadow:             0 10px 30px -5px rgba(0, 0, 0, 0.05), 0 20px 40px -10px rgba(0, 0, 0, 0.03);
+  /* Soft, organic depth as seen in the mockup */
+  --shadow:             0 10px 30px -5px rgba(0, 0, 0, 0.08), 0 20px 40px -10px rgba(0, 0, 0, 0.04);
   --radius:             14px;
-  --radius-lg:          32px;      /* Large radius for the Hero/Cloud card */
+  --radius-lg:          32px;      
 
   /* ── INFO / PARENT BOX ── */
-  --info-bg:            #EEF2EE;
-  --info-border:        #CBD2CB;
-  --info-text:          #2C2318;
+  --info-bg:            #D6DDD6;
+  --info-border:        #A9B5A9;
+  --info-text:          #000000;
 
   /* ── VIDEO CARDS ── */
   --video-card-bg:      #FDFCFA; 
-  --video-card-border:  #E2DDD6;
+  --video-card-border:  #D1D9D1;
   --video-card-radius:  24px;
 
   /* ── PLAYER SCREEN ── */
@@ -57,39 +56,27 @@
 
 /* ── UI SPECIFIC OVERRIDES ── */
 
-/* Italic styling for tagline/parent-note as seen in mockup */
+/* Force all instructions and secondary text to stay Bold Black */
 .brand-tag, .input-desc, .parent-note {
     font-style: italic;
-    color: var(--text-2);
+    color: #000000 !important;
+    font-weight: 500;
 }
 
 /* ── Dark Mode (Warm & Deep Sage) ── */
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg:               #1C1A18;   /* Warm Charcoal base */
-    --card:             #252320;   
-    --card2:            #2E271E;   
-    --border:           #3A3733;
-    --badge-bg:         #252320;
-    --input-bg:         #121110;
-
-    --text:             #F0EDE8;   /* Parchment White */
-    --text-2:           #C4BFB8;   
-    --text-3:           #8C7D6E;   
-
-    --red:              #D4A855;   /* Softened Ochre */
-    --red-light:        #2E1E18;   /* Deep Brown Glow */
-
-    --accent:           #6FA396;   /* Desaturated Sage */
-    --accent-text:      #6FA396;
-
-    --info-bg:          #252320;
-    --info-border:      #3A3733;
-    --info-text:        #C4BFB8;
-
-    --video-card-bg:    #252320;
-    --video-card-border:#3A3733;
+    --bg:               #161A16;   /* Very deep forest-charcoal */
+    --card:             #1F241F;   
+    --border:           #2D352D;
     
-    --shadow: 0 4px 20px rgba(0,0,0,0.5);
+    --text:             #FFFFFF;   /* Switch to white for dark mode readability */
+    --text-2:           #FFFFFF;
+    --text-3:           #D1D9D1;
+
+    --red:              #D4A855;   /* Brighter Ochre for dark mode */
+    --input-bg:         #000000;
+    
+    --shadow: 0 4px 20px rgba(0,0,0,0.6);
   }
 }
