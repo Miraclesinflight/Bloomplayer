@@ -27,6 +27,13 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:14px 1
 .nav-name{font-size:17px;font-weight:700;}
 .nav-link{font-size:13px;color:var(--red);font-weight:600;text-decoration:none;background:var(--red-light);padding:7px 14px;border-radius:20px;}
 
+/* full-width hero above columns */
+.hero-wrapper{max-width:1400px;margin:0 auto;padding:32px 16px 0 16px;}
+.hero{padding:0 0 24px 0;}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:6px;background:var(--red-light);color:var(--red);font-size:12px;font-weight:700;padding:5px 12px;border-radius:20px;margin-bottom:16px;text-transform:uppercase;letter-spacing:0.5px;}
+.hero h1{font-size:clamp(24px,5vw,38px);font-weight:800;letter-spacing:-1px;line-height:1.15;margin-bottom:8px;}
+.hero-sub{font-size:13px;color:var(--text-3);}
+
 /* two-column layout */
 .page-layout{display:flex;max-width:1400px;margin:0 auto;padding:0 16px;gap:32px;}
 @media(max-width:699px){.page-layout{flex-direction:column;gap:0;padding:0;}}
@@ -42,11 +49,6 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:14px 1
 /* right content */
 .content{flex:1;min-width:0;padding:20px 0 60px 0;}
 @media(max-width:699px){.content{padding:20px 16px 60px;}}
-
-.hero{padding:32px 0 24px;}
-.hero-eyebrow{display:inline-flex;align-items:center;gap:6px;background:var(--red-light);color:var(--red);font-size:12px;font-weight:700;padding:5px 12px;border-radius:20px;margin-bottom:16px;text-transform:uppercase;letter-spacing:0.5px;}
-.hero h1{font-size:clamp(24px,5vw,38px);font-weight:800;letter-spacing:-1px;line-height:1.15;margin-bottom:8px;}
-.hero-sub{font-size:13px;color:var(--text-3);}
 
 .highlight-card{background:var(--info-bg);border:1px solid var(--info-border);border-radius:var(--radius);padding:18px 22px;margin-bottom:10px;}
 .highlight-card p{font-size:14px;color:var(--info-text);line-height:1.75;}
@@ -74,8 +76,18 @@ footer a{color:var(--red);text-decoration:none;}
   <a class="nav-link" href="index.html">Open app</a>
 </nav>
 
+<!-- FULL-WIDTH HERO (above columns) -->
+<div class="hero-wrapper">
+  <div class="hero">
+    <div class="hero-eyebrow">Privacy Policy</div>
+    <h1>Plain language.<br/>No surprises.</h1>
+    <p class="hero-sub">Last updated: April 24, 2026</p>
+  </div>
+</div>
+
+<!-- TWO COLUMNS (sidebar + content) -->
 <div class="page-layout">
-  <!-- LEFT SIDEBAR (clickable links) -->
+  <!-- LEFT SIDEBAR -->
   <div class="sidebar" id="sidebar">
     <a href="#info-collect" data-section="info-collect">1. Information we collect</a>
     <a href="#how-we-use" data-section="how-we-use">2. How we use your information</a>
@@ -88,12 +100,6 @@ footer a{color:var(--red);text-decoration:none;}
 
   <!-- RIGHT CONTENT -->
   <div class="content">
-    <div class="hero">
-      <div class="hero-eyebrow">Privacy Policy</div>
-      <h1>Plain language.<br/>No surprises.</h1>
-      <p class="hero-sub">Last updated: April 24, 2026</p>
-    </div>
-
     <div class="highlight-card">
       <p>BloomPlayer is built by a parent, for parents. <strong>Your child never creates an account or fills in any form.</strong> Everything here applies to you — the parent using the app.</p>
     </div>
@@ -112,7 +118,7 @@ footer a{color:var(--red);text-decoration:none;}
       – <strong>Usage data</strong> – anonymized information about how you interact with the app (e.g., number of sessions, device type, age group selected) to help us improve BloomPlayer.</p>
     </div>
 
-    <!-- ========== 2. HOW WE USE YOUR INFORMATION (generic) ========== -->
+    <!-- ========== 2. HOW WE USE YOUR INFORMATION ========== -->
     <div id="how-we-use" class="section-card">
       <h2>2. How we use your information</h2>
       <p>– <strong>To provide services</strong> – sign you in, save your video library, show your Parent Dashboard.<br/>
@@ -140,7 +146,7 @@ footer a{color:var(--red);text-decoration:none;}
       <strong>Manual deletion request</strong> – Email <a href="mailto:hello@bloomplayer.com">hello@bloomplayer.com</a> if you cannot sign in.</p>
     </div>
 
-    <!-- ========== 5. CHILDREN’S PRIVACY (COPPA) ========== -->
+    <!-- ========== 5. CHILDREN’S PRIVACY ========== -->
     <div id="children" class="section-card">
       <h2>5. Children’s privacy</h2>
       <p>BloomPlayer is a parent‑controlled tool. We do <strong>not</strong> knowingly collect personal information from children under 13. Child profiles store only a nickname and broad age range – no real name, location, or contact details. What you share is entirely up to you; you may use any nickname you wish.<br/>
@@ -178,7 +184,7 @@ footer a{color:var(--red);text-decoration:none;}
 
   function updateActiveLink() {
     let current = '';
-    const scrollPos = window.scrollY + 100; // offset for sticky header
+    const scrollPos = window.scrollY + 100;
     sections.forEach(section => {
       const sectionTop = section.offsetTop;
       const sectionBottom = sectionTop + section.offsetHeight;
@@ -212,7 +218,6 @@ footer a{color:var(--red);text-decoration:none;}
     });
   });
 
-  // If URL has a hash, scroll to that section after load
   if (window.location.hash) {
     const id = window.location.hash.substring(1);
     const el = document.getElementById(id);
