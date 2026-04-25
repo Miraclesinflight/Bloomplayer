@@ -1,90 +1,117 @@
 /* ============================================================
-   BloomPlayer — Theme File: Warm Cream & Golden Ochre
-   Matches the uploaded layout: Soft parchment and earthy accents.
+   BloomPlayer — Refined Theme: Balanced & Symmetrical
+   Fixes uneven spacing and aligns card structures.
    ============================================================ */
 
 :root {
-  /* ── PRIMARY ACTIONS (Golden Ochre) ── */
-  /* Matches the "+ Add" button and active tab underline */
-  --red:                #C09747;   
-  --red-dark:           #A37F38;   
-  --red-light:          #F9F2E0;   
+  /* ── COLORS ── */
+  --red:                #C09747;   /* Ochre Button */
+  --red-dark:           #A37F38;
+  --bg:                 #F7F3EA;   /* Main Parchment */
+  --card:               #EEE7D7;   /* Section Container (Slightly darker for depth) */
+  --card2:              #FFFFFF;   /* Video Cards */
+  --border:             #DED5C0;   /* Consistent Border color */
 
-  /* ── PAGE SURFACES (Cream & Parchment) ── */
-  /* The main background is a very light, warm off-white/cream */
-  --bg:                 #F7F3EA;   
-  --card:               #F1EAD8;   /* The header/hero area background */
-  --card2:              #FFFFFF;   /* Pure white for the video cards */
-  --border:             #E8DEC5;   /* Soft tan divider lines */
+  /* ── TEXT ── */
+  --text:               #2D2922;   
+  --text-2:             #5C564A;   
+  --text-3:             #8E8777;
 
-  /* ── MAXIMUM READABILITY TEXT ── */
-  --text:               #2D2922;   /* Deep charcoal-brown for headers */
-  --text-2:             #2D2922;   /* Muted brown for "Primary (5-8)" */
-  --text-3:             #2D2922;   /* Lighter metadata */
-
-  /* ── SECONDARY ACCENT (Soft Sage & Mint) ── */
-  /* Matches the "TI" icon and the "Algebra" / "Animals" pills */
-  --accent:             #77BFA3;   
-  --accent-text:        #1E4637;   /* Dark green text for high contrast on mint */
-
-  /* ── MISC SURFACES ── */
-  --badge-bg:           #E0F2EB;   /* Light mint for tag backgrounds */
-  --video-bg:           #000000;   
-  --input-bg:           #FDFCFA;   
-
-  /* ── THE "ORGANIC" SHADOW ── */
-  --shadow:             0 8px 24px rgba(0, 0, 0, 0.05);
-  --radius:             16px;      /* Standard curves */
-  --radius-lg:          40px;      /* Super-rounded buttons/inputs */
-
-  /* ── INFO / PARENT BOX ── */
-  --info-bg:            #F9F2E0;
-  --info-border:        #DBC9A0;
-  --info-text:          #5C564A;
-
-  /* ── VIDEO CARDS ── */
-  --video-card-bg:      #FDFCFA; 
-  --video-card-border:  #EEE8DB;
-  --video-card-radius:  28px;      /* Matches the high-radius cards in image */
-
-  /* ── PLAYER SCREEN ── */
-  --player-bg:          #1A1917;
-  --player-btn-bg:      #262421;
-  --player-btn-border:  #3D3A35;
+  /* ── SPACING & RADIUS ── */
+  --radius:             12px;
+  --radius-lg:          24px;      /* Softer, consistent rounding */
+  --shadow:             0 4px 12px rgba(0, 0, 0, 0.03);
+  
+  /* ── SECTION PADDING ── */
+  --section-gap:        24px;      /* Space between main blocks */
+  --inner-padding:      20px;      /* Space inside the tan blocks */
 }
 
-/* ── UI SPECIFIC OVERRIDES ── */
+/* ── LAYOUT HARMONY ── */
 
-/* Styling for the "I hope they never know" subtitle style */
-.brand-tag, .input-desc, .parent-note {
+/* 1. Main Container: Add breathing room at the top and sides */
+body {
+    background-color: var(--bg);
+    padding: 40px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* 2. Section Blocks: Ensure they all have identical width and spacing */
+.section-container, .my-videos, .paste-link, .discover-learn {
+    width: 100%;
+    max-width: 900px;
+    background-color: var(--card);
+    border-radius: var(--radius-lg);
+    padding: var(--inner-padding);
+    margin-bottom: var(--section-gap);
+    border: 1px solid var(--border);
+    box-sizing: border-box; /* Prevents layout bleed */
+}
+
+/* 3. Header Alignment: Align "BloomPlayer" text with the content below */
+header {
+    width: 100%;
+    max-width: 900px;
+    margin-bottom: 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+/* 4. Video Card Grid: Prevent them from touching the container edges */
+.video-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 16px;
+    margin-top: 15px;
+}
+
+/* 5. Individual Cards: Standardize height and padding */
+.video-card {
+    background-color: var(--card2);
+    border-radius: var(--radius);
+    padding: 12px;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+    transition: transform 0.2s ease;
+}
+
+/* 6. Input & Button Alignment: Make the search bar and button feel like one unit */
+.input-group {
+    display: flex;
+    gap: 10px;
+    background: var(--card2);
+    padding: 8px;
+    border-radius: 50px; /* Pill shape */
+    border: 1px solid var(--border);
+}
+
+input[type="text"] {
+    border: none !important;
+    background: transparent;
+    padding-left: 15px;
+    flex-grow: 1;
+}
+
+button.watch-btn {
+    border-radius: 40px;
+    padding: 10px 25px;
+}
+
+/* ── UI POLISH ── */
+
+.brand-tag {
     font-style: italic;
-    color: #7A7468 !important;
-    font-family: serif; /* Optional: gives it that classic look in the header */
+    color: var(--text-3);
+    font-size: 0.9rem;
 }
 
-/* Matches the pill-style tags (Algebra, Animals) */
-.category-pill {
-    background-color: var(--badge-bg);
-    color: var(--accent-text);
-    border-radius: 12px;
-    padding: 4px 12px;
-    font-weight: 600;
-}
-
-/* ── Dark Mode (Deep Espresso) ── */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg:               #12110F;   
-    --card:             #1C1B18;   
-    --border:           #2D2B28;
-    
-    --text:             #F2EEE6;   
-    --text-2:           #D6D1C7;
-    --text-3:           #A8A296;
-
-    --red:              #D4A855;   
-    --input-bg:         #000000;
-    
-    --shadow: 0 10px 30px rgba(0,0,0,0.5);
-  }
+/* Labels (My Videos, Paste a Link) */
+h2, h3 {
+    margin-top: 0;
+    font-size: 1.1rem;
+    color: var(--text);
+    font-weight: 700;
 }
