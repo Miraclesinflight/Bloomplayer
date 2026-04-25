@@ -91,8 +91,24 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',-apple-system,s
 .dot.filled{background:#10B981;transform:scale(1.1);}
 .pin-error{font-size:12.5px;color:#F87171;height:16px;}
 .pin-grid{display:grid;grid-template-columns:repeat(3,72px);gap:10px;}
-.pin-btn{height:72px;border-radius:12px;background:#1E293B;border:1px solid #334155;color:white;font-size:22px;font-weight:500;font-family:inherit;cursor:pointer;}
-.pin-btn:active{background:#334155;}
+.pin-btn {
+  height: 72px;
+  border-radius: var(--radius);
+  background: var(--card2); /* Matches your Sage theme */
+  border: 1px solid var(--border);
+  color: var(--text);       /* Changes to white in dark mode automatically */
+  font-size: 22px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.pin-btn:active {
+  background: var(--red);   /* Flashes Golden Ochre when tapped */
+  color: white;
+  border-color: var(--red);
+}
 
 /* ── MAIN CONTENT ── */
 #parent-content{display:none;flex-direction:column;min-height:100vh;}
