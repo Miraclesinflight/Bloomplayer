@@ -313,12 +313,22 @@ input:checked+.slider:before{transform:translateX(18px);}
 
 
 <!-- ── SETUP COMPLETE ── -->
-<div id="setup-complete" style="display:none;position:fixed;inset:0;background:#0F172A;z-index:200;flex-direction:column;align-items:center;justify-content:center;padding:32px;text-align:center;gap:16px;">
+<div id="setup-complete" style="display:none; position:fixed; inset:0; background:var(--bg); z-index:200; flex-direction:column; align-items:center; justify-content:center; padding:32px; text-align:center; gap:16px;">
   <div style="font-size:52px;">&#127881;</div>
-  <div style="font-size:22px;font-weight:700;color:white;letter-spacing:-0.3px;">You're all set!</div>
-  <div style="font-size:14px;color:#94A3B8;line-height:1.7;max-width:300px;">Your PIN is saved. Long press the BloomPlayer logo anytime to return to Parent Mode.</div>
-<button onclick="window.location.href='index.html';" style="margin-top:16px; width:100%; max-width:320px; padding:16px; border-radius:var(--radius); background:var(--red); color:white; border:none; font-size:16px; font-weight:700; cursor:pointer;">Take me to the app</button>
+  
+  <div style="font-size:24px; font-weight:800; color:var(--text); letter-spacing:-0.3px;">
+    You're all set!
+  </div>
+  
+  <div style="font-size:15px; color:var(--text-2); line-height:1.7; max-width:300px; font-weight:500;">
+    Your PIN is saved. Long press the BloomPlayer logo anytime to return to Parent Mode.
+  </div>
+
+  <button onclick="window.location.href='index.html';" style="margin-top:16px; width:100%; max-width:320px; padding:16px; border-radius:var(--radius); background:var(--red); color:white; border:none; font-size:16px; font-weight:700; font-family:inherit; cursor:pointer; box-shadow: var(--shadow);">
+    Take me to the app
+  </button>
 </div>
+
 
 <!-- ── CHANGE PIN MODAL ── -->
 <div id="change-pin-modal">
