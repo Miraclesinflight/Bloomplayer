@@ -171,9 +171,45 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',-apple-system,s
 .btn-back{width:100%;padding:17px;border-radius:10px;background:var(--card);color:var(--text);border:1px solid var(--border);font-size:17px;font-family:nunito;cursor:pointer;}
 .player-back-bar{background:var(--player-bg);padding:8px 20px;width:100%;}
 .player-back-bar button{width:100%;padding:12px;border-radius:8px;background:none;border:1px solid #444;color:#888;font-size:15px;font-family:nunito;cursor:pointer;}
-.tab-bar{display:flex;flex:1;border:1px solid var(--border);border-radius:10px;overflow:hidden;}
-.tab-btn{flex:1;padding:6px 16px;background:none;border:none;border-bottom:2px solid transparent;font-size:15px;font-weight:600;color:var(--text-3);font-family:nunito;cursor:pointer;text-align:center;}
-.tab-btn.active{color:var(--red);background:var(--red-light);border-bottom:2px solid var(--red);}
+/*.tab-bar{display:flex;flex:1;border:1px solid var(--border);border-radius:10px;overflow:hidden;}*/
+/*.tab-btn{flex:1;padding:6px 16px;background:none;border:none;border-bottom:2px solid transparent;font-size:15px;font-weight:600;color:var(--text-3);font-family:nunito;cursor:pointer;text-align:center;}
+.tab-btn.active{color:var(--red);background:var(--red-light);border-bottom:2px solid var(--red);}*/
+  /* ── UPDATED TAB BAR ── */
+.tab-bar {
+    display: flex;
+    flex: 1;
+    background: var(--border); /* Provides a subtle recessed track */
+    border: 1px solid var(--border);
+    border-radius: 50px;       /* Pill shape for a professional look */
+    overflow: hidden;
+    padding: 3px;              /* Creates a small gap around the buttons */
+}
+
+.tab-btn {
+    flex: 1;
+    padding: 8px 16px;
+    background: transparent;
+    border: none;
+    /* Remove the old border-bottom */
+    border-bottom: none; 
+    font-size: 15px;
+    font-weight: 700;          /* Bolded for professionalism */
+    color: var(--text-3);      /* Muted color when inactive */
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    text-align: center;
+    border-radius: 50px;       /* Individual pills inside the track */
+    transition: all 0.2s ease;
+}
+
+/* ── ACTIVE STATE: BOLD COLOR ── */
+.tab-btn.active {
+    color: var(--bg);          /* Contrast text against the bold button */
+    background: var(--red);    /* Bold Gold/Ochre background */
+    border-bottom: none;       /* Ensure underline is removed */
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2); /* Adds a little pop */
+}
+
 .edu-controls{display:flex;gap:8px;margin-bottom:17px;flex-wrap:wrap;}
 .edu-select{padding:6px 10px;border-radius:8px;border:1px solid var(--border);background:var(--input-bg);color:var(--text);font-size:15px;font-family:nunito;outline:none;cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24'%3E%3Cpath fill='%2394A3B8' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center;padding-right:24px;}
 </style>
