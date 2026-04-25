@@ -733,7 +733,7 @@ auth.onAuthStateChanged(function(user){
     saveUserTier(user,'general',function(){
       loadUserProfile(user);
       window.location.href='parent.html?setup=true';
-      document.getElementById('home').style.display='flex'; 
+/*      document.getElementById('home').style.display='flex'; */
     });
   } else {
     var data=doc.data();
