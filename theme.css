@@ -1,73 +1,82 @@
 /* ============================================================
-   BloomPlayer — Professional Deep Forest & Almond
-   High-contrast, sensory-friendly theme.
+   BloomPlayer — Theme File: Misty Sage & Ink Black
+   Matches the organic, greenish background mockup exactly.
    ============================================================ */
 
 :root {
   /* ── PRIMARY ACTIONS (Golden Ochre) ── */
-  --red:                #D4A855;   /* Premium Gold */
-  --red-dark:           #B88E3D;   
-  --red-light:          #26322A;   /* Muted green for subtle states */
+  /* Matches the "Watch" button and the Lotus Logo */
+  --red:                #CC9544;   
+  --red-dark:           #B37E36;   
+  --red-light:          #F5EAE6;   
 
-  /* ── PAGE SURFACES (Deep Forest) ── */
-  --bg:                 #1B241E;   /* Deep Soothing Green Base */
-  --card:               #26322A;   /* Layered Green surface */
-  --card2:              #2D3A31;   /* Tertiary surface */
-  --border:             #324238;   /* Dark definition divider */
+  /* ── PAGE SURFACES (Misty Sage Tint) ── */
+  /* This provides that distinct greenish-grey background */
+  --bg:                 #C2CDC2;   /* Deepened Misty Sage Base */
+  --card:               #D6DDD6;   /* Muted Mint surface */
+  --card2:              #E2E8E2;   /* Highlighted surface for hero cards */
+  --border:             #A9B5A9;   /* Organic Sage divider */
 
-  /* ── MAXIMUM READABILITY TEXT (Soft White/Ivory) ── */
-  --text:               #E8EDEA;   /* Primary Headers */
-  --text-2:             #B0BCB5;   /* Instructions & Body */
-  --text-3:             #8BA193;   /* Metadata & Captions */
+  /* ── MAXIMUM READABILITY TEXT (INK BLACK) ── */
+  --text:               #000000;   /* Primary Headers */
+  --text-2:             #000000;   /* Instructions & Body */
+  --text-3:             #000000;   /* Metadata & Captions */
 
-  /* ── SECONDARY ACCENT (Sage Mint) ── */
-  --accent:             #A7C7B3;   
-  --accent-text:        #1B241E;   /* Dark text for contrast on mint pills */
+  /* ── SECONDARY ACCENT (Sage Green) ── */
+  /* Used for filters and the "Educational" pills */
+  --accent:             #7A9A88;   /* Darker Sage for readability */
+  --accent-text:        #FFFFFF;   /* White text on Sage pills */
 
   /* ── MISC SURFACES ── */
-  --badge-bg:           #A7C7B3;   
+  --badge-bg:           #B5C0B5;   
   --video-bg:           #000000;   
-  --input-bg:           rgba(255, 255, 255, 0.05); /* Softer glare-free input */
+  --input-bg:           #E2E8E2;   
 
-  /* ── THE "ORGANIC" DEPTH ── */
-  --shadow:             0 10px 30px rgba(0, 0, 0, 0.3);
-  --radius:             16px;
-  --radius-lg:          24px;      
+  /* ── THE "CLOUD" SHADOW ── */
+  /* Soft, organic depth as seen in the mockup */
+  --shadow:             0 10px 30px -5px rgba(0, 0, 0, 0.08), 0 20px 40px -10px rgba(0, 0, 0, 0.04);
+  --radius:             14px;
+  --radius-lg:          32px;      
 
   /* ── INFO / PARENT BOX ── */
-  --info-bg:            #26322A;
-  --info-border:        #324238;
-  --info-text:          #B0BCB5;
+  --info-bg:            #D6DDD6;
+  --info-border:        #A9B5A9;
+  --info-text:          #000000;
 
-  /* ── VIDEO CARDS (Almond Pop) ── */
-  /* This creates the clear "target" for eye stimming needs */
-  --video-card-bg:      #FDF8F0; 
-  --video-card-border:  #324238;
-  --video-card-radius:  12px;
+  /* ── VIDEO CARDS ── */
+  --video-card-bg:      #FDFCFA; 
+  --video-card-border:  #D1D9D1;
+  --video-card-radius:  24px;
 
   /* ── PLAYER SCREEN ── */
-  --player-bg:          #000000;
-  --player-btn-bg:      #1B241E;
-  --player-btn-border:  #324238;
+  --player-bg:          #121110;
+  --player-btn-bg:      #1C1A18;
+  --player-btn-border:  #3A3733;
 }
 
 /* ── UI SPECIFIC OVERRIDES ── */
 
-/* Keeping your style intact but shifting color to Sage for readability on dark */
+/* Force all instructions and secondary text to stay Bold Black */
 .brand-tag, .input-desc, .parent-note {
     font-style: italic;
-    color: var(--accent) !important;
+    color: #000000 !important;
     font-weight: 500;
 }
 
-/* ── Dark Mode ── */
-/* Since the main theme is already dark/soothing, we keep it consistent */
+/* ── Dark Mode (Warm & Deep Sage) ── */
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg:               #0F1411;   /* Slightly deeper black-green */
-    --card:             #1B241E;   
-    --border:           #26322A;
-    --text:             #FFFFFF;
+    --bg:               #161A16;   /* Very deep forest-charcoal */
+    --card:             #1F241F;   
+    --border:           #2D352D;
+    
+    --text:             #FFFFFF;   /* Switch to white for dark mode readability */
+    --text-2:           #FFFFFF;
+    --text-3:           #D1D9D1;
+
+    --red:              #D4A855;   /* Brighter Ochre for dark mode */
     --input-bg:         #000000;
+    
+    --shadow: 0 4px 20px rgba(0,0,0,0.6);
   }
 }
