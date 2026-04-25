@@ -14,31 +14,38 @@
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-:root{
---bg:#F1F5F9;--card:#FFFFFF;--card2:#F8FAFC;--border:#E2E8F0;
---text:#0F172A;--text-2:#334155;--text-3:#64748B;
---green:#10B981;--green-dim:#D1FAE5;--green-text:#065F46;
---red:#EF4444;--red-dim:#FEE2E2;--radius:14px;
---shadow:0 1px 4px rgba(0,0,0,0.08),0 4px 16px rgba(0,0,0,0.06);
-}
-@media(prefers-color-scheme:dark){
+
 :root {
-  /* Misty Sage & Ink Black Theme */
-  --bg: #C2CDC2;           /* Deepened Misty Sage Base */
-  --card: #D6DDD6;         /* Muted Mint surface */
-  --card2: #E2E8E2;        /* Highlighted surface */
-  --border: #A9B5A9;       /* Organic Sage divider */
-  --text: #000000;         /* Ink Black */
-  --text-2: #1A1A1A;       /* Secondary text */
-  --text-3: #4B554B;       /* Muted text */
-  --red: #CC9544;          /* Golden Ochre (for buttons/icons) */
+  /* ── MAIN THEME: Misty Sage & Ink Black ── */
+  --bg: #C2CDC2;           
+  --card: #D6DDD6;         
+  --card2: #E2E8E2;        
+  --border: #A9B5A9;       
+  --text: #000000;         
+  --text-2: #1A1A1A;       
+  --text-3: #4B554B;       
+  --accent: #7A9A88;
+  --red: #CC9544;          
   --red-dim: #F5EAE6;
-  --green: #7A9A88;        /* Sage Green Accent */
+  --green: #7A9A88;        
   --green-dim: #D1D9D1;
   --green-text: #000000;
   --radius: 14px;
   --shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.08);
 }
+
+@media(prefers-color-scheme:dark){
+  :root {
+    /* ── DARK MODE: Deep Forest ── */
+    --bg: #161A16;         
+    --card: #1F241F;   
+    --border: #2D352D;
+    --text: #FFFFFF;
+    --text-2: #E2E8E2;
+    --text-3: #A9B5A9;
+    --red: #D4A855;        
+  }
+} /* <--- Added this crucial closing brace */
 
 @media(prefers-color-scheme:dark) {
   :root {
