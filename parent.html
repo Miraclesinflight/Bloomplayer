@@ -22,12 +22,34 @@
 --shadow:0 1px 4px rgba(0,0,0,0.08),0 4px 16px rgba(0,0,0,0.06);
 }
 @media(prefers-color-scheme:dark){
-:root{
---bg:#0F172A;--card:#1E293B;--card2:#1E293B;--border:#334155;
---text:#F8FAFC;--text-2:#CBD5E1;--text-3:#94A3B8;
---green-dim:#022C22;--green-text:#10B981;--red-dim:#3B0000;
---shadow:0 1px 4px rgba(0,0,0,0.4),0 4px 16px rgba(0,0,0,0.3);
+:root {
+  /* Misty Sage & Ink Black Theme */
+  --bg: #C2CDC2;           /* Deepened Misty Sage Base */
+  --card: #D6DDD6;         /* Muted Mint surface */
+  --card2: #E2E8E2;        /* Highlighted surface */
+  --border: #A9B5A9;       /* Organic Sage divider */
+  --text: #000000;         /* Ink Black */
+  --text-2: #1A1A1A;       /* Secondary text */
+  --text-3: #4B554B;       /* Muted text */
+  --red: #CC9544;          /* Golden Ochre (for buttons/icons) */
+  --red-dim: #F5EAE6;
+  --green: #7A9A88;        /* Sage Green Accent */
+  --green-dim: #D1D9D1;
+  --green-text: #000000;
+  --radius: 14px;
+  --shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.08);
 }
+
+@media(prefers-color-scheme:dark) {
+  :root {
+    --bg: #161A16;         /* Deep forest-charcoal */
+    --card: #1F241F;   
+    --border: #2D352D;
+    --text: #FFFFFF;
+    --text-2: #E2E8E2;
+    --text-3: #A9B5A9;
+    --red: #D4A855;        /* Brighter Ochre for dark mode */
+  }
 }
 
 body{background:var(--bg);color:var(--text);font-family:'Nunito',-apple-system,sans-serif;min-height:100vh;padding-bottom:40px;}
