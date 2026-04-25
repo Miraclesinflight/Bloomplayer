@@ -526,11 +526,33 @@ auth.onAuthStateChanged(function(user){
     return;
   }
   currentUser=user;
-  if(isSetupMode){
+ /* if(isSetupMode){
     document.getElementById('setup-screen').style.display='flex';
     setTimeout(function(){
       document.getElementById('setup-pin-modal').style.display='flex';
     },3000);
+  } else */
+    if(isSetupMode){
+    const splash = document.getElementById('setup-screen');
+    const pinModal = document.getElementById('setup-pin-modal');
+
+    splash.style.display = 'flex';
+
+    // 1. Wait the 3 seconds you just set
+    setTimeout(function(){
+      
+      // 2. Add a quick fade out (0.5s) so it doesn't just "snap"
+      splash.style.transition = 'opacity 0.5s ease';
+      splash.style.opacity = '0';
+
+      // 3. Swap the displays after the fade finishes
+      setTimeout(function(){
+        splash.style.display = 'none';
+        pinModal.style.display = 'flex';
+      }, 500);
+
+    }, 3000); // Your updated timing
+    
   } else {
     document.getElementById('parent-content').style.display='flex';
     renderParentMode();
