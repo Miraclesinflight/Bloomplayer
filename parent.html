@@ -212,11 +212,30 @@ input:checked+.slider:before{transform:translateX(18px);}
 <body>
 
 <!-- ── SETUP SCREEN (first time only) ── -->
-<div id="setup-screen">
-  <img src="icon.png" class="setup-logo" alt="BloomPlayer" onerror="this.style.background='#10B981';"/>
-  <div class="setup-title">Welcome to BloomPlayer</div>
-  <div class="setup-sub">Let's secure your account before your child uses the app. This will only take a moment.</div>
+<div id="setup-screen" style="
+  background: var(--bg); 
+  color: var(--text); 
+  height: 100vh; 
+  display: flex; 
+  flex-direction: column; 
+  align-items: center; 
+  justify-content: center; 
+  text-align: center; 
+  padding: 20px;
+">
+  <img src="icon.png" class="setup-logo" alt="BloomPlayer" 
+       style="width: 80px; margin-bottom: 20px; border-radius: var(--radius);"
+       onerror="this.style.background='var(--red)';"/>
+  
+  <div class="setup-title" style="font-size: 24px; font-weight: bold; margin-bottom: 10px;">
+    Welcome to BloomPlayer
+  </div>
+  
+  <div class="setup-sub" style="color: var(--text-2); max-width: 300px; line-height: 1.5;">
+    Let's secure your account before your child uses the app. This will only take a moment.
+  </div>
 </div>
+
 
 <!-- ── SETUP PIN MODAL ── -->
 <div id="setup-pin-modal" style="background: var(--card); color: var(--text); border-radius: var(--radius-lg); padding: 20px;">
