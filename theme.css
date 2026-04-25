@@ -1,82 +1,90 @@
 /* ============================================================
-   BloomPlayer — Theme File: Misty Sage & Ink Black
-   Matches the organic, greenish background mockup exactly.
+   BloomPlayer — Theme File: Warm Cream & Golden Ochre
+   Matches the uploaded layout: Soft parchment and earthy accents.
    ============================================================ */
 
 :root {
   /* ── PRIMARY ACTIONS (Golden Ochre) ── */
-  /* Matches the "Watch" button and the Lotus Logo */
-  --red:                #CC9544;   
-  --red-dark:           #B37E36;   
-  --red-light:          #F5EAE6;   
+  /* Matches the "+ Add" button and active tab underline */
+  --red:                #C09747;   
+  --red-dark:           #A37F38;   
+  --red-light:          #F9F2E0;   
 
-  /* ── PAGE SURFACES (Misty Sage Tint) ── */
-  /* This provides that distinct greenish-grey background */
-  --bg:                 #C2CDC2;   /* Deepened Misty Sage Base */
-  --card:               #D6DDD6;   /* Muted Mint surface */
-  --card2:              #E2E8E2;   /* Highlighted surface for hero cards */
-  --border:             #A9B5A9;   /* Organic Sage divider */
+  /* ── PAGE SURFACES (Cream & Parchment) ── */
+  /* The main background is a very light, warm off-white/cream */
+  --bg:                 #F7F3EA;   
+  --card:               #F1EAD8;   /* The header/hero area background */
+  --card2:              #FFFFFF;   /* Pure white for the video cards */
+  --border:             #E8DEC5;   /* Soft tan divider lines */
 
-  /* ── MAXIMUM READABILITY TEXT (INK BLACK) ── */
-  --text:               #000000;   /* Primary Headers */
-  --text-2:             #000000;   /* Instructions & Body */
-  --text-3:             #000000;   /* Metadata & Captions */
+  /* ── MAXIMUM READABILITY TEXT ── */
+  --text:               #2D2922;   /* Deep charcoal-brown for headers */
+  --text-2:             #5C564A;   /* Muted brown for "Primary (5-8)" */
+  --text-3:             #7A7468;   /* Lighter metadata */
 
-  /* ── SECONDARY ACCENT (Sage Green) ── */
-  /* Used for filters and the "Educational" pills */
-  --accent:             #7A9A88;   /* Darker Sage for readability */
-  --accent-text:        #FFFFFF;   /* White text on Sage pills */
+  /* ── SECONDARY ACCENT (Soft Sage & Mint) ── */
+  /* Matches the "TI" icon and the "Algebra" / "Animals" pills */
+  --accent:             #77BFA3;   
+  --accent-text:        #1E4637;   /* Dark green text for high contrast on mint */
 
   /* ── MISC SURFACES ── */
-  --badge-bg:           #B5C0B5;   
+  --badge-bg:           #E0F2EB;   /* Light mint for tag backgrounds */
   --video-bg:           #000000;   
-  --input-bg:           #E2E8E2;   
+  --input-bg:           #FDFCFA;   
 
-  /* ── THE "CLOUD" SHADOW ── */
-  /* Soft, organic depth as seen in the mockup */
-  --shadow:             0 10px 30px -5px rgba(0, 0, 0, 0.08), 0 20px 40px -10px rgba(0, 0, 0, 0.04);
-  --radius:             14px;
-  --radius-lg:          32px;      
+  /* ── THE "ORGANIC" SHADOW ── */
+  --shadow:             0 8px 24px rgba(0, 0, 0, 0.05);
+  --radius:             16px;      /* Standard curves */
+  --radius-lg:          40px;      /* Super-rounded buttons/inputs */
 
   /* ── INFO / PARENT BOX ── */
-  --info-bg:            #D6DDD6;
-  --info-border:        #A9B5A9;
-  --info-text:          #000000;
+  --info-bg:            #F9F2E0;
+  --info-border:        #DBC9A0;
+  --info-text:          #5C564A;
 
   /* ── VIDEO CARDS ── */
   --video-card-bg:      #FDFCFA; 
-  --video-card-border:  #D1D9D1;
-  --video-card-radius:  24px;
+  --video-card-border:  #EEE8DB;
+  --video-card-radius:  28px;      /* Matches the high-radius cards in image */
 
   /* ── PLAYER SCREEN ── */
-  --player-bg:          #121110;
-  --player-btn-bg:      #1C1A18;
-  --player-btn-border:  #3A3733;
+  --player-bg:          #1A1917;
+  --player-btn-bg:      #262421;
+  --player-btn-border:  #3D3A35;
 }
 
 /* ── UI SPECIFIC OVERRIDES ── */
 
-/* Force all instructions and secondary text to stay Bold Black */
+/* Styling for the "I hope they never know" subtitle style */
 .brand-tag, .input-desc, .parent-note {
     font-style: italic;
-    color: #000000 !important;
-    font-weight: 500;
+    color: #7A7468 !important;
+    font-family: serif; /* Optional: gives it that classic look in the header */
 }
 
-/* ── Dark Mode (Warm & Deep Sage) ── */
+/* Matches the pill-style tags (Algebra, Animals) */
+.category-pill {
+    background-color: var(--badge-bg);
+    color: var(--accent-text);
+    border-radius: 12px;
+    padding: 4px 12px;
+    font-weight: 600;
+}
+
+/* ── Dark Mode (Deep Espresso) ── */
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg:               #161A16;   /* Very deep forest-charcoal */
-    --card:             #1F241F;   
-    --border:           #2D352D;
+    --bg:               #12110F;   
+    --card:             #1C1B18;   
+    --border:           #2D2B28;
     
-    --text:             #FFFFFF;   /* Switch to white for dark mode readability */
-    --text-2:           #FFFFFF;
-    --text-3:           #D1D9D1;
+    --text:             #F2EEE6;   
+    --text-2:           #D6D1C7;
+    --text-3:           #A8A296;
 
-    --red:              #D4A855;   /* Brighter Ochre for dark mode */
+    --red:              #D4A855;   
     --input-bg:         #000000;
     
-    --shadow: 0 4px 20px rgba(0,0,0,0.6);
+    --shadow: 0 10px 30px rgba(0,0,0,0.5);
   }
 }
