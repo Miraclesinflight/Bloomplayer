@@ -19,8 +19,8 @@
 
   /* ── MAXIMUM READABILITY TEXT ── */
   --text:               #2D2922;   /* Deep charcoal-brown for headers */
-  --text-2:             #5C564A;   /* Muted brown for "Primary (5-8)" */
-  --text-3:             #7A7468;   /* Lighter metadata */
+  --text-2:             #2D2922;   /* Muted brown for "Primary (5-8)" */
+  --text-3:             #2D2922;   /* Lighter metadata */
 
   /* ── SECONDARY ACCENT (Soft Sage & Mint) ── */
   /* Matches the "TI" icon and the "Algebra" / "Animals" pills */
