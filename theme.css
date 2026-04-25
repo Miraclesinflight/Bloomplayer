@@ -1,117 +1,171 @@
 /* ============================================================
-   BloomPlayer — Refined Theme: Balanced & Symmetrical
-   Fixes uneven spacing and aligns card structures.
+   BloomPlayer — Unified Harmony Theme
+   Colors: Warm Parchment, Golden Ochre, and Soft Mint
    ============================================================ */
 
 :root {
-  /* ── COLORS ── */
-  --red:                #C09747;   /* Ochre Button */
+  /* ── COLOR PALETTE ── */
+  --bg:                 #F7F3EA;   /* Main Page Background */
+  --card:               #EEE7D7;   /* Section Containers (Tan) */
+  --card2:              #F9F7F2;   /* Video Cards (Soft Milk - replaces White) */
+  --border:             #DED5C0;   /* Muted dividers */
+  
+  /* ── ACCENTS ── */
+  --red:                #C09747;   /* Golden Ochre Buttons */
   --red-dark:           #A37F38;
-  --bg:                 #F7F3EA;   /* Main Parchment */
-  --card:               #EEE7D7;   /* Section Container (Slightly darker for depth) */
-  --card2:              #FFFFFF;   /* Video Cards */
-  --border:             #DED5C0;   /* Consistent Border color */
+  --accent:             #77BFA3;   /* Soft Mint for Tags/Icons */
+  --accent-text:        #1E4637;
 
   /* ── TEXT ── */
-  --text:               #2D2922;   
-  --text-2:             #5C564A;   
-  --text-3:             #8E8777;
+  --text:               #2D2922;   /* Rich Charcoal Brown */
+  --text-2:             #5C564A;   /* Muted body text */
+  --text-3:             #8E8777;   /* Metadata & Captions */
 
-  /* ── SPACING & RADIUS ── */
-  --radius:             12px;
-  --radius-lg:          24px;      /* Softer, consistent rounding */
-  --shadow:             0 4px 12px rgba(0, 0, 0, 0.03);
-  
-  /* ── SECTION PADDING ── */
-  --section-gap:        24px;      /* Space between main blocks */
-  --inner-padding:      20px;      /* Space inside the tan blocks */
+  /* ── STRUCTURE ── */
+  --radius-lg:          24px;      /* Main container rounding */
+  --radius-sm:          16px;      /* Card/Button rounding */
+  --shadow:             0 8px 20px rgba(180, 170, 150, 0.15);
+  --section-gap:        32px;      /* Vertical spacing between sections */
 }
 
-/* ── LAYOUT HARMONY ── */
-
-/* 1. Main Container: Add breathing room at the top and sides */
+/* ── BASE LAYOUT ── */
 body {
     background-color: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    line-height: 1.5;
+    margin: 0;
     padding: 40px 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-/* 2. Section Blocks: Ensure they all have identical width and spacing */
-.section-container, .my-videos, .paste-link, .discover-learn {
-    width: 100%;
-    max-width: 900px;
-    background-color: var(--card);
-    border-radius: var(--radius-lg);
-    padding: var(--inner-padding);
-    margin-bottom: var(--section-gap);
-    border: 1px solid var(--border);
-    box-sizing: border-box; /* Prevents layout bleed */
-}
-
-/* 3. Header Alignment: Align "BloomPlayer" text with the content below */
+/* ── HEADER NAVIGATION ── */
 header {
     width: 100%;
-    max-width: 900px;
-    margin-bottom: 30px;
+    max-width: 1000px;
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
+    margin-bottom: 40px;
 }
 
-/* 4. Video Card Grid: Prevent them from touching the container edges */
-.video-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: 16px;
-    margin-top: 15px;
+.brand-title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin: 0;
 }
-
-/* 5. Individual Cards: Standardize height and padding */
-.video-card {
-    background-color: var(--card2);
-    border-radius: var(--radius);
-    padding: 12px;
-    border: 1px solid var(--border);
-    box-shadow: var(--shadow);
-    transition: transform 0.2s ease;
-}
-
-/* 6. Input & Button Alignment: Make the search bar and button feel like one unit */
-.input-group {
-    display: flex;
-    gap: 10px;
-    background: var(--card2);
-    padding: 8px;
-    border-radius: 50px; /* Pill shape */
-    border: 1px solid var(--border);
-}
-
-input[type="text"] {
-    border: none !important;
-    background: transparent;
-    padding-left: 15px;
-    flex-grow: 1;
-}
-
-button.watch-btn {
-    border-radius: 40px;
-    padding: 10px 25px;
-}
-
-/* ── UI POLISH ── */
 
 .brand-tag {
     font-style: italic;
     color: var(--text-3);
     font-size: 0.9rem;
+    margin: 0;
 }
 
-/* Labels (My Videos, Paste a Link) */
-h2, h3 {
-    margin-top: 0;
-    font-size: 1.1rem;
+/* ── SECTION CONTAINERS ── */
+.section-container, 
+.my-videos, 
+.paste-link, 
+.discover-learn {
+    width: 100%;
+    max-width: 1000px;
+    background-color: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    margin-bottom: var(--section-gap);
+    box-sizing: border-box;
+}
+
+/* ── VIDEO GRID & CARDS ── */
+.video-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.video-card {
+    background-color: var(--card2); /* No more #FFFFFF */
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 16px;
+    box-shadow: var(--shadow);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.video-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 25px rgba(180, 170, 150, 0.25);
+    border-color: var(--red);
+}
+
+/* ── INPUTS & BUTTONS ── */
+.input-group {
+    display: flex;
+    gap: 12px;
+    background: var(--card2);
+    padding: 10px 10px 10px 20px;
+    border-radius: 50px;
+    border: 1px solid var(--border);
+    margin-top: 15px;
+}
+
+input[type="text"] {
+    flex: 1;
+    border: none;
+    background: transparent;
+    font-size: 1rem;
     color: var(--text);
+    outline: none;
+}
+
+button {
+    background-color: var(--red);
+    color: white;
+    border: none;
+    padding: 12px 28px;
+    border-radius: 40px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+button:hover {
+    background-color: var(--red-dark);
+}
+
+/* ── BADGES & TAGS ── */
+.pill {
+    background-color: var(--badge-bg, #E0F2EB);
+    color: var(--accent-text);
+    padding: 4px 12px;
+    border-radius: 10px;
+    font-size: 0.75rem;
     font-weight: 700;
+    text-transform: uppercase;
+}
+
+/* ── FOOTER ── */
+footer {
+    margin-top: 40px;
+    text-align: center;
+    color: var(--text-3);
+    font-size: 0.85rem;
+}
+
+/* ── DARK MODE ── */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg:               #12110F;   
+    --card:             #1C1B18;   
+    --card2:            #262421;
+    --border:           #3D3A35;
+    --text:             #F2EEE6;   
+    --text-2:           #D6D1C7;
+    --text-3:           #A8A296;
+    --shadow:           0 10px 30px rgba(0,0,0,0.5);
+  }
 }
