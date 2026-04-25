@@ -1,133 +1,82 @@
 /* ============================================================
-   BloomPlayer — Professional "Deep Forest" Theme
-   Designed for Visual Processing & High-End Aesthetic
+   BloomPlayer — Theme File: Misty Sage & Ink Black
+   Matches the organic, greenish background mockup exactly.
    ============================================================ */
+
 :root {
-  /* ── COLORS (The "Anchor" Strategy) ── */
-  --bg:                 #1B241E;   /* Deep Forest Green (Soothing Anchor) */
-  --card:               #26322A;   /* Slightly lighter green for containers */
-  --card2:              #FDF8F0;   /* Almond/Parchment (High-contrast for cards) */
-  --border:             #324238;   /* Subtle dark definition */
-  
-  /* ── ACCENTS ── */
-  --red:                #D4A855;   /* Premium Gold (Buttons) */
-  --red-dark:           #B88E3D;
-  --accent:             #A7C7B3;   /* Sage Mint (Tags) */
+  /* ── PRIMARY ACTIONS (Golden Ochre) ── */
+  /* Matches the "Watch" button and the Lotus Logo */
+  --red:                #CC9544;   
+  --red-dark:           #B37E36;   
+  --red-light:          #F5EAE6;   
 
-  /* ── TEXT ── */
-  --text-on-dark:       #E8EDEA;   /* Soft white for headers */
-  --text-on-light:      #1B241E;   /* Deep green for card text */
-  --text-muted:         #8BA193;   /* Secondary info on dark */
+  /* ── PAGE SURFACES (Misty Sage Tint) ── */
+  /* This provides that distinct greenish-grey background */
+  --bg:                 #C2CDC2;   /* Deepened Misty Sage Base */
+  --card:               #D6DDD6;   /* Muted Mint surface */
+  --card2:              #E2E8E2;   /* Highlighted surface for hero cards */
+  --border:             #A9B5A9;   /* Organic Sage divider */
 
-  /* ── STRUCTURE ── */
-  --radius-lg:          16px;      /* Sharp but friendly */
-  --radius-sm:          10px;
-  --shadow-strong:      0 15px 40px rgba(0, 0, 0, 0.4);
+  /* ── MAXIMUM READABILITY TEXT (INK BLACK) ── */
+  --text:               #000000;   /* Primary Headers */
+  --text-2:             #000000;   /* Instructions & Body */
+  --text-3:             #000000;   /* Metadata & Captions */
+
+  /* ── SECONDARY ACCENT (Sage Green) ── */
+  /* Used for filters and the "Educational" pills */
+  --accent:             #7A9A88;   /* Darker Sage for readability */
+  --accent-text:        #FFFFFF;   /* White text on Sage pills */
+
+  /* ── MISC SURFACES ── */
+  --badge-bg:           #B5C0B5;   
+  --video-bg:           #000000;   
+  --input-bg:           #E2E8E2;   
+
+  /* ── THE "CLOUD" SHADOW ── */
+  /* Soft, organic depth as seen in the mockup */
+  --shadow:             0 10px 30px -5px rgba(0, 0, 0, 0.08), 0 20px 40px -10px rgba(0, 0, 0, 0.04);
+  --radius:             14px;
+  --radius-lg:          32px;      
+
+  /* ── INFO / PARENT BOX ── */
+  --info-bg:            #D6DDD6;
+  --info-border:        #A9B5A9;
+  --info-text:          #000000;
+
+  /* ── VIDEO CARDS ── */
+  --video-card-bg:      #FDFCFA; 
+  --video-card-border:  #D1D9D1;
+  --video-card-radius:  24px;
+
+  /* ── PLAYER SCREEN ── */
+  --player-bg:          #121110;
+  --player-btn-bg:      #1C1A18;
+  --player-btn-border:  #3A3733;
 }
 
-/* ── BASE LAYOUT ── */
-body {
-    background-color: var(--bg);
-    color: var(--text-on-dark);
-    font-family: 'Inter', system-ui, sans-serif;
-    margin: 0;
-    padding: 40px 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+/* ── UI SPECIFIC OVERRIDES ── */
+
+/* Force all instructions and secondary text to stay Bold Black */
+.brand-tag, .input-desc, .parent-note {
+    font-style: italic;
+    color: #000000 !important;
+    font-weight: 500;
 }
 
-/* ── HEADER ── */
-header {
-    width: 100%;
-    max-width: 1000px;
-    margin-bottom: 50px;
-    text-align: left;
-}
+/* ── Dark Mode (Warm & Deep Sage) ── */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg:               #161A16;   /* Very deep forest-charcoal */
+    --card:             #1F241F;   
+    --border:           #2D352D;
+    
+    --text:             #FFFFFF;   /* Switch to white for dark mode readability */
+    --text-2:           #FFFFFF;
+    --text-3:           #D1D9D1;
 
-.brand-tag {
-    color: var(--accent);
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    font-size: 0.8rem;
-    font-weight: 600;
-}
-
-/* ── SECTION CONTAINERS ── */
-.my-videos, .paste-link, .discover-learn {
-    width: 100%;
-    max-width: 1000px;
-    background-color: var(--card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    padding: 30px;
-    margin-bottom: 40px;
-    box-shadow: var(--shadow-strong);
-}
-
-/* ── THE "POP" CARDS ── */
-.video-card {
-    background-color: var(--card2);
-    color: var(--text-on-light);
-    border-radius: var(--radius-sm);
-    padding: 12px;
-    border: none;
-    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-.video-card:hover {
-    transform: scale(1.02);
-}
-
-.video-card h4 {
-    color: var(--text-on-light);
-    font-weight: 700;
-}
-
-/* ── SEARCH BAR (High Focus) ── */
-.input-group {
-    display: flex;
-    background: rgba(255, 255, 255, 0.05); /* Semi-transparent glass */
-    border: 2px solid var(--border);
-    border-radius: 50px;
-    padding: 8px 8px 8px 24px;
-    margin-top: 20px;
-}
-
-input[type="text"] {
-    flex: 1;
-    background: transparent;
-    border: none;
-    color: white;
-    font-size: 1rem;
-    outline: none;
-}
-
-button.watch-btn {
-    background-color: var(--red);
-    color: #1B241E; /* Dark text on gold button for pro look */
-    border-radius: 40px;
-    padding: 12px 30px;
-    font-weight: 800;
-    border: none;
-}
-
-/* ── TAB SWITCHER ── */
-.tab-container {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 25px;
-}
-
-.tab {
-    padding: 10px 25px;
-    border-radius: 30px;
-    background: var(--border);
-    color: var(--text-muted);
-    font-weight: 600;
-}
-
-.tab.active {
-    background: var(--red);
-    color: var(--bg);
+    --red:              #D4A855;   /* Brighter Ochre for dark mode */
+    --input-bg:         #000000;
+    
+    --shadow: 0 4px 20px rgba(0,0,0,0.6);
+  }
 }
