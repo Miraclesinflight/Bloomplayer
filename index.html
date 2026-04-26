@@ -652,15 +652,6 @@ function loadAppConfig(){
   auth.onAuthStateChanged(function(user){if(user)return;document.getElementById('welcome-modal').style.display='flex';},{onlyOnce:true});
 }*/
 
-  function checkWelcomeModal() {
-  if (configReady && authReady) {
-    if (!currentUser && appConfig.signinEnabled && !localStorage.getItem('et_email')) {
-      document.getElementById('welcome-modal').style.display = 'flex';
-    } else {
-      document.getElementById('welcome-modal').style.display = 'none';
-    }
-  }
-}
 
 function onConfigLoaded(){
   configReady = true;
@@ -669,9 +660,10 @@ function onConfigLoaded(){
     showInstallPopupIfNeeded();
     return;
   }
-  checkWelcomeModal();
+   if(currentUser) {
+    updateAuthUI(currentUser);
 }
-
+}
 
 /* ── WELCOME MODAL ── */
 function welcomeSignInWithGoogle(){
@@ -776,7 +768,8 @@ auth.onAuthStateChanged(function(user){
   } else {
     currentUser=null;
     updateAuthUI(null);
-    checkWelcomeModal();
+      if(configReady && appConfig.signinEnabled && !localStorage.getItem('et_email')){
+      document.getElementById('welcome-modal').style.display = 'flex';
   }
   }
 });
