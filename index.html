@@ -547,7 +547,10 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',-apple-system,s
 <script>
 /* ── UTILITIES ── */
   var lastUsedCategory='';
-  var configIsLoaded = false;
+  /*var configIsLoaded = false;*/
+  var configReady = false;
+  var authReady = false;
+
 
 
 function showToast(msg,isError){
@@ -648,21 +651,27 @@ function loadAppConfig(){
   if(userEmail){updateAuthUI(null);showInstallPopupIfNeeded();return;}
   auth.onAuthStateChanged(function(user){if(user)return;document.getElementById('welcome-modal').style.display='flex';},{onlyOnce:true});
 }*/
-function onConfigLoaded() {
-  configIsLoaded = true;
-  if (!appConfig.signinEnabled) {
+
+  function checkWelcomeModal() {
+  if (configReady && authReady) {
+    if (!currentUser && appConfig.signinEnabled && !localStorage.getItem('et_email')) {
+      document.getElementById('welcome-modal').style.display = 'flex';
+    } else {
+      document.getElementById('welcome-modal').style.display = 'none';
+    }
+  }
+}
+
+function onConfigLoaded(){
+  configReady = true;
+  if(!appConfig.signinEnabled){
     updateAuthUI(currentUser);
     showInstallPopupIfNeeded();
     return;
   }
-  // If Firebase already found a user, don't show the modal
-  if (auth.currentUser) {
-    document.getElementById('welcome-modal').style.display = 'none';
-  } else if (!localStorage.getItem('et_email')) {
-    // Only show if we're sure no one is logged in and no email is saved
-    document.getElementById('welcome-modal').style.display = 'flex';
-  }
+  checkWelcomeModal();
 }
+
 
 /* ── WELCOME MODAL ── */
 function welcomeSignInWithGoogle(){
@@ -739,6 +748,7 @@ function updateAuthUI(user){
 
 /* ── AUTH STATE CHANGE ── */
 auth.onAuthStateChanged(function(user){
+  authReady = true;
   if(user){
     currentUser=user;
     document.getElementById('welcome-modal').style.display='none';
@@ -766,9 +776,8 @@ auth.onAuthStateChanged(function(user){
   } else {
     currentUser=null;
     updateAuthUI(null);
-      if(appConfig.signinEnabled && !localStorage.getItem('et_email')){
-        document.getElementById('welcome-modal').style.display='flex';
-    }
+    checkWelcomeModal();
+  }
   }
 });
 
