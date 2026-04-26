@@ -594,6 +594,7 @@ var reportingVideo=null;
 var sessionStartTime=null;
 var currentVideoTitle='';
 var currentVideoDuration=null;
+var isProcessingRedirect = true;   
 
 
 /* ── APP CONFIG ── */
@@ -658,13 +659,9 @@ function loadAppConfig(){
 }*/
 
 function finalizeAppLoad() {
-  // Only proceed if BOTH the Config and Auth have finished their first check
+  if (isProcessingRedirect) return;
   if (configReady && authReady) {
-    // Hide the splash screen cover
     document.getElementById('app-splash').style.display = 'none';
-
-    // If we have no user, show the Welcome/Login modal
-    // Note: If this doesn't show, check your Firestore to ensure 'signinEnabled' is true
     if (!currentUser && appConfig.signinEnabled) {
       document.getElementById('welcome-modal').style.display = 'flex';
     } else {
@@ -672,7 +669,6 @@ function finalizeAppLoad() {
     }
   }
 }
-
 function onConfigLoaded(){
   configReady = true;
   finalizeAppLoad();
@@ -1325,6 +1321,7 @@ auth.getRedirectResult().then(function(result){
     window.location.href='parent.html?setup=true';
   }
 }).catch(function(e){console.error('boot redirect error:',e);}).finally(function(){
+   isProcessingRedirect = false;  
   loadAppConfig();
   loadVideos();
   switchTab('educational');
