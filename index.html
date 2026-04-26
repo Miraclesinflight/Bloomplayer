@@ -659,14 +659,9 @@ function loadAppConfig(){
 }*/
 
 function finalizeAppLoad() {
-  if (isProcessingRedirect) return;
   if (configReady && authReady) {
     document.getElementById('app-splash').style.display = 'none';
-    if (!currentUser && appConfig.signinEnabled) {
-      document.getElementById('welcome-modal').style.display = 'flex';
-    } else {
-      document.getElementById('welcome-modal').style.display = 'none';
-    }
+    // Do NOT show welcome modal here at all
   }
 }
 function onConfigLoaded(){
@@ -1326,7 +1321,17 @@ auth.getRedirectResult().then(function(result){
   loadVideos();
   switchTab('educational');
 });
-
+// Show welcome modal only after 500ms, if user is still not signed in
+setTimeout(function() {
+  if (!currentUser && appConfig.signinEnabled && !localStorage.getItem('et_email')) {
+    // Make sure we are not returning from a Google redirect (which would already have a user)
+    var isSignInLink = firebase.auth().isSignInWithEmailLink(window.location.href);
+    if (!isSignInLink) {
+      document.getElementById('welcome-modal').style.display = 'flex';
+    }
+  }
+}, 550);
+  
 if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('/sw.js');});}
 </script>
 </body>
