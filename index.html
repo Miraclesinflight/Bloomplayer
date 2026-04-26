@@ -642,9 +642,9 @@ function loadAppConfig(){
 
 function onConfigLoaded(){
   if(!appConfig.signinEnabled){updateAuthUI(currentUser);showInstallPopupIfNeeded();return;}
-  if(currentUser){updateAuthUI(currentUser);showInstallPopupIfNeeded();return;}
+ /* if(currentUser){updateAuthUI(currentUser);showInstallPopupIfNeeded();return;}
   if(userEmail){updateAuthUI(null);showInstallPopupIfNeeded();return;}
-  auth.onAuthStateChanged(function(user){if(user)return;document.getElementById('welcome-modal').style.display='flex';},{onlyOnce:true});
+  auth.onAuthStateChanged(function(user){if(user)return;document.getElementById('welcome-modal').style.display='flex';},{onlyOnce:true});*/
 }
 
 /* ── WELCOME MODAL ── */
