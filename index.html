@@ -657,11 +657,25 @@ function loadAppConfig(){
   if(userEmail){updateAuthUI(null);showInstallPopupIfNeeded();return;}
   auth.onAuthStateChanged(function(user){if(user)return;document.getElementById('welcome-modal').style.display='flex';},{onlyOnce:true});
 }*/
-
 function finalizeAppLoad() {
   if (configReady && authReady) {
     document.getElementById('app-splash').style.display = 'none';
-    // Do NOT show welcome modal here at all
+
+    // If we just came back from a Google redirect, do NOT show the welcome modal
+    if (sessionStorage.getItem('et_google_redirect')) {
+      // Clear the flag so it doesn't interfere next time
+      sessionStorage.removeItem('et_google_redirect');
+      // Also make sure modal is hidden
+      document.getElementById('welcome-modal').style.display = 'none';
+      return;
+    }
+
+    // Normal case: show modal only if user is not signed in and sign-in is enabled
+    if (!currentUser && appConfig.signinEnabled && !localStorage.getItem('et_email')) {
+      document.getElementById('welcome-modal').style.display = 'flex';
+    } else {
+      document.getElementById('welcome-modal').style.display = 'none';
+    }
   }
 }
 function onConfigLoaded(){
@@ -670,7 +684,7 @@ function onConfigLoaded(){
 }
 
 /* ── WELCOME MODAL ── */
-function welcomeSignInWithGoogle(){
+/*function welcomeSignInWithGoogle(){
   document.getElementById('welcome-error').textContent='';
   var p=new firebase.auth.GoogleAuthProvider();
   p.setCustomParameters({prompt:'select_account'});
@@ -678,7 +692,27 @@ function welcomeSignInWithGoogle(){
     if(e.code==='auth/popup-blocked'){auth.signInWithRedirect(p);}
     else if(e.code!=='auth/cancelled-popup-request'&&e.code!=='auth/popup-closed-by-user'){showToast('Sign in failed. Please try again.',true);}
   });
+}*/
+
+  
+function welcomeSignInWithGoogle(){
+  document.getElementById('welcome-error').textContent='';
+  // Set a flag that we are about to redirect to Google
+  sessionStorage.setItem('et_google_redirect', '1');
+  var p = new firebase.auth.GoogleAuthProvider();
+  p.setCustomParameters({prompt:'select_account'});
+  auth.signInWithPopup(p).catch(function(e){
+    if(e.code === 'auth/popup-blocked'){
+      // Popup blocked – redirect will happen, flag already set
+      auth.signInWithRedirect(p);
+    } else if(e.code !== 'auth/cancelled-popup-request' && e.code !== 'auth/popup-closed-by-user'){
+      // On error, clear the flag
+      sessionStorage.removeItem('et_google_redirect');
+      showToast('Sign in failed. Please try again.', true);
+    }
+  });
 }
+
 
 function welcomeContinueWithEmail(){
   var email=document.getElementById('welcome-email').value.trim();
