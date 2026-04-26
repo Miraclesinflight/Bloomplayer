@@ -212,17 +212,14 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',-apple-system,s
 
 .edu-controls{display:flex;gap:8px;margin-bottom:17px;flex-wrap:wrap;}
 .edu-select{padding:6px 10px;border-radius:8px;border:1px solid var(--border);background:var(--input-bg);color:var(--text);font-size:15px;font-family:nunito;outline:none;cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24'%3E%3Cpath fill='%2394A3B8' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center;padding-right:24px;}
-<div id="app-splash" style="position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;">
-  <img src="icon.png" style="width:80px;height:80px;border-radius:20px;margin-bottom:20px;animation: pulse 1.5s infinite;">
-  <div style="font-size:18px;font-weight:700;color:var(--text);">Loading BloomPlayer...</div>
-</div>
-
-<style>
-@keyframes pulse { 0% { transform: scale(0.95); opacity: 0.8; } 50% { transform: scale(1); opacity: 1; } 100% { transform: scale(0.95); opacity: 0.8; } }
 </style>
 
 </head>
 <body>
+<div id="app-splash" style="position:fixed;inset:0;background:#fff;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+  <img src="icon.png" style="width:80px;height:80px;border-radius:20px;margin-bottom:20px;animation: pulse 1.5s infinite;">
+  <div style="font-size:18px;font-weight:700;color:#2D2922;">Loading BloomPlayer...</div>
+</div>
 
 <div id="home" class="screen">
   <nav class="app-nav">
@@ -661,13 +658,17 @@ function loadAppConfig(){
 }*/
 
 function finalizeAppLoad() {
+  // Only proceed if BOTH the Config and Auth have finished their first check
   if (configReady && authReady) {
-    // Both are done! Hide the splash screen.
+    // Hide the splash screen cover
     document.getElementById('app-splash').style.display = 'none';
 
-    // Now safely decide if we show the modal
-    if (!currentUser && appConfig.signinEnabled && !localStorage.getItem('et_email')) {
+    // If we have no user, show the Welcome/Login modal
+    // Note: If this doesn't show, check your Firestore to ensure 'signinEnabled' is true
+    if (!currentUser && appConfig.signinEnabled) {
       document.getElementById('welcome-modal').style.display = 'flex';
+    } else {
+      document.getElementById('welcome-modal').style.display = 'none';
     }
   }
 }
