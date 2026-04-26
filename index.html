@@ -749,6 +749,9 @@ auth.onAuthStateChanged(function(user){
   } else {
     currentUser=null;
     updateAuthUI(null);
+      if(appConfig.signinEnabled && !localStorage.getItem('et_email')){
+        document.getElementById('welcome-modal').style.display='flex';
+    }
   }
 });
 
