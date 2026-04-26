@@ -64,7 +64,7 @@
 }
 
 /* ── Dark Mode (Deep Forest & Warm Charcoal) ── */
-@media (prefers-color-scheme: dark) {
+/*@media (prefers-color-scheme: dark) {
   :root {
     /* ── SURFACES ── */
     --bg:               #121412;   /* Deep charcoal with a hint of forest */
@@ -90,17 +90,16 @@
     --info-bg:          #1C211C;
     --info-text:        #D1D9D1;
 
-    --shadow: 0 10px 40px rgba(0,0,0,0.4);
-  }
+/*    --shadow: 0 10px 40px rgba(0,0,0,0.4);} */
 
   /* Fix for the white text on your video cards in the screenshot */
-  .video-title {
+  /*.video-title {
       color: var(--text) !important;
   }
   
   /* Make the video cards feel integrated, not like white boxes */
-  .video-item {
+  /*.video-item {
       background: var(--video-card-bg) !important;
       border-color: var(--video-card-border) !important;
   }
-}
+}*/
