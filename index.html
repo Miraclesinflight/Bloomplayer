@@ -547,6 +547,8 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',-apple-system,s
 <script>
 /* ── UTILITIES ── */
   var lastUsedCategory='';
+  var configIsLoaded = false;
+
 
 function showToast(msg,isError){
   var t=document.getElementById('app-toast');
@@ -640,11 +642,26 @@ function loadAppConfig(){
   }).catch(function(){onConfigLoaded();});
 }
 
-function onConfigLoaded(){
+/*function onConfigLoaded(){
   if(!appConfig.signinEnabled){updateAuthUI(currentUser);showInstallPopupIfNeeded();return;}
- /* if(currentUser){updateAuthUI(currentUser);showInstallPopupIfNeeded();return;}
+  if(currentUser){updateAuthUI(currentUser);showInstallPopupIfNeeded();return;}
   if(userEmail){updateAuthUI(null);showInstallPopupIfNeeded();return;}
-  auth.onAuthStateChanged(function(user){if(user)return;document.getElementById('welcome-modal').style.display='flex';},{onlyOnce:true});*/
+  auth.onAuthStateChanged(function(user){if(user)return;document.getElementById('welcome-modal').style.display='flex';},{onlyOnce:true});
+}*/
+function onConfigLoaded() {
+  configIsLoaded = true;
+  if (!appConfig.signinEnabled) {
+    updateAuthUI(currentUser);
+    showInstallPopupIfNeeded();
+    return;
+  }
+  // If Firebase already found a user, don't show the modal
+  if (auth.currentUser) {
+    document.getElementById('welcome-modal').style.display = 'none';
+  } else if (!localStorage.getItem('et_email')) {
+    // Only show if we're sure no one is logged in and no email is saved
+    document.getElementById('welcome-modal').style.display = 'flex';
+  }
 }
 
 /* ── WELCOME MODAL ── */
