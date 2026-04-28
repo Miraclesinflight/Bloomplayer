@@ -1521,23 +1521,29 @@ function requestPlayerExit() {
 }
 
 function closeVideo() {
-  // 1. RESET the blessing flag so the next manual video selection shows the button
-  isSessionStarted = false;
+  // 1. RESET FIRST: This ensures the state is 'false' before we go back to the library
+  isSessionStarted = false; 
+  console.log("Session Reset: Ready for next manual selection");
 
   // 2. Kill the video/iframe
   var container = document.getElementById('player-container');
-  if(container) container.innerHTML = '';
+  if(container) {
+      container.innerHTML = '';
+  }
   
-  // 3. Hide the player and go home
+  // 3. Hide the player screen and the overlay (just in case)
   document.getElementById('player-screen').style.display = 'none';
+  document.getElementById('ready-overlay').style.display = 'none';
+  document.getElementById('player-shield').style.display = 'none';
+
+  // 4. Return to Library
   document.getElementById('home').style.display = 'flex';
   
-  // 4. Reset playlist tracking
+  // 5. Reset internal tracking
   currentPlaylist = [];
   currentIndex = 0;
   pinAction = null;
 }
-
 
 
 function updatePlayerStatus() {
