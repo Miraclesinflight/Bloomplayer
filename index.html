@@ -21,11 +21,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,400;1,400&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-4LPVCYGQP9"></script>
 <script>
-
-  let currentPlaylist = []; // Stores the current list of video objects
-let currentIndex = 0;    // Tracks which number we are on
-let currentCategoryName = ""; // Stores "Leisure", "Educational", etc.
-
   window.dataLayer=window.dataLayer||[];
   function gtag(){dataLayer.push(arguments);}
   gtag('js',new Date());
@@ -549,26 +544,6 @@ html, body, #home, .screen {
       <a href="privacy.html">Privacy</a>
     </div>
 
-  </div>
-</div>
-
-<!-- PLAYER SCREEN -->
-<div id="player-screen" class="screen">
-  <div class="player-top" id="player-top">
-    <div class="player-instruction">Tap play on the video below, then tap Lock — controls disappear for your child.</div>
-    <button class="btn-lock" id="btn-lock" onclick="lockControls()">&#9654; Play and Lock</button>
-  </div>
-  <div class="player-wrap">
-    <iframe id="yt-iframe" src="" allow="autoplay; encrypted-media" allowfullscreen="false"></iframe>
-    <div class="player-overlay" id="player-overlay" oncontextmenu="return false;"></div>
-    <div class="lock-toast hidden" id="lock-toast">Locked</div>
-  </div>
-  <div class="player-back-bar">
-    <button onclick="requestClose()">Exit to Library (PIN)</button>
-  </div>
-  <div class="player-bottom" id="player-bottom">
-    <div class="next-title">Play next</div>
-    <div class="next-videos" id="next-videos"></div>
   </div>
 </div>
 
@@ -1124,7 +1099,6 @@ function showNoVideosState(){
 }
 
 var currentPersonalPage = 0; // Tracks the current page
-
 function renderPersonalCategory(resetPage) {
   if (resetPage) currentPersonalPage = 0;
   
@@ -1133,13 +1107,9 @@ function renderPersonalCategory(resetPage) {
   var listContainer = document.getElementById('personal-video-list');
   
   // DYNAMIC CALCULATION: Read the active CSS Grid columns
-  // getComputedStyle returns a string like "300px 300px", so splitting by space counts the columns.
   var computedCols = window.getComputedStyle(listContainer).gridTemplateColumns.split(' ').length;
   
   // Decide how many rows to show based on the column count
-  // 1 col (Phone) -> 3 rows (3 videos total)
-  // 2 cols (iPad Portrait) -> 3 rows (6 videos total)
-  // 3+ cols (Laptop/Desktop) -> 2 rows (6 or 8 videos total)
   var targetRows = (computedCols <= 2) ? 3 : 2; 
   var itemsPerPage = computedCols * targetRows;
   
@@ -1154,11 +1124,11 @@ function renderPersonalCategory(resetPage) {
 
   var html = '';
   videosToShow.forEach(function(v){
-   /* html += '<div class="video-item" style="position:relative;" 'onclick="directPlay(\''+escAttr(v.id)+'\', userVideos, \'My Library\')">'*/
-          html += '<div class="video-item" style="position:relative;" onclick="directPlay(\''+escAttr(v.id)+'\', personalVideosData[\''+escAttr(cat)+'\'], \'My Library\')">'
-      + '<button class="btn-delete-vid" onclick="event.stopPropagation(); requestDeleteVideo(\''+escAttr(v.id)+'\', \''+escAttr(cat)+'\')">&times;</button>'
-      + '<div class="video-thumb"><img src="https://img.youtube.com/vi/'+escAttr(v.id)+'/mqdefault.jpg" alt="" loading="lazy"/></div>'
-      + '<div class="video-info"><div class="video-title">'+escHtml(v.title||v.id)+'</div></div></div>';
+    // Pass 'null' for the list so the smart directPlay function handles the lookup by 'My Library'
+    html += '<div class="video-item" style="position:relative;" onclick="directPlay(\'' + escAttr(v.id) + '\', null, \'My Library\')">'
+      + '<button class="btn-delete-vid" onclick="event.stopPropagation(); requestDeleteVideo(\'' + escAttr(v.id) + '\', \'' + escAttr(cat) + '\')">&times;</button>'
+      + '<div class="video-thumb"><img src="https://img.youtube.com/vi/' + escAttr(v.id) + '/mqdefault.jpg" alt="" loading="lazy"/></div>'
+      + '<div class="video-info"><div class="video-title">' + escHtml(v.title || v.id) + '</div></div></div>';
   });
   
   // Handle empty state
@@ -1181,6 +1151,7 @@ function renderPersonalCategory(resetPage) {
     document.getElementById('page-info').textContent = 'Page ' + (currentPersonalPage + 1) + ' of ' + totalPages;
   }
 }
+
 
 function changePersonalPage(direction) {
   currentPersonalPage += direction;
@@ -1356,23 +1327,44 @@ function updateSubjectOptions(){
 }
 
 function renderEducationalVideos(){
-  if(!curriculumLoaded){document.getElementById('edu-video-list').innerHTML='<div class="loading-state">Loading curriculum...</div>';return;}
-  var grade=document.getElementById('grade-select').value;
-  var subject=document.getElementById('subject-select').value;
-  var f=allCurriculumVideos.filter(function(v){return String(v.grade||'').trim()===grade&&(v.subject||'').trim()===subject;});
-  var html='';
-  if(!f.length){html='<div class="empty-state">No videos yet for this selection.</div>';}
-  else{f.forEach(function(v){
-    var id=(v.id||v.youtube_id||'').trim().replace(/[^a-zA-Z0-9_-]/g,'');
-    trackCurriculumSelected(grade,subject);
-/*    html+='<div class="video-item" onclick="directPlay(\''+escAttr(id)+'\',\'educational\',\''+escAttr(grade)+'\',\''+escAttr(subject)+'\')">'*/
-     html+='<div class="video-item" onclick="directPlay(\''+escAttr(id)+'\', educationalVideos, \'Educational\')">'
-      +'<div class="video-thumb"><img src="https://img.youtube.com/vi/'+escAttr(id)+'/mqdefault.jpg" alt="" loading="lazy"/></div>'
-      +'<div class="video-info"><div class="video-title">'+escHtml(v.title||v.chapter||'')+'</div>'
-      +'<div class="video-sub">'+escHtml(v.channel||'')+'</div>'
-      +'<div class="video-tag">'+escHtml(v.unit||v.chapter||'')+'</div></div></div>';
-  });}
-  document.getElementById('edu-video-list').innerHTML=html;
+  if(!curriculumLoaded){
+    document.getElementById('edu-video-list').innerHTML='<div class="loading-state">Loading curriculum...</div>';
+    return;
+  }
+  
+  var grade = document.getElementById('grade-select').value;
+  var subject = document.getElementById('subject-select').value;
+  
+  // Filter the master curriculum list based on the dropdowns
+  var f = allCurriculumVideos.filter(function(v){
+    return String(v.grade || '').trim() === grade && (v.subject || '').trim() === subject;
+  });
+  
+  var html = '';
+  if(!f.length){
+    html = '<div class="empty-state">No videos yet for this selection.</div>';
+  } else {
+    f.forEach(function(v){
+      // Clean the ID
+      var id = (v.id || v.youtube_id || '').trim().replace(/[^a-zA-Z0-9_-]/g,'');
+      
+      trackCurriculumSelected(grade, subject);
+
+      // UPDATED: We pass 'null' so directPlay can auto-detect the list context
+      html += '<div class="video-item" onclick="directPlay(\'' + escAttr(id) + '\', null, \'Educational\')">'
+        + '<div class="video-thumb">'
+        +   '<img src="https://img.youtube.com/vi/' + escAttr(id) + '/mqdefault.jpg" alt="" loading="lazy"/>'
+        + '</div>'
+        + '<div class="video-info">'
+        +   '<div class="video-title">' + escHtml(v.title || v.chapter || '') + '</div>'
+        +   '<div class="video-sub">' + escHtml(v.channel || '') + '</div>'
+        +   '<div class="video-tag">' + escHtml(v.unit || v.chapter || '') + '</div>'
+        + '</div>'
+        + '</div>';
+    });
+  }
+  
+  document.getElementById('edu-video-list').innerHTML = html;
 }
 
 function switchTab(tab){
@@ -1434,27 +1426,37 @@ function extractId(url){
 }
 function handleWatch(){var id=extractId(document.getElementById('url-input').value.trim());if(!id){document.getElementById('url-error').textContent='Please paste a valid YouTube link.';return;}prepareVideo(id);}
 function directPlay(videoId, list = null, categoryName = "Video") {
-    // 1. Setup the playlist context
-    if (list && Array.isArray(list)) {
-        currentPlaylist = list;
-        currentIndex = list.findIndex(v => (v.id || v.videoId) === videoId);
-        currentCategoryName = categoryName;
-    } else {
-        currentPlaylist = [{id: videoId}];
-        currentIndex = 0;
-        currentCategoryName = "Quick Watch";
+    // 1. Auto-detect the list if it wasn't passed in
+    if (!list) {
+        if (categoryName === 'Leisure') {
+            var age = document.getElementById('age-select').value;
+            list = allVideos.filter(function(v){ return (v.age||'').toLowerCase() === age; });
+            if(!list.length) list = FALLBACK[age] || [];
+        } else if (categoryName === 'Educational') {
+            var grade = document.getElementById('grade-select').value;
+            var subject = document.getElementById('subject-select').value;
+            list = allCurriculumVideos.filter(function(v){
+                return String(v.grade||'').trim() === grade && (v.subject||'').trim() === subject;
+            });
+        } else if (categoryName === 'My Library') {
+            var cat = document.getElementById('category-select').value;
+            list = personalVideosData[cat] || [];
+        }
     }
+
+    currentPlaylist = list || [{id: videoId}];
+    currentIndex = currentPlaylist.findIndex(v => (v.id || v.videoId || v.id_status) === videoId);
+    if (currentIndex === -1) currentIndex = 0;
+    currentCategoryName = categoryName;
 
     // 2. Switch UI
     document.getElementById('home').style.display = 'none';
     document.getElementById('player-screen').style.display = 'flex';
 
-    // 3. Update the Bottom Bar Text
     updatePlayerStatus();
-
-    // 4. Load the Video
     loadVideoById(videoId);
 }
+
 
 
 function updatePlayerStatus() {
