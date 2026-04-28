@@ -1412,7 +1412,26 @@ setTimeout(function() {
   }
 }, 550);
   
-if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('/sw.js');});}
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('/sw.js').then(function(reg) {
+      reg.onupdatefound = function() {
+        var installingWorker = reg.installing;
+        installingWorker.onstatechange = function() {
+          // If a new service worker is installed and takes over, force a reload
+          if (installingWorker.state === 'installed' && navigator.serviceWorker.controller) {
+            console.log('New version available! Refreshing...');
+            window.location.reload(true);
+          }
+        };
+      };
+    }).catch(function(e) {
+      console.error('Service Worker registration failed:', e);
+    });
+  });
+}
+
 </script>
 </body>
 </html>
