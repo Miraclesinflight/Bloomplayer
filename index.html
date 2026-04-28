@@ -1,0 +1,1593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="color-scheme" content="light">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+<meta http-equiv="Pragma" content="no-cache"/>
+<meta http-equiv="Expires" content="0"/>
+<!-- v4.0 — Firestore video storage -->
+<title>BloomPlayer</title>
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="default"/>
+<meta name="apple-mobile-web-app-title" content="BloomPlayer"/>
+<link rel="apple-touch-icon" href="icon.png"/>
+<link rel="icon" type="image/png" href="icon.png"/>
+<link rel="manifest" href="manifest.json"/>
+<meta name="theme-color" content="#C2CDC2"/>
+<link rel="stylesheet" href="theme-v2.css?v=2.2"/>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,400;1,400&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-4LPVCYGQP9"></script>
+<script>
+  window.dataLayer=window.dataLayer||[];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js',new Date());
+  gtag('config','G-4LPVCYGQP9');
+</script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700&display=swap');
+
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+body{background:var(--bg);color:var(--text);font-family:'Nunito',-apple-system,sans-serif;min-height:100vh;}
+.screen{display:none;flex-direction:column;min-height:100vh;}
+#home{display:flex;}
+
+.app-nav { position: sticky; top: 0; z-index: 50; background: var(--bg); border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; width: 100%; padding: 16px; box-sizing: border-box; }
+
+.beta-strip { background: var(--card); border-bottom: 1px solid var(--border); width: 100%; display: none; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 16px; box-sizing: border-box; }
+
+.app-content { display: flex; flex-direction: column; gap: 16px; width: 100%; padding: 16px; box-sizing: border-box; }
+
+/* Tablet / iPad */
+@media(min-width: 640px) {
+  .app-nav { padding: 16px 24px; }
+  .beta-strip { padding: 12px 24px; }
+  .app-content { padding: 20px 24px; gap: 17px; }
+}
+
+/* Desktop / Laptop */
+@media(min-width: 1024px) {
+  .app-nav { padding: 16px 32px; }
+  .beta-strip { padding: 12px 32px; }
+  .app-content { padding: 24px 32px; gap: 16px; }
+}
+
+
+/* Add this new class for the delete button */
+.btn-delete-vid {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    width: 26px;
+    height: 26px;
+    background: var(--red);
+    color: white;
+    border: 2px solid var(--card);
+    border-radius: 50%;
+    font-size: 18px;
+    line-height: 1;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 5;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    padding-bottom: 2px; /* Optically centers the X */
+}
+
+.nav-brand { display: flex; align-items: center; gap: 10px; cursor: pointer; user-select: none; flex: 1; min-width: 0; }
+.nav-brand img { width: 48px; height: 48px; border-radius: 14px; flex-shrink: 0; }
+.nav-brand > div { min-width: 0; display: flex; flex-direction: column; }
+.brand-name { font-size: 20px; font-weight: 700; letter-spacing: -0.3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.brand-tag { font-size: 14px; color: #2D2922; font-style: normal; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.nav-right{display:flex;flex-direction:row;align-items:center;gap:8px;margin-left:auto;flex-shrink:0;}
+.auth-signed-in-header{display:none;align-items:center;gap:6px;}
+.auth-avatar{width:24px;height:24px;border-radius:50%;background:var(--red-light);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--red);overflow:hidden;flex-shrink:0;}
+.auth-avatar img{width:100%;height:100%;object-fit:cover;}
+.auth-name{font-size:19px;font-weight:600;color:var(--text);max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.btn-signout{font-size:17px;color:#2D2922;background:none;border:none;cursor:pointer;font-family:nunito;text-decoration:underline;padding:0;}
+
+.beta-strip{background:var(--card);border-bottom:1px solid var(--border);padding:10px 17px;width:100%;display:none;align-items:center;justify-content:space-between;gap:12px;}
+.beta-strip-text{font-size:17px;color:var(--text-2);line-height:1.5;}
+.beta-strip-text strong{color:var(--text);display:block;font-size:15px;margin-bottom:2px;}
+.btn-unlock{display:flex;align-items:center;gap:6px;background:var(--red-light);border:1px solid var(--red);border-radius:8px;padding:8px 12px;cursor:pointer;font-size:17px;font-weight:600;color:var(--red);font-family:nunito;white-space:nowrap;flex-shrink:0;}
+
+.card-header{font-size:20px;font-weight:700;letter-spacing:-0.3px;color:var(--text);margin-bottom:10px;}
+
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:17px;width:100%;box-sizing:border-box;display: block;}
+.input-desc{font-size:19px;color:var(--text-3);margin-bottom:12px;line-height:1.5;}
+.input-wrap{display:flex;gap:10px;}
+.input-wrap input{flex:1;min-width:0;padding:17px 16px;border-radius:10px;border:1.5px solid var(--border);background:var(--input-bg);color:var(--text);font-size:15px;font-family:nunito;outline:none;}
+.input-wrap input:focus{border-color:var(--red);}
+.input-wrap input::placeholder{color:var(--text-3);}
+.btn-watch{padding:17px 24px;border-radius:10px;background:var(--red);color:white;border:none;font-weight:600;font-size:17px;font-family:nunito;cursor:pointer;white-space:nowrap;}
+.error-msg{font-size:14.5px;color:var(--red);margin-top:8px;min-height:16px;}
+.section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:17px;}
+.section-left{display:flex;align-items:center;gap:8px;}
+.age-select{padding:6px 10px;border-radius:8px;border:1px solid var(--border);background:var(--input-bg);color:var(--text);font-size:15px;font-family:nunito;outline:none;cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24'%3E%3Cpath fill='%2394A3B8' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center;padding-right:24px;}
+.btn-add-video{display:flex;align-items:center;gap:5px;font-size:15px;color:var(--red);background:var(--red-light);border:1px solid var(--red);border-radius:8px;padding:6px 12px;cursor:pointer;font-family:nunito;font-weight:600;}
+
+.video-list{display:grid;grid-template-columns:1fr;gap:10px;}
+@media(min-width:560px){.video-list{grid-template-columns:repeat(2,1fr);}}
+@media(min-width:900px){.video-list{grid-template-columns:repeat(3,1fr);}}
+@media(min-width:1280px){.video-list{grid-template-columns:repeat(4,1fr);}}
+
+.video-item{display:flex;flex-direction:row;align-items:flex-start;gap:10px;padding:10px;background:var(--video-card-bg);border:1px solid var(--video-card-border);border-radius:16px;cursor:pointer;}
+.video-thumb{width:64px;height:64px;border-radius:8px;background:var(--card);flex-shrink:0;overflow:hidden;}
+.video-thumb img{width:100%;height:100%;object-fit:cover;display:block;}
+.video-info{flex:1;min-width:0;}
+.video-title{font-size:17px;font-weight:600;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.video-sub{font-size:13px;color:var(--text-3);margin-top:2px;}
+.video-tag{font-size:12px;font-weight:600;background:var(--red-light);color:var(--red);padding:2px 6px;border-radius:5px;margin-top:4px;display:inline-block;}
+.report-btn{display:inline-flex;align-items:center;gap:3px;margin-top:5px;font-size:12px;color:var(--red);background:var(--red-light);border:1px solid var(--red);border-radius:6px;padding:3px 7px;cursor:pointer;font-family:nunito;font-weight:500;}
+.loading-state,.empty-state{text-align:center;padding:24px;color:var(--text-3);font-size:15px;}
+.info-card{background:var(--info-bg);border:1px solid var(--info-border);border-radius:var(--radius);padding:16px 18px;width:100%;}
+.info-card p{font-size:15px;color:var(--info-text);line-height:1.65;}
+.kofi-bar{text-align:center;padding:4px 0;}
+.kofi-bar a{font-size:17px;color:var(--text-3);text-decoration:none;}
+.app-footer{text-align:center;font-size:13px;color:var(--text-3);padding:4px 0 20px;}
+.app-footer a{color:var(--text-3);text-decoration:none;}
+
+#player-screen{background:#000;width:100%;}
+.player-top{background:var(--player-bg);padding:17px 20px;width:100%;}
+.player-instruction{font-size:15px;color:#aaa;margin-bottom:12px;line-height:1.5;text-align:center;}
+.btn-lock{width:100%;padding:17px;border-radius:10px;background:var(--red);border:none;color:white;font-size:17px;font-weight:700;font-family:nunito;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;}
+.player-wrap{position:relative;width:100%;background:#000;}
+#yt-iframe{display:block;width:100%;aspect-ratio:16/9;border:none;}
+.player-overlay{display:none;position:absolute;top:0;left:0;width:100%;height:100%;z-index:10;}
+.lock-toast{position:absolute;top:16px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.85);color:white;font-size:17px;font-weight:700;padding:10px 20px;border-radius:20px;z-index:15;white-space:nowrap;transition:opacity 0.3s;border:1px solid rgba(255,255,255,0.15);}
+.lock-toast.hidden{opacity:0;pointer-events:none;}
+.player-bottom{background:var(--player-bg);padding:17px 20px;width:100%;display:none;}
+.next-title{font-size:13px;color:#888;text-transform:uppercase;letter-spacing:0.6px;font-weight:600;margin-bottom:10px;}
+.next-videos{display:flex;flex-direction:column;gap:8px;margin-bottom:12px;}
+.next-video-btn{background:var(--player-btn-bg);border:1px solid var(--player-btn-border);color:white;border-radius:10px;padding:12px 17px;text-align:left;cursor:pointer;font-family:nunito;display:flex;align-items:center;gap:10px;width:100%;}
+.next-play-icon{width:28px;height:28px;background:var(--red);border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.next-play-icon svg{width:12px;height:12px;fill:white;}
+.next-video-title{font-size:15px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.next-video-sub{font-size:13px;color:#888;margin-top:2px;}
+
+#pin-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:100;flex-direction:column;align-items:center;justify-content:center;gap:18px;}
+.pin-icon{width:52px;height:52px;background:var(--player-btn-bg);border-radius:17px;display:flex;align-items:center;justify-content:center;margin-bottom:4px;}
+.pin-icon svg{width:22px;height:22px;fill:#94A3B8;}
+#pin-overlay h2{font-size:18px;font-weight:600;color:white;}
+#pin-overlay p{font-size:13px;color:#94A3B8;margin-top:-8px;}
+.pin-dots{display:flex;gap:12px;margin:4px 0;}
+.dot{width:17px;height:17px;border-radius:50%;background:var(--player-btn-bg);transition:background 0.12s,transform 0.12s;}
+.dot.filled{background:var(--red);transform:scale(1.1);}
+.pin-error{font-size:14.5px;color:#F87171;height:16px;}
+.pin-grid{display:grid;grid-template-columns:repeat(3,72px);gap:10px;}
+.pin-btn{height:72px;border-radius:12px;background:var(--player-btn-bg);border:1px solid var(--player-btn-border);color:white;font-size:24px;font-weight:500;font-family:nunito;cursor:pointer;}
+.pin-btn:active{background:var(--player-btn-border);}
+.pin-hint{font-size:13px;color:#4B5563;margin-top:4px;}
+.pin-forgot{font-size:17px;color:var(--red);background:none;border:none;cursor:pointer;font-family:nunito;margin-top:2px;text-decoration:underline;}
+
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.87);z-index:200;align-items:center;justify-content:center;padding:20px;}
+.modal-box{background:var(--bg);border:1px solid var(--border);border-radius:20px;padding:28px 24px 40px;width:100%;max-width:560px;}
+.modal-title{font-size:19px;font-weight:700;margin-bottom:4px;color:var(--text);}
+.modal-sub{font-size:15px;color:var(--text-2);margin-bottom:20px;line-height:1.5;}
+.modal-label{font-size:17px;font-weight:600;color:var(--text-2);text-transform:uppercase;letter-spacing:0.6px;margin-bottom:6px;display:block;}
+.modal-input{width:100%;padding:13px 17px;border-radius:10px;border:1.5px solid var(--border);background:var(--input-bg);color:var(--text);font-size:17px;font-family:nunito;outline:none;margin-bottom:17px;}
+.modal-input:focus{border-color:var(--red);}
+.modal-input::placeholder{color:var(--text-3);}
+.privacy-note{font-size:11.5px;color:var(--text-3);margin-bottom:18px;line-height:1.5;}
+.modal-btns{display:flex;gap:10px;}
+.btn-submit{flex:1;padding:17px;border-radius:10px;background:var(--red);color:white;border:none;font-size:17px;font-weight:600;font-family:nunito;cursor:pointer;}
+.btn-submit:disabled{opacity:0.6;cursor:not-allowed;}
+.btn-cancel{padding:17px 20px;border-radius:10px;background:var(--card);color:var(--text-2);border:1px solid var(--border);font-size:17px;font-family:nunito;cursor:pointer;}
+
+#welcome-modal{display:none;position:fixed;inset:0;background:var(--bg);z-index:400;align-items:flex-start;justify-content:center;padding:40px 20px 60px;overflow-y:auto;}
+.welcome-wrap{display:flex;flex-direction:column;align-items:center;width:100%;max-width:400px;}
+.welcome-top-name{font-size:26px;font-weight:700;letter-spacing:-0.3px;color:var(--text);text-align:center;margin-bottom:16px;}
+.welcome-box{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:28px 22px 24px;width:100%;}
+.welcome-letter{background:var(--badge-bg);border:1px solid var(--border);border-left:3px solid #CC9544;border-radius:0 10px 10px 0;padding:17px 16px;margin-bottom:20px;}
+.welcome-letter-eyebrow{font-size:14px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:8px;}
+.welcome-letter-body{font-family:'Nunito';font-size:24px;color:var(--text-2);text-align:justify;line-height:1.8;}
+.welcome-letter-sign{display:block;font-family:'Nunito';font-size:18px;color:var(--text-3);font-style:italic;font-weight:450;text-align:center;margin-top:10px;}
+.welcome-field-label{font-size:11px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:0.7px;display:block;margin-bottom:6px;}
+.welcome-input{width:100%;padding:13px 15px;border-radius:10px;border:1.5px solid var(--border);background:var(--input-bg);color:var(--text);font-size:17px;font-family:nunito;outline:none;margin-bottom:16px;}
+.welcome-input:focus{border-color:#CC9544;}
+.welcome-input::placeholder{color:var(--text-3);}
+.btn-continue{width:100%;padding:15px;border-radius:10px;background:#CC9544;border:none;color:#0d1117;font-size:15px;font-weight:700;font-family:nunito;cursor:pointer;margin-bottom:10px;}
+.btn-google{width:100%;padding:17px;border-radius:10px;background:var(--badge-bg);border:1.5px solid var(--border);color:var(--text);font-size:17px;font-weight:600;font-family:nunito;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;}
+.btn-google svg{width:18px;height:18px;flex-shrink:0;}
+.welcome-error{font-size:17px;color:var(--red);margin-bottom:8px;min-height:16px;text-align:center;}
+.welcome-footer{text-align:center;margin-top:16px;padding:0 4px;width:100%;}
+.welcome-footer a{font-size:17px;color:#CC9544;text-decoration:none;font-weight:500;}
+
+#settings-screen{background:var(--bg);}
+.settings-content{display:flex;flex-direction:column;gap:12px;padding:52px 17px 32px;width:100%;}
+@media(min-width:640px){.settings-content{padding:52px 20px 32px;}}
+.settings-title{font-size:22px;font-weight:700;letter-spacing:-0.5px;}
+.settings-sub{font-size:15px;color:var(--text-2);margin-top:4px;}
+.setting-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px;width:100%;}
+.setting-card label{font-size:17px;font-weight:600;color:var(--text-2);text-transform:uppercase;letter-spacing:0.6px;display:block;margin-bottom:10px;}
+.setting-card input{width:100%;padding:13px 17px;border-radius:10px;border:1.5px solid var(--border);background:var(--input-bg);color:var(--text);font-size:15px;font-family:nunito;outline:none;}
+.setting-note{font-size:13.5px;color:var(--text-3);margin-top:8px;line-height:1.5;}
+.btn-save{width:100%;padding:17px;border-radius:10px;background:var(--red);color:white;border:none;font-size:17px;font-weight:600;font-family:nunito;cursor:pointer;}
+.btn-back{width:100%;padding:17px;border-radius:10px;background:var(--card);color:var(--text);border:1px solid var(--border);font-size:17px;font-family:nunito;cursor:pointer;}
+.player-back-bar{background:var(--player-bg);padding:8px 20px;width:100%;}
+.player-back-bar button{width:100%;padding:12px;border-radius:8px;background:none;border:1px solid #444;color:#888;font-size:15px;font-family:nunito;cursor:pointer;}
+/*.tab-bar{display:flex;flex:1;border:1px solid var(--border);border-radius:10px;overflow:hidden;}*/
+/*.tab-btn{flex:1;padding:6px 16px;background:none;border:none;border-bottom:2px solid transparent;font-size:15px;font-weight:600;color:var(--text-3);font-family:nunito;cursor:pointer;text-align:center;}
+.tab-btn.active{color:var(--red);background:var(--red-light);border-bottom:2px solid var(--red);}*/
+  /* ── UPDATED TAB BAR ── */
+.tab-bar {
+    display: flex;
+    flex: 1;
+    background: var(--border); /* Provides a subtle recessed track */
+    border: 1px solid var(--border);
+    border-radius: 50px;       /* Pill shape for a professional look */
+    overflow: hidden;
+    padding: 3px;              /* Creates a small gap around the buttons */
+}
+
+.tab-btn {
+    flex: 1;
+    padding: 8px 10px; /* Reduced side padding for mobile */
+    background: transparent;
+    border: none;
+    border-bottom: none; 
+    font-size: 14.5px; /* Slightly smaller to prevent truncation */
+    font-weight: 600; /* Bumped weight slightly for readability */
+    color: var(--text-3);
+    font-family: 'Nunito';
+    cursor: pointer;
+    text-align: center;
+    border-radius: 50px;
+    transition: all 0.2s ease;
+    white-space: nowrap; /* Ensures the word itself doesn't break */
+}
+
+/* Let the tabs breathe more on bigger screens */
+@media(min-width: 640px) {
+    .tab-btn {
+        padding: 8px 16px;
+        font-size: 15px;
+    }
+}
+
+
+/* ── ACTIVE STATE: BOLD COLOR ── */
+.tab-btn.active {
+    color: var(--accent-text);          /* Contrast text against the bold button */
+    background: var(--red);    /* Bold Gold/Ochre background */
+    border-bottom: none;       /* Ensure underline is removed */
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2); /* Adds a little pop */
+}
+
+.edu-controls{display:flex;gap:8px;margin-bottom:17px;flex-wrap:wrap;}
+.edu-select{padding:6px 10px;border-radius:8px;border:1px solid var(--border);background:var(--input-bg);color:var(--text);font-size:15px;font-family:nunito;outline:none;cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24'%3E%3Cpath fill='%2394A3B8' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center;padding-right:24px;}
+/* --- ULTIMATE LAYOUT LOCK --- */
+html, body, #home, .screen {
+    overflow-x: hidden !important;
+    width: 100% !important;
+    max-width: 100vw !important;
+}
+
+.app-nav, .beta-strip, .app-content {
+    box-sizing: border-box !important;
+    width: 100% !important;
+    max-width: 100vw !important;
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+}
+
+.card, .info-card {
+    box-sizing: border-box !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+}
+
+@media(min-width: 640px) {
+    .app-nav, .beta-strip, .app-content { padding-left: 32px !important; padding-right: 32px !important; }
+}
+@media(min-width: 1024px) {
+    .app-nav, .beta-strip, .app-content { padding-left: 48px !important; padding-right: 48px !important; }
+}
+
+.btn-page {
+    padding: 6px 16px;
+    border-radius: 8px;
+    background: transparent;
+    color: var(--text-2);
+    border: 1px solid var(--border);
+    font-size: 14px;
+    font-family: nunito;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+.btn-page:active { background: var(--card2); }
+.btn-page:disabled { opacity: 0.4; cursor: not-allowed; background: transparent; }
+
+</style>
+
+</head>
+<body>
+<div id="app-splash" style="position:fixed;inset:0;background:#fff;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+  <img src="icon.png" style="width:80px;height:80px;border-radius:20px;margin-bottom:20px;animation: pulse 1.5s infinite;">
+  <div style="font-size:18px;font-weight:700;color:#2D2922;">Loading BloomPlayer...</div>
+</div>
+
+<div id="home" class="screen">
+  <nav class="app-nav">
+    <div class="nav-brand" id="logo">
+      <img src="icon.png"/>
+      <div>
+        <div class="brand-name">BloomPlayer</div>
+        <div class="brand-tag">I hope they never know.</div>
+      </div>
+    </div>
+    <div class="nav-right">
+      <div class="auth-signed-in-header" id="auth-signed-in">
+        <div class="auth-avatar" id="auth-avatar"></div>
+        <span class="auth-name" id="auth-name"></span>
+        <button class="btn-signout" onclick="signOut()">Sign out</button>
+      </div>
+      <div class="auth-signed-in-header" id="auth-email-only" style="display:none;">
+        <span class="auth-name" id="auth-email-name"></span>
+        <button class="btn-signout" onclick="emailSignOut()">Sign out</button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="beta-strip" id="beta-strip">
+    <div class="beta-strip-text">
+      <strong>Want to add your own videos?</strong>
+      Have an invite code? Click Unlock to enable.
+    </div>
+    <button class="btn-unlock" onclick="showBetaCodeModal()">Unlock</button>
+  </div>
+
+  <div class="app-content">
+       <div class="card" id="personal-card" style="display:none;">
+      <div class="section-header" style="flex-wrap: wrap; gap: 12px;">
+        <div class="section-left">
+          <div class="card-header" style="margin-bottom: 0;">My Videos</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px; flex-wrap: wrap;">
+          <select class="age-select" id="category-select" onchange="renderPersonalCategory(true)"></select>
+          <button class="btn-add-video" onclick="showAddVideoModal()">+ Add</button>
+        </div>
+      </div>
+      <div class="video-list" id="personal-video-list"></div>
+      
+      <div id="personal-pagination" style="display:none; align-items:center; justify-content:space-between; margin-top:16px; padding-top:16px; border-top:1px solid var(--border);">
+        <button id="btn-prev-page" onclick="changePersonalPage(-1)" class="btn-page">Prev</button>
+        <span id="page-info" style="font-size:13px; color:var(--text-3); font-weight:600;"></span>
+        <button id="btn-next-page" onclick="changePersonalPage(1)" class="btn-page">Next</button>
+      </div>
+    </div>
+
+    <div class="card" id="no-videos-card" style="display:none;">
+      <div class="section-header">
+        <div class="section-left">
+          <div class="card-header">My Videos</div>
+        </div>
+        <button class="btn-add-video" onclick="showAddVideoModal()">+ Add video</button>
+      </div>
+      <div class="empty-state">No videos yet — tap + Add to build your list.</div>
+    </div>
+
+    <div class="card" id="paste-card">
+      <div class="card-header">Paste a Link</div>
+      <div class="input-desc">Find a video on YouTube, copy the link and paste it here. Your child watches without any controls — no rewind, no skip, no loop.</div>
+      <div class="input-wrap">
+        <input id="url-input" type="url" inputmode="url" placeholder="youtube.com/watch?v=..."/>
+        <button class="btn-watch" onclick="handleWatch()">Watch</button>
+      </div>
+      <div class="error-msg" id="url-error"></div>
+    </div>
+
+<div class="card" id="suggested-card">
+  <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:12px; flex-wrap:wrap;">
+    <div class="card-header" style="margin-bottom:0; white-space:nowrap;">Discover &amp; Learn</div>
+        <div class="tab-bar">
+          <button class="tab-btn active" id="tab-btn-educational" onclick="switchTab('educational')">Educational</button>
+          <button class="tab-btn" id="tab-btn-leisure" onclick="switchTab('leisure')">Leisure</button>
+        </div>
+      </div>
+      <div style="border-bottom:1px solid var(--border);margin-bottom:16px;"></div>
+      <div id="tab-leisure" style="display:none;">
+        <div class="section-header" style="justify-content:flex-end;">
+          <select class="age-select" id="age-select" onchange="renderVideos()">
+            <option value="teenplus">Teen+ (16+)</option>
+            <option value="teen">Teen (12-16)</option>
+            <option value="junior">Junior (8-12)</option>
+            <option value="primary">Primary (5-8)</option>
+            <option value="prek">Pre-K (3-5)</option>
+            <option value="toddler">Toddler (2-3)</option>
+          </select>
+        </div>
+        <div class="video-list" id="video-list"><div class="loading-state">Loading videos...</div></div>
+      </div>
+      <div id="tab-educational">
+        <div class="edu-controls" style="justify-content:flex-end;">
+          <select class="edu-select" id="grade-select" onchange="updateSubjectOptions();renderEducationalVideos();">
+            <option value="9">Grade 9</option>
+            <option value="10">Grade 10</option>
+            <option value="11">Grade 11</option>
+            <option value="12">Grade 12</option>
+          </select>
+          <select class="edu-select" id="subject-select" onchange="renderEducationalVideos()"></select>
+        </div>
+        <div class="video-list" id="edu-video-list"><div class="loading-state">Loading curriculum...</div></div>
+      </div>
+    </div>
+
+    <div class="info-card">
+      <p id="info-card-text"><strong>For parents:</strong> Select your child's age above to see suitable videos. Videos play with no controls visible — your child cannot rewind, skip, or scrub. Closing always requires the parent PIN. <strong>Default PIN is 1234.</strong> Long press the logo to open Settings.</p>
+    </div> 
+
+    <div class="kofi-bar">
+      <a href="https://ko-fi.com/BloomPlayer" target="_blank">If this helped your child, support BloomPlayer on Ko-fi</a>
+    </div>
+
+    <div class="app-footer">
+      <a href="about.html">Our story</a> &nbsp;&middot;&nbsp;
+      <a href="faq.html">FAQ</a> &nbsp;&middot;&nbsp;
+      <a href="contact.html">Contact</a> &nbsp;&middot;&nbsp;
+      <a href="privacy.html">Privacy</a>
+    </div>
+
+  </div>
+</div>
+
+<!-- PLAYER SCREEN -->
+<div id="player-screen" class="screen">
+  <div class="player-top" id="player-top">
+    <div class="player-instruction">Tap play on the video below, then tap Lock — controls disappear for your child.</div>
+    <button class="btn-lock" id="btn-lock" onclick="lockControls()">&#9654; Play and Lock</button>
+  </div>
+  <div class="player-wrap">
+    <iframe id="yt-iframe" src="" allow="autoplay; encrypted-media" allowfullscreen="false"></iframe>
+    <div class="player-overlay" id="player-overlay" oncontextmenu="return false;"></div>
+    <div class="lock-toast hidden" id="lock-toast">Locked</div>
+  </div>
+  <div class="player-back-bar">
+    <button onclick="requestClose()">Exit to Library (PIN)</button>
+  </div>
+  <div class="player-bottom" id="player-bottom">
+    <div class="next-title">Play next</div>
+    <div class="next-videos" id="next-videos"></div>
+  </div>
+</div>
+
+<!-- PIN OVERLAY -->
+<div id="pin-overlay">
+  <button onclick="pinCancel()" style="position:absolute;top:20px;right:20px;background:none;border:none;color:#94A3B8;font-size:24px;cursor:pointer;line-height:1;">&#10005;</button>
+  <div class="pin-icon"><svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg></div>
+  <h2 id="pin-title">Parent PIN required</h2>
+  <p id="pin-subtitle">Enter your 4-digit PIN to continue</p>
+  <div class="pin-dots">
+    <div class="dot" id="d0"></div><div class="dot" id="d1"></div>
+    <div class="dot" id="d2"></div><div class="dot" id="d3"></div>
+  </div>
+  <div class="pin-error" id="pin-error"></div>
+  <div class="pin-grid">
+    <button class="pin-btn" onclick="pinPress('1')">1</button>
+    <button class="pin-btn" onclick="pinPress('2')">2</button>
+    <button class="pin-btn" onclick="pinPress('3')">3</button>
+    <button class="pin-btn" onclick="pinPress('4')">4</button>
+    <button class="pin-btn" onclick="pinPress('5')">5</button>
+    <button class="pin-btn" onclick="pinPress('6')">6</button>
+    <button class="pin-btn" onclick="pinPress('7')">7</button>
+    <button class="pin-btn" onclick="pinPress('8')">8</button>
+    <button class="pin-btn" onclick="pinPress('9')">9</button>
+    <button class="pin-btn" onclick="pinClear()" style="font-size:18px;color:#94A3B8">&#9003;</button>
+    <button class="pin-btn" onclick="pinPress('0')">0</button>
+    <button class="pin-btn" onclick="pinCancel()" style="font-size:12px;color:#94A3B8">Cancel</button>
+  </div>
+ <div class="pin-hint">Forgotten your PIN? We'll send a reset link to your email.</div>
+<button class="pin-forgot" onclick="forgotPin()">Send reset link</button>
+</div>
+
+<!-- WELCOME MODAL -->
+<div id="welcome-modal">
+  <div class="welcome-wrap">
+    <div class="welcome-box">
+      <img src="icon.png" alt="BloomPlayer" style="width:48px;height:48px;border-radius:12px;display:block;margin:0 auto 10px;"/>
+      <div class="welcome-top-name">BloomPlayer</div>
+      <div class="welcome-letter">
+        <div class="welcome-letter-body">
+         I created this to help my child practice watching from start to finish... and now it is shared with yours.
+          <span class="welcome-letter-sign">Built by a mom</span>
+        </div>
+      </div>
+      <div class="welcome-error" id="welcome-error"></div>
+      <span class="welcome-field-label">Your email</span>
+      <input class="welcome-input" id="welcome-email" type="email" inputmode="email" placeholder="your@email.com"/>
+      <button class="btn-continue" onclick="welcomeContinueWithEmail()">Send me a sign-in link</button>
+      <button class="btn-google" onclick="welcomeSignInWithGoogle()">
+        <svg viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+        Continue with Google
+      </button>
+    </div>
+    <div class="welcome-footer">
+      <a href="privacy.html">Privacy Policy</a>
+    </div>
+  </div>
+</div>
+
+<!-- BETA CODE MODAL -->
+<div id="beta-modal" class="modal-overlay">
+  <div class="modal-box">
+    <div id="beta-code-section">
+      <div class="modal-title">Have a code?</div>
+      <div class="modal-sub">Enter your invite code to start building your safe video library.</div>
+      <input class="modal-input" id="beta-code-input" type="text" placeholder="Enter code..." style="text-transform:uppercase;letter-spacing:2px;"/>
+      <div class="modal-btns">
+        <button class="btn-cancel" onclick="closeBetaModal()">Cancel</button>
+     <button class="btn-submit" id="add-video-submit" onclick="savePersonalVideo()">Add video</button>
+      </div>
+    </div>
+    <div id="beta-waitlist-section" style="display:none;">
+      <div class="modal-title">Full house for now!</div>
+      <div class="modal-sub">We're at capacity for new families. Drop your email and you'll be first to know when we expand.</div>
+      <label class="modal-label">Your email</label>
+      <input class="modal-input" id="beta-waitlist-email" type="email" inputmode="email" placeholder="your@email.com"/>
+      <div class="modal-btns">
+        <button class="btn-cancel" onclick="closeBetaModal()">Maybe later</button>
+        <button class="btn-submit" onclick="submitBetaWaitlist()">Save my spot</button>
+      </div>
+    </div>
+    <div id="beta-confirmed-section" style="display:none;text-align:center;padding:20px 0;">
+      <div style="font-size:40px;margin-bottom:16px;">&#127881;</div>
+      <div class="modal-title">Access unlocked!</div>
+      <div class="modal-sub">The Add Videos feature is now available. Tap + Add on any video card to get started.</div>
+    </div>
+    <div id="beta-waitlist-confirmed-section" style="display:none;text-align:center;padding:20px 0;">
+      <div style="font-size:40px;margin-bottom:16px;">&#9989;</div>
+      <div class="modal-title">You're on the list</div>
+      <div class="modal-sub">We'll be in touch soon.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ADD VIDEO MODAL -->
+<div id="add-video-modal" class="modal-overlay">
+  <div class="modal-box">
+    <div class="modal-title">Add a video</div>
+    <div class="modal-sub">Paste a YouTube link — we'll fetch the title automatically.</div>
+    <label class="modal-label">YouTube link</label>
+    <input class="modal-input" id="add-url" type="url" inputmode="url" placeholder="youtube.com/watch?v=..."/>
+ <label class="modal-label">Category (optional)</label>
+<div style="position:relative;">
+  <input class="modal-input" id="add-category" type="text" placeholder="e.g. Animals, Science, Bedtime" autocomplete="off" oninput="filterCategorySuggestions()" onfocus="showCategorySuggestions()" style="margin-bottom:0;"/>
+  <div id="category-suggestion-list" style="display:none;position:absolute;top:100%;left:0;right:0;background:var(--bg);border:1.5px solid var(--border);border-radius:10px;z-index:999;overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,0.15);"></div>
+</div>
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="closeAddVideoModal()">Cancel</button>
+     <button class="btn-submit" id="add-video-submit" onclick="savePersonalVideo()">Add another video</button>
+    </div>
+  </div>
+</div>
+
+<!-- REPORT MODAL -->
+<div id="report-modal" class="modal-overlay" style="pointer-events:none;">
+  <div class="modal-box" style="pointer-events:all;">
+    <div class="modal-title">Suggest a replacement</div>
+    <div class="modal-sub" id="report-sub">Found a broken video? Suggest a better one.</div>
+    <label class="modal-label">Your email</label>
+    <input class="modal-input" id="report-email" type="email" inputmode="email" placeholder="your@email.com"/>
+    <label class="modal-label">Replacement YouTube link</label>
+    <input class="modal-input" id="report-link" type="url" inputmode="url" placeholder="youtube.com/watch?v=..."/>
+    <label class="modal-label">Notes (optional)</label>
+    <input class="modal-input" id="report-note" type="text" placeholder="e.g. Great science video for toddlers"/>
+    <div class="privacy-note">Your email will only be used to notify you if your suggestion is approved.</div>
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="closeReportModal()">Cancel</button>
+      <button class="btn-submit" onclick="submitReport()">Submit</button>
+    </div>
+  </div>
+</div>
+
+<!-- SETTINGS SCREEN -->
+<div id="settings-screen" class="screen">
+  <div class="settings-content">
+    <div>
+      <div class="settings-title">Settings</div>
+      <div class="settings-sub">Manage your parent PIN and preferences</div>
+    </div>
+    <div class="setting-card">
+      <label>Change Parent PIN</label>
+      <input id="new-pin" type="password" inputmode="numeric" maxlength="4" placeholder="Enter new 4-digit PIN"/>
+      <div class="setting-note" id="pin-storage-note"></div>
+    </div>
+    <button class="btn-save" onclick="saveSettings()">Save changes</button>
+    <button class="btn-back" onclick="showHome()">Back to BloomPlayer</button>
+  </div>
+</div>
+
+<!-- INSTALL POPUP -->
+<div id="install-popup" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.87);z-index:300;align-items:center;justify-content:center;padding:20px;">
+  <div style="background:var(--bg);border:1px solid var(--border);border-radius:20px;padding:28px 24px 36px;width:100%;max-width:480px;">
+    <div style="font-size:21px;font-weight:700;margin-bottom:6px;">Add to Home Screen</div>
+    <div style="font-size:17px;color:var(--text-2);line-height:1.75;margin-bottom:20px;">For the best experience open BloomPlayer as an app.<br><br>
+    <strong style="color:var(--text);">iPhone / iPad:</strong> tap Share (&#9633;&#8593;) &rarr; <em>Add to Home Screen</em> &rarr; Add<br><br>
+    <strong style="color:var(--text);">Android:</strong> tap Menu (&#8942;) &rarr; <em>Add to Home Screen</em> &rarr; Add</div>
+    <button onclick="document.getElementById('install-popup').style.display='none';"
+      style="width:100%;padding:17px;border-radius:10px;background:var(--red);color:white;border:none;font-size:17px;font-weight:600;font-family:nunito;cursor:pointer;margin-bottom:10px;">
+      OK, I'll add it
+    </button>
+    <button onclick="localStorage.setItem('et_no_install_prompt','1');document.getElementById('install-popup').style.display='none';"
+      style="width:100%;padding:12px;border-radius:10px;background:none;border:1px solid var(--border);color:var(--text-3);font-size:17px;font-family:nunito;cursor:pointer;">
+      Don't remind me again
+    </button>
+  </div>
+</div>
+
+<!-- EMAIL SENT MODAL -->
+<div id="email-sent-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.87);z-index:500;align-items:center;justify-content:center;padding:20px;">
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:20px;padding:32px 24px;width:100%;max-width:400px;text-align:center;">
+    <div style="font-size:17px;font-weight:700;margin-bottom:8px;color:var(--text);">Check your inbox</div>
+    <div style="font-size:13px;color:var(--text-2);line-height:1.75;margin-bottom:6px;">We sent a sign-in link to<br><strong id="email-sent-address" style="color:var(--text);"></strong></div>
+    <div style="font-size:12px;color:var(--text-2);margin-bottom:24px;">Email comes from noreply@bloomplayer-9cba5.firebaseapp.com</div>
+    <button onclick="document.getElementById('email-sent-modal').style.display='none';" style="width:100%;padding:17px;border-radius:10px;background:var(--red);color:white;border:none;font-size:15px;font-weight:600;font-family:nunito;cursor:pointer;">Got it</button>
+  </div>
+</div>
+
+<!-- EMAIL CONFIRM MODAL -->
+<div id="email-confirm-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.87);z-index:600;align-items:center;justify-content:center;padding:20px;">
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:20px;padding:32px 24px;width:100%;max-width:400px;text-align:center;">
+    <div style="font-size:17px;font-weight:700;margin-bottom:8px;color:var(--text);">Confirm your email</div>
+    <div style="font-size:13px;color:var(--text-2);margin-bottom:16px;">Enter the email address you used to request the sign-in link.</div>
+    <input id="email-confirm-input" type="email" inputmode="email" placeholder="your@email.com"
+      style="width:100%;padding:13px 17px;border-radius:10px;border:1.5px solid var(--border);background:var(--input-bg);color:var(--text);font-size:15px;font-family:nunito;outline:none;margin-bottom:17px;"/>
+    <div id="email-confirm-error" style="font-size:12px;color:var(--red);margin-bottom:10px;min-height:16px;"></div>
+    <button onclick="confirmEmailAndSignIn()"
+      style="width:100%;padding:17px;border-radius:10px;background:var(--red);color:white;border:none;font-size:15px;font-weight:600;font-family:nunito;cursor:pointer;">
+      Continue
+    </button>
+  </div>
+</div>
+
+<script>
+/* ── UTILITIES ── */
+  var lastUsedCategory='';
+  /*var configIsLoaded = false;*/
+  var configReady = false;
+  var authReady = false;
+
+
+
+function showToast(msg,isError){
+  var t=document.getElementById('app-toast');
+  if(!t){t=document.createElement('div');t.id='app-toast';t.style.cssText='position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1E293B;color:#F8FAFC;font-size:13px;font-weight:600;padding:12px 20px;border-radius:20px;z-index:9999;white-space:nowrap;box-shadow:0 4px 16px rgba(0,0,0,0.4);border:1px solid #334155;transition:opacity 0.3s;';document.body.appendChild(t);}
+  t.textContent=msg;t.style.borderColor=isError?'var(--red)':'#334155';t.style.opacity='1';
+  clearTimeout(t._timer);t._timer=setTimeout(function(){t.style.opacity='0';},2800);
+}
+function escHtml(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function escAttr(s){return(s||'').replace(/'/g,"\\'");}
+
+/* ── FIREBASE ── */
+var firebaseConfig={
+  apiKey:'AIzaSyDa_838Z_Kq-SQhi1LH1IibLkw5KkkVq6M',
+  authDomain:'bloomplayer-9cba5.firebaseapp.com',
+  projectId:'bloomplayer-9cba5',
+  storageBucket:'bloomplayer-9cba5.firebasestorage.app',
+  messagingSenderId:'424186955738',
+  appId:'1:424186955738:web:e2c3306fb52e33e83322e3',
+  measurementId:'G-4LPVCYGQP9'
+};
+firebase.initializeApp(firebaseConfig);
+var auth=firebase.auth();
+var db=firebase.firestore();
+auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+
+/* ── STATE ── */
+var currentUser=null;
+var personalVideosData={};
+var parentPin=localStorage.getItem('et_pin')||'1234';
+var pinBuffer='',pinAction=null,pendingId=null;
+var userTier=localStorage.getItem('et_tier')||'general';
+var userEmail=localStorage.getItem('et_email')||null;
+var currentVideoSource='leisure',currentVideoGrade=null,currentVideoSubject=null;
+var reportingVideo=null;
+var sessionStartTime=null;
+var currentVideoTitle='';
+var currentVideoDuration=null;
+var isProcessingRedirect = true;   
+
+
+/* ── APP CONFIG ── */
+var appConfig={signinEnabled:false,inviteCodeEnabled:false,betaFeaturesEnabled:false,betaLimit:99,betaUsageCount:0};
+
+/* ── EMAIL LINK SIGN-IN ── */
+if(auth.isSignInWithEmailLink(window.location.href)){
+  var emailForSignIn=localStorage.getItem('et_email_for_signin');
+  if(!emailForSignIn){
+    document.getElementById('email-confirm-modal').style.display='flex';
+  } else {
+    auth.signInWithEmailLink(emailForSignIn,window.location.href)
+    .then(function(result){
+      localStorage.setItem('et_email',result.user.email);
+      localStorage.removeItem('et_email_for_signin');
+      window.history.replaceState(null,'',window.location.pathname);
+      var intent=localStorage.getItem('et_redirect_intent');
+      if(intent==='reset_pin'){
+        localStorage.removeItem('et_redirect_intent');
+        window.location.href='parent.html?setup=true';
+      }
+    }).catch(function(e){console.error('Email link sign-in failed:',e);});
+  }
+}
+
+function confirmEmailAndSignIn(){
+  var email=document.getElementById('email-confirm-input').value.trim();
+  if(!email||!email.includes('@')){document.getElementById('email-confirm-error').textContent='Please enter a valid email.';return;}
+  document.getElementById('email-confirm-modal').style.display='none';
+  auth.signInWithEmailLink(email,window.location.href)
+  .then(function(result){
+    localStorage.setItem('et_email',result.user.email);
+    localStorage.removeItem('et_email_for_signin');
+    window.history.replaceState(null,'',window.location.pathname);
+  }).catch(function(e){
+    document.getElementById('email-confirm-modal').style.display='flex';
+    document.getElementById('email-confirm-error').textContent='Sign-in failed. Please request a new link.';
+  });
+}
+
+/* ── LOAD APP CONFIG ── */
+function loadAppConfig(){
+  db.collection('config').doc('app').get().then(function(doc){
+    if(doc.exists){
+      var d=doc.data();
+      if(d.maintenanceMode===true){fetch('maintenance.html').then(function(r){return r.text();}).then(function(html){document.open();document.write(html);document.close();});return;}
+      appConfig.signinEnabled=d.signinEnabled===true;
+      appConfig.inviteCodeEnabled=d.inviteCodeEnabled===true;
+      appConfig.betaFeaturesEnabled=d.betaFeaturesEnabled===true;
+      appConfig.betaLimit=d.betaLimit||99;
+      appConfig.betaUsageCount=d.betaUsageCount||0;
+    }
+    onConfigLoaded();
+  }).catch(function(){onConfigLoaded();});
+}
+
+/*function onConfigLoaded(){
+  if(!appConfig.signinEnabled){updateAuthUI(currentUser);showInstallPopupIfNeeded();return;}
+  if(currentUser){updateAuthUI(currentUser);showInstallPopupIfNeeded();return;}
+  if(userEmail){updateAuthUI(null);showInstallPopupIfNeeded();return;}
+  auth.onAuthStateChanged(function(user){if(user)return;document.getElementById('welcome-modal').style.display='flex';},{onlyOnce:true});
+}*/
+function finalizeAppLoad() {
+  if (configReady && authReady) {
+    document.getElementById('app-splash').style.display = 'none';
+
+    // If we just came back from a Google redirect, do NOT show the welcome modal
+    if (sessionStorage.getItem('et_google_redirect')) {
+      // Clear the flag so it doesn't interfere next time
+      sessionStorage.removeItem('et_google_redirect');
+      // Also make sure modal is hidden
+      document.getElementById('welcome-modal').style.display = 'none';
+      return;
+    }
+
+    // Normal case: show modal only if user is not signed in and sign-in is enabled
+    if (!currentUser && appConfig.signinEnabled && !localStorage.getItem('et_email')) {
+      document.getElementById('welcome-modal').style.display = 'flex';
+    } else {
+      document.getElementById('welcome-modal').style.display = 'none';
+    }
+  }
+}
+function onConfigLoaded(){
+  configReady = true;
+  finalizeAppLoad();
+}
+
+/* ── WELCOME MODAL ── */
+/*function welcomeSignInWithGoogle(){
+  document.getElementById('welcome-error').textContent='';
+  var p=new firebase.auth.GoogleAuthProvider();
+  p.setCustomParameters({prompt:'select_account'});
+  auth.signInWithPopup(p).catch(function(e){
+    if(e.code==='auth/popup-blocked'){auth.signInWithRedirect(p);}
+    else if(e.code!=='auth/cancelled-popup-request'&&e.code!=='auth/popup-closed-by-user'){showToast('Sign in failed. Please try again.',true);}
+  });
+}*/
+
+  
+function welcomeSignInWithGoogle(){
+  document.getElementById('welcome-error').textContent='';
+  // Set a flag that we are about to redirect to Google
+  sessionStorage.setItem('et_google_redirect', '1');
+  var p = new firebase.auth.GoogleAuthProvider();
+  p.setCustomParameters({prompt:'select_account'});
+  auth.signInWithPopup(p).catch(function(e){
+    if(e.code === 'auth/popup-blocked'){
+      // Popup blocked – redirect will happen, flag already set
+      auth.signInWithRedirect(p);
+    } else if(e.code !== 'auth/cancelled-popup-request' && e.code !== 'auth/popup-closed-by-user'){
+      // On error, clear the flag
+      sessionStorage.removeItem('et_google_redirect');
+      showToast('Sign in failed. Please try again.', true);
+    }
+  });
+}
+
+
+function welcomeContinueWithEmail(){
+  var email=document.getElementById('welcome-email').value.trim();
+  var errEl=document.getElementById('welcome-error');
+  if(!email||!email.includes('@')){errEl.textContent='Please enter a valid email address.';return;}
+  errEl.textContent='';
+  var btn=document.querySelector('.btn-continue');
+  btn.textContent='Sending...';btn.disabled=true;
+  auth.sendSignInLinkToEmail(email,{url:window.location.href,handleCodeInApp:true}).then(function(){
+    localStorage.setItem('et_email_for_signin',email);
+    btn.textContent='Resend';btn.disabled=false;
+    document.getElementById('email-sent-address').textContent=email;
+    document.getElementById('email-sent-modal').style.display='flex';
+  }).catch(function(){
+    btn.textContent='Send me a sign-in link';btn.disabled=false;
+    errEl.textContent='Could not send link. Please try again.';
+  });
+}
+
+function emailSignOut(){
+  userEmail=null;localStorage.removeItem('et_email');updateAuthUI(null);
+  document.getElementById('welcome-error').textContent='';
+  if(appConfig.signinEnabled){document.getElementById('welcome-modal').style.display='flex';}
+}
+
+/* ── SIGN OUT ── */
+function signOut(){
+  stopInactivityWatch();
+  auth.signOut().then(function(){
+    currentUser=null;personalVideosData={};userTier='general';
+    localStorage.removeItem('et_tier');
+    updateAuthUI(null);
+    var player=document.getElementById('player-screen');
+    if(player&&player.style.display==='flex'){closeVideo();}
+    if(appConfig.signinEnabled&&!localStorage.getItem('et_email')){document.getElementById('welcome-modal').style.display='flex';}
+  });
+}
+
+/* ── AUTH UI ── */
+function updateAuthUI(user){
+  if(user){
+    document.getElementById('auth-signed-in').style.display='flex';
+    document.getElementById('auth-email-only').style.display='none';
+    var av=document.getElementById('auth-avatar');
+    if(user.photoURL){av.innerHTML='<img src="'+user.photoURL+'" alt=""/>';}
+    else{av.textContent=user.displayName?user.displayName[0].toUpperCase():'U';}
+    document.getElementById('auth-name').textContent=user.displayName?user.displayName.split(' ')[0]:user.email;
+    document.getElementById('pin-storage-note').textContent='You are signed in — your PIN is saved to your account.';
+   document.getElementById('info-card-text').closest('.info-card').style.display='none';
+    updateBetaUI();
+  } else {
+    document.getElementById('auth-signed-in').style.display='none';
+    var emailOnlyEl=document.getElementById('auth-email-only');
+    if(userEmail&&emailOnlyEl){emailOnlyEl.style.display='flex';document.getElementById('auth-email-name').textContent=userEmail.split('@')[0];}
+    else if(emailOnlyEl){emailOnlyEl.style.display='none';}
+    document.getElementById('personal-card').style.display='none';
+    document.getElementById('no-videos-card').style.display='none';
+    document.getElementById('pin-storage-note').textContent='Sign in to save your PIN permanently.';
+    document.getElementById('info-card-text').closest('.info-card').style.display='none';
+    updateBetaUI();
+  }
+}
+
+/* ── AUTH STATE CHANGE ── */
+auth.onAuthStateChanged(function(user){
+  authReady = true;
+  if(user){
+    currentUser=user;
+    document.getElementById('welcome-modal').style.display='none';
+    updateAuthUI(user);
+    showInstallPopupIfNeeded();
+    startInactivityWatch();
+   db.collection('users').doc(user.uid).get().then(function(doc){
+  if(!doc.exists){
+    saveUserTier(user,'general',function(){
+      loadUserProfile(user);
+      window.location.href='parent.html?setup=true';
+/*      document.getElementById('home').style.display='flex'; */
+    });
+  } else {
+    var data=doc.data();
+    userTier=data.tier||'general';
+    localStorage.setItem('et_tier',userTier);
+    if(data.pin){parentPin=data.pin;localStorage.setItem('et_pin',data.pin);}
+    if(data.betaInvited){localStorage.setItem('et_beta_invited','true');}
+    updateBetaUI();
+    loadUserProfile(user);
+    if(!data.onboarded){window.location.href='parent.html?setup=true';}
+  }
+}).catch(function(){loadUserProfile(user);});
+  } else {
+    currentUser=null;
+    updateAuthUI(null);
+  }
+    finalizeAppLoad(); 
+});
+
+/* ── LOAD USER PROFILE ── */
+function loadUserProfile(user){
+  db.collection('users').doc(user.uid).get().then(function(doc){
+    if(doc.exists&&doc.data().defaultAge){
+      var defaultAge=doc.data().defaultAge;
+      localStorage.setItem('et_default_age',defaultAge);
+      var sel=document.getElementById('age-select');
+      if(sel){sel.value=defaultAge;renderVideos();}
+    }
+  }).catch(function(){});
+  var isBeta=userTier==='beta'||userTier==='gamma';
+  if(isBeta){loadPersonalVideosFromFirestore(user);}
+  else{showNoVideosState();}
+}
+
+/* ── FIRESTORE VIDEO STORAGE ── */
+function loadPersonalVideosFromFirestore(user){
+  db.collection('users').doc(user.uid).get()
+  .then(function(doc){
+    var videos=(doc.exists&&doc.data().videos)?doc.data().videos:[];
+    var freshData={};
+    videos.forEach(function(v){
+      var cat=v.category||'My Videos';
+      if(!freshData[cat])freshData[cat]=[];
+      freshData[cat].push({id:v.videoId,title:v.title||''});
+    });
+    personalVideosData=freshData;
+    if(!Object.keys(freshData).length){showNoVideosState();return;}
+    var cats=Object.keys(freshData);
+    var sel=document.getElementById('category-select');
+    var prev=sel.value;sel.innerHTML='';
+    cats.forEach(function(cat){
+      var opt=document.createElement('option');
+      opt.value=cat;opt.textContent=cat+' ('+freshData[cat].length+')';
+      sel.appendChild(opt);
+    });
+    if(prev&&freshData[prev])sel.value=prev;
+    document.getElementById('personal-card').style.display='block';
+    document.getElementById('no-videos-card').style.display='none';
+    renderPersonalCategory();
+    updateBetaUI();
+  }).catch(function(e){
+    console.error('loadPersonalVideosFromFirestore:',e);
+    showNoVideosState();
+  });
+}
+
+function savePersonalVideoToFirestore(videoId,title,category){
+  var video={
+    id:crypto.randomUUID(),
+    videoId:videoId,
+    title:title,
+    category:category||'My Videos',
+    addedAt:new Date().toISOString()
+  };
+  return db.collection('users').doc(currentUser.uid).update({
+    videos:firebase.firestore.FieldValue.arrayUnion(video)
+  });
+}
+
+
+/* ── SAVE PERSONAL VIDEO ── */
+function savePersonalVideo(){
+  if(!currentUser){showToast('Please sign in to save videos.',true);return;}
+  var url=document.getElementById('add-url').value.trim();
+  var category=document.getElementById('add-category').value.trim()||'My Videos';
+  var id=extractId(url);
+  if(!id){showToast('Please paste a valid YouTube link.',true);return;}
+  var btn=document.getElementById('add-video-submit');
+  btn.textContent='Fetching title...';btn.disabled=true;
+  // Try to get title from YouTube oEmbed, fall back to empty
+  fetch('https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v='+id+'&format=json')
+  .then(function(r){if(!r.ok)throw new Error('oEmbed failed');return r.json();})
+  .then(function(data){return savePersonalVideoToFirestore(id,data.title||'',category);})
+  .catch(function(){return savePersonalVideoToFirestore(id,'',category);})
+ .then(function(){
+    lastUsedCategory=category;
+    loadPersonalVideosFromFirestore(currentUser);
+    showToast('Video added!');
+    document.getElementById('add-url').value='';
+    document.getElementById('add-category').value=lastUsedCategory;
+    var btn=document.getElementById('add-video-submit');
+   showToast('Video added!');
+btn.textContent='Add to playlist';btn.disabled=false;
+  }).catch(function(e){
+    console.error('savePersonalVideo error:',e);
+    showToast('Failed to save. Please try again.',true);
+    btn.textContent='Save video';btn.disabled=false;
+  });
+}
+
+function showNoVideosState(){
+  document.getElementById('personal-card').style.display='none';
+  var isBeta=appConfig.betaFeaturesEnabled&&(userTier==='beta'||userTier==='gamma');
+  document.getElementById('no-videos-card').style.display=(currentUser&&isBeta)?'block':'none';
+  updateBetaUI();
+}
+
+var currentPersonalPage = 0; // Tracks the current page
+
+function renderPersonalCategory(resetPage) {
+  if (resetPage) currentPersonalPage = 0;
+  
+  var cat = document.getElementById('category-select').value;
+  var videos = personalVideosData[cat] || [];
+  var listContainer = document.getElementById('personal-video-list');
+  
+  // DYNAMIC CALCULATION: Read the active CSS Grid columns
+  // getComputedStyle returns a string like "300px 300px", so splitting by space counts the columns.
+  var computedCols = window.getComputedStyle(listContainer).gridTemplateColumns.split(' ').length;
+  
+  // Decide how many rows to show based on the column count
+  // 1 col (Phone) -> 3 rows (3 videos total)
+  // 2 cols (iPad Portrait) -> 3 rows (6 videos total)
+  // 3+ cols (Laptop/Desktop) -> 2 rows (6 or 8 videos total)
+  var targetRows = (computedCols <= 2) ? 3 : 2; 
+  var itemsPerPage = computedCols * targetRows;
+  
+  var totalPages = Math.ceil(videos.length / itemsPerPage);
+  
+  // Guard against out of bounds if a video is deleted
+  if (currentPersonalPage >= totalPages) currentPersonalPage = Math.max(0, totalPages - 1);
+  
+  // Slice the array for the current page
+  var startIndex = currentPersonalPage * itemsPerPage;
+  var videosToShow = videos.slice(startIndex, startIndex + itemsPerPage);
+
+  var html = '';
+  videosToShow.forEach(function(v){
+    html += '<div class="video-item" style="position:relative;" onclick="prepareVideo(\''+escAttr(v.id)+'\')">'
+      + '<button class="btn-delete-vid" onclick="event.stopPropagation(); requestDeleteVideo(\''+escAttr(v.id)+'\', \''+escAttr(cat)+'\')">&times;</button>'
+      + '<div class="video-thumb"><img src="https://img.youtube.com/vi/'+escAttr(v.id)+'/mqdefault.jpg" alt="" loading="lazy"/></div>'
+      + '<div class="video-info"><div class="video-title">'+escHtml(v.title||v.id)+'</div></div></div>';
+  });
+  
+  // Handle empty state
+  if (!html) {
+    listContainer.innerHTML = '<div class="empty-state">No videos in this category.</div>';
+    document.getElementById('personal-pagination').style.display = 'none';
+    return;
+  }
+
+  listContainer.innerHTML = html;
+
+  // Handle Pagination UI
+  var paginationEl = document.getElementById('personal-pagination');
+  if (totalPages <= 1) {
+    paginationEl.style.display = 'none';
+  } else {
+    paginationEl.style.display = 'flex';
+    document.getElementById('btn-prev-page').disabled = (currentPersonalPage === 0);
+    document.getElementById('btn-next-page').disabled = (currentPersonalPage >= totalPages - 1);
+    document.getElementById('page-info').textContent = 'Page ' + (currentPersonalPage + 1) + ' of ' + totalPages;
+  }
+}
+
+function changePersonalPage(direction) {
+  currentPersonalPage += direction;
+  renderPersonalCategory(false);
+}
+
+
+function showAddVideoModal(){
+  document.getElementById('category-suggestion-list').style.display='none';
+document.getElementById('add-category').value=lastUsedCategory;
+document.getElementById('add-video-modal').style.display='flex';
+}
+
+ function showCategorySuggestions(){
+  filterCategorySuggestions();
+}
+
+function filterCategorySuggestions(){
+  var input=document.getElementById('add-category');
+  var list=document.getElementById('category-suggestion-list');
+  var val=input.value.toLowerCase();
+  var cats=Object.keys(personalVideosData).filter(function(c){
+    return c.toLowerCase().indexOf(val)>-1;
+  });
+  if(!cats.length){list.style.display='none';return;}
+  list.innerHTML='';
+  cats.forEach(function(cat){
+    var item=document.createElement('div');
+    item.textContent=cat;
+    item.style.cssText='padding:12px 16px;font-size:15px;cursor:pointer;border-bottom:1px solid var(--border);color:var(--text);';
+    item.onmousedown=function(e){e.preventDefault();input.value=cat;list.style.display='none';};
+    item.ontouchend=function(e){e.preventDefault();input.value=cat;list.style.display='none';};
+    list.appendChild(item);
+  });
+  list.style.display='block';
+}
+ 
+function closeAddVideoModal(){
+  document.getElementById('add-video-modal').style.display='none';
+  document.getElementById('add-url').value='';
+  document.getElementById('add-category').value='';
+  document.getElementById('add-video-submit').textContent='Save video';
+  document.getElementById('add-video-submit').disabled=false;
+  document.getElementById('category-suggestion-list').style.display='none';
+}
+
+/* ── BETA UI ── */
+function updateBetaUI(){
+  var isBeta=userTier==='beta'||userTier==='gamma';
+  var showStrip=appConfig.betaFeaturesEnabled&&currentUser&&!isBeta&&localStorage.getItem('et_beta_invited')==='true';
+  var showAdd=appConfig.betaFeaturesEnabled&&isBeta;
+  var strip=document.getElementById('beta-strip');
+  if(strip)strip.style.display=showStrip?'flex':'none';
+  document.querySelectorAll('.btn-add-video').forEach(function(b){b.style.display=showAdd?'flex':'none';});
+}
+
+/* ── BETA CODE MODAL ── */
+function showBetaCodeModal(){
+  ['beta-code-section','beta-waitlist-section','beta-confirmed-section','beta-waitlist-confirmed-section'].forEach(function(id,i){document.getElementById(id).style.display=i===0?'block':'none';});
+  document.getElementById('beta-code-input').value='';
+  var knownEmail=currentUser?currentUser.email:localStorage.getItem('et_email');
+  if(knownEmail)document.getElementById('beta-waitlist-email').value=knownEmail;
+  document.getElementById('beta-submit-btn').textContent='Unlock';document.getElementById('beta-submit-btn').disabled=false;
+  document.getElementById('beta-modal').style.display='flex';
+}
+function closeBetaModal(){document.getElementById('beta-modal').style.display='none';}
+
+function validateBetaCode(){
+  var code=document.getElementById('beta-code-input').value.trim().toUpperCase();
+  var btn=document.getElementById('beta-submit-btn');
+  if(!code){document.getElementById('beta-code-input').focus();return;}
+  btn.textContent='Checking...';btn.disabled=true;
+  db.collection('config').doc('app').get().then(function(doc){
+    var data=doc.exists?doc.data():{};
+    var codes=data.codes||{};
+    var usageCount=data.betaUsageCount||0;
+    var limit=data.betaLimit||99;
+    if(!codes[code]){
+      btn.textContent='Unlock';btn.disabled=false;
+      document.getElementById('beta-code-input').style.borderColor='var(--red)';
+      setTimeout(function(){
+        document.getElementById('beta-code-input').style.borderColor='';
+        document.getElementById('beta-code-section').style.display='none';
+        var knownEmail=currentUser?currentUser.email:localStorage.getItem('et_email');
+        if(knownEmail)document.getElementById('beta-waitlist-email').value=knownEmail;
+        document.getElementById('beta-waitlist-section').style.display='block';
+      },600);
+      return;
+    }
+    if(usageCount>=limit){
+      document.getElementById('beta-code-section').style.display='none';
+      document.getElementById('beta-waitlist-section').style.display='block';
+      btn.textContent='Unlock';btn.disabled=false;return;
+    }
+    var tier=codes[code].tier||'beta';
+    db.collection('config').doc('app').update({betaUsageCount:firebase.firestore.FieldValue.increment(1)}).catch(function(){});
+    saveUserTier(currentUser,tier,function(){
+      document.getElementById('beta-code-section').style.display='none';
+      document.getElementById('beta-confirmed-section').style.display='block';
+      setTimeout(function(){closeBetaModal();loadPersonalVideosFromFirestore(currentUser);},2000);
+    });
+  }).catch(function(){btn.textContent='Unlock';btn.disabled=false;showToast('Could not validate code. Please try again.',true);});
+}
+
+function submitBetaWaitlist(){
+  var email=document.getElementById('beta-waitlist-email').value.trim();
+  if(!email){showToast('Please enter your email.',true);return;}
+  db.collection('waitlist').add({email:email,source:'beta-strip',consented:true,createdAt:firebase.firestore.FieldValue.serverTimestamp()})
+  .then(function(){
+    document.getElementById('beta-waitlist-section').style.display='none';
+    document.getElementById('beta-waitlist-confirmed-section').style.display='block';
+    setTimeout(function(){closeBetaModal();},2000);
+  }).catch(function(){closeBetaModal();});
+}
+
+/* ── SAVE USER TIER ── */
+function saveUserTier(user,tier,callback){
+  userTier=tier;localStorage.setItem('et_tier',tier);updateBetaUI();
+  db.collection('users').doc(user.uid).set({name:user.displayName,email:user.email,tier:tier,createdAt:firebase.firestore.FieldValue.serverTimestamp()},{merge:true})
+  .then(function(){if(callback)callback();}).catch(function(){if(callback)callback();});
+}
+
+/* ── INACTIVITY ── */
+var INACTIVITY_MS=15*60*1000,inactivityTimer=null;
+function resetInactivityTimer(){if(!currentUser)return;clearTimeout(inactivityTimer);inactivityTimer=setTimeout(function(){var p=document.getElementById('player-screen');if(p&&p.style.display==='flex')return;signOut();},INACTIVITY_MS);}
+function startInactivityWatch(){['touchstart','mousemove','keydown','scroll'].forEach(function(e){document.addEventListener(e,resetInactivityTimer,{passive:true});});resetInactivityTimer();}
+function stopInactivityWatch(){clearTimeout(inactivityTimer);inactivityTimer=null;}
+
+/* ── CURATOR VIDEOS (CSV) ── */
+var CSV_URL='https://docs.google.com/spreadsheets/d/e/2PACX-1vSMkmJi2zz99BE6d7STDfVXiBgd1eyfZSdIx4TUsst05Xm4m7G6tz9zGTJXmoVku1DQpmC52vWpOlhI/pub?output=csv';
+var CURRICULUM_CSV_URL='https://docs.google.com/spreadsheets/d/e/2PACX-1vTtcwNml9H2o_yu_3JTreZTWfyljHZcWuqzOBnl12KuC6IRBWj7LFlF1c3045vUIisUHeavcm1JJEMj/pub?output=csv';
+var allCurriculumVideos=[],curriculumLoaded=false;
+var CONTACT_EMAIL='hello@bloomplayer.com';
+var FALLBACK={
+  toddler:[{id:'XqZsoesa55w',title:'Baby Shark',channel:'Pinkfong',tag:'Animals'},{id:'yCjJyiqpAuU',title:'Animal Sounds',channel:'Sesame Street',tag:'Animals'},{id:'tBhkzYAqhMI',title:'Wild Animals for Kids',channel:'Nat Geo Kids',tag:'Nature'},{id:'pRpeEdMmmQ0',title:'The Alphabet A to Z',channel:'Dave and Ava',tag:'Letters'}],
+  prek:[{id:'GIAjzCH3X8Q',title:'Wild Animals for Kids',channel:'Nat Geo Kids',tag:'Nature'},{id:'pRpeEdMmmQ0',title:'The Alphabet A to Z',channel:'Dave and Ava',tag:'Letters'},{id:'XqZsoesa55w',title:'Baby Shark',channel:'Pinkfong',tag:'Animals'},{id:'u46A0WKp2nk',title:'How Do Plants Grow?',channel:'SciShow Kids',tag:'Science'}],
+  primary:[{id:'n6veBGGHCsY',title:'How Do Plants Grow?',channel:'SciShow Kids',tag:'Science'},{id:'_-OzmBSZXfo',title:'The Solar System',channel:'SciShow Kids',tag:'Science'},{id:'xyQY8a-ng6g',title:'How Food Affects Your Brain',channel:'TED-Ed',tag:'Health'},{id:'VtHtnMlMgzI',title:'How Does the Internet Work?',channel:'TED-Ed',tag:'Technology'}],
+  junior:[{id:'xyQY8a-ng6g',title:'How Food Affects Your Brain',channel:'TED-Ed',tag:'Health'},{id:'VtHtnMlMgzI',title:'How Does the Internet Work?',channel:'TED-Ed',tag:'Technology'},{id:'n6veBGGHCsY',title:'How Do Plants Grow?',channel:'SciShow Kids',tag:'Science'},{id:'sNhhvQGsMEc',title:'The Fermi Paradox',channel:'Kurzgesagt',tag:'Space'}],
+  teen:[{id:'sNhhvQGsMEc',title:'The Fermi Paradox',channel:'Kurzgesagt',tag:'Space'},{id:'JnlUkBm0lBQ',title:'How Your Immune System Works',channel:'TED-Ed',tag:'Biology'},{id:'MBRqu0YOH14',title:'Optimistic Nihilism',channel:'Kurzgesagt',tag:'Philosophy'},{id:'ZSt9tm3RoUU',title:'The Science of Productivity',channel:'AsapSCIENCE',tag:'Psychology'}],
+  teenplus:[{id:'MBRqu0YOH14',title:'Optimistic Nihilism',channel:'Kurzgesagt',tag:'Philosophy'},{id:'ZSt9tm3RoUU',title:'The Science of Productivity',channel:'AsapSCIENCE',tag:'Psychology'},{id:'sNhhvQGsMEc',title:'The Fermi Paradox',channel:'Kurzgesagt',tag:'Space'},{id:'JnlUkBm0lBQ',title:'How Your Immune System Works',channel:'TED-Ed',tag:'Biology'}]
+};
+var allVideos=[];
+
+function parseCSV(t){var l=t.trim().split('\n');if(l.length<2)return[];var h=l[0].split(',').map(function(x){return x.trim().toLowerCase().replace(/"/g,'');});var r=[];for(var i=1;i<l.length;i++){var c=splitCSV(l[i]);if(c.length<3)continue;var o={};h.forEach(function(k,j){o[k]=(c[j]||'').trim().replace(/^"|"$/g,'');});if(o.id)r.push(o);}return r;}
+function splitCSV(line){var cols=[],cur='',inQ=false;for(var i=0;i<line.length;i++){var c=line[i];if(c==='"'){inQ=!inQ;}else if(c===','&&!inQ){cols.push(cur);cur='';}else{cur+=c;}}cols.push(cur);return cols;}
+
+function loadVideos(){
+  fetch(CSV_URL).then(function(r){return r.text();}).then(function(csv){
+    var rows=parseCSV(csv);
+    allVideos=rows.filter(function(r){var s=(r.status||'').toLowerCase();return s===''||s==='approved';});
+    renderVideos();
+  }).catch(function(){renderVideos();});
+}
+
+function loadCurriculumVideos(){
+  if(curriculumLoaded)return;
+  fetch(CURRICULUM_CSV_URL).then(function(r){return r.text();}).then(function(csv){
+    var rows=parseCSV(csv);
+    allCurriculumVideos=rows.filter(function(r){return(r.id_status||'').toUpperCase()==='YES';});
+    curriculumLoaded=true;updateSubjectOptions();renderEducationalVideos();
+  }).catch(function(){document.getElementById('edu-video-list').innerHTML='<div class="empty-state">Curriculum coming soon.</div>';});
+}
+
+function updateSubjectOptions(){
+  var grade=document.getElementById('grade-select').value;
+  var subjects=[];
+  allCurriculumVideos.forEach(function(v){if(String(v.grade||'').trim()===grade&&subjects.indexOf(v.subject)===-1)subjects.push(v.subject);});
+  subjects.sort();
+  var sel=document.getElementById('subject-select');
+  var prev=sel.value;sel.innerHTML='';
+  subjects.forEach(function(s){var opt=document.createElement('option');opt.value=s;opt.textContent=s;sel.appendChild(opt);});
+  if(prev&&subjects.indexOf(prev)>-1)sel.value=prev;
+}
+
+function renderEducationalVideos(){
+  if(!curriculumLoaded){document.getElementById('edu-video-list').innerHTML='<div class="loading-state">Loading curriculum...</div>';return;}
+  var grade=document.getElementById('grade-select').value;
+  var subject=document.getElementById('subject-select').value;
+  var f=allCurriculumVideos.filter(function(v){return String(v.grade||'').trim()===grade&&(v.subject||'').trim()===subject;});
+  var html='';
+  if(!f.length){html='<div class="empty-state">No videos yet for this selection.</div>';}
+  else{f.forEach(function(v){
+    var id=(v.id||v.youtube_id||'').trim().replace(/[^a-zA-Z0-9_-]/g,'');
+    trackCurriculumSelected(grade,subject);
+    html+='<div class="video-item" onclick="prepareVideo(\''+escAttr(id)+'\',\'educational\',\''+escAttr(grade)+'\',\''+escAttr(subject)+'\')">'
+      +'<div class="video-thumb"><img src="https://img.youtube.com/vi/'+escAttr(id)+'/mqdefault.jpg" alt="" loading="lazy"/></div>'
+      +'<div class="video-info"><div class="video-title">'+escHtml(v.title||v.chapter||'')+'</div>'
+      +'<div class="video-sub">'+escHtml(v.channel||'')+'</div>'
+      +'<div class="video-tag">'+escHtml(v.unit||v.chapter||'')+'</div></div></div>';
+  });}
+  document.getElementById('edu-video-list').innerHTML=html;
+}
+
+function switchTab(tab){
+  trackTabSwitch(tab);
+  document.getElementById('tab-leisure').style.display=tab==='leisure'?'block':'none';
+  document.getElementById('tab-educational').style.display=tab==='educational'?'block':'none';
+  document.getElementById('tab-btn-leisure').className='tab-btn'+(tab==='leisure'?' active':'');
+  document.getElementById('tab-btn-educational').className='tab-btn'+(tab==='educational'?' active':'');
+  if(tab==='educational')loadCurriculumVideos();
+}
+
+function renderVideos(){
+  var age=document.getElementById('age-select').value;
+  var f=allVideos.filter(function(v){return(v.age||'').toLowerCase()===age;});
+  if(!f.length)f=FALLBACK[age]||[];
+  var html='';
+  if(!f.length){html='<div class="empty-state">No videos yet.</div>';}
+  else{f.forEach(function(v){
+    html+='<div class="video-item">'
+      +'<div class="video-thumb" onclick="prepareVideo(\''+v.id+'\')">'
+      +'<img src="https://img.youtube.com/vi/'+v.id+'/mqdefault.jpg" alt="" loading="lazy"/></div>'
+      +'<div class="video-info" onclick="prepareVideo(\''+v.id+'\')">'
+      +'<div class="video-title">'+escHtml(v.title)+'</div>'
+      +'<div class="video-sub">'+escHtml(v.channel||'')+'</div>'
+      +'<div class="video-tag">'+escHtml(v.tag||'')+'</div>'
+      +'<button class="report-btn" onclick="event.stopPropagation();openReportModal(\''+escAttr(v.id)+'\',\''+escAttr(v.title)+'\')">Suggest a fix</button>'
+      +'</div></div>';
+  });}
+  document.getElementById('video-list').innerHTML=html;
+}
+
+/* ── REPORT MODAL ── */
+function openReportModal(id,title){
+  reportingVideo={id:id,title:title};
+  document.getElementById('report-sub').textContent='Reporting: "'+title+'"';
+  ['report-email','report-link','report-note'].forEach(function(id){document.getElementById(id).value='';});
+  document.getElementById('report-modal').style.cssText+='display:flex;pointer-events:all;';
+}
+function closeReportModal(){document.getElementById('report-modal').style.display='none';document.getElementById('report-modal').style.pointerEvents='none';reportingVideo=null;}
+function submitReport(){
+  var email=document.getElementById('report-email').value.trim();
+  var link=document.getElementById('report-link').value.trim();
+  if(!email){showToast('Please enter your email.',true);return;}
+  if(!link){showToast('Please paste a YouTube link.',true);return;}
+  var age=document.getElementById('age-select').value;
+  var sub=encodeURIComponent('EarlyTube suggestion — '+age);
+  var body=encodeURIComponent('Reporting: '+(reportingVideo?reportingVideo.title+' ('+reportingVideo.id+')':'')+'\nReplacement: '+link+'\nAge: '+age+'\nFrom: '+email);
+  window.location.href='mailto:'+CONTACT_EMAIL+'?subject='+sub+'&body='+body;
+  closeReportModal();
+}
+
+/* ── VIDEO PLAYER ── */
+function show(id){document.querySelectorAll('.screen').forEach(function(s){s.style.display='none';});document.getElementById(id).style.display='flex';}
+function extractId(url){
+  url=(url||'').split('?si=')[0].split('&si=')[0];
+  var p=[/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/,/^([a-zA-Z0-9_-]{11})$/];
+  for(var i=0;i<p.length;i++){var m=url.match(p[i]);if(m)return m[1];}
+  return null;
+}
+function handleWatch(){var id=extractId(document.getElementById('url-input').value.trim());if(!id){document.getElementById('url-error').textContent='Please paste a valid YouTube link.';return;}prepareVideo(id);}
+
+function prepareVideo(id,source,grade,subject){
+  pendingId=id;currentVideoSource=source||'leisure';currentVideoGrade=grade||null;currentVideoSubject=subject||null;
+  currentVideoTitle='';
+  if(currentVideoSource==='educational'){
+    var ev=allCurriculumVideos.find(function(v){return(v.id||v.youtube_id||'').trim()===id;});
+    if(ev)currentVideoTitle=ev.title||ev.chapter||'';
+  } else if(currentVideoSource==='leisure'){
+    var lv=allVideos.find(function(v){return v.id===id;});
+    if(lv)currentVideoTitle=lv.title||'';
+  } else {
+    Object.keys(personalVideosData).forEach(function(cat){
+      personalVideosData[cat].forEach(function(v){if(v.id===id)currentVideoTitle=v.title||'';});
+    });
+  }
+  trackVideoPlayed(id,currentVideoSource,currentVideoGrade,currentVideoSubject);
+  document.getElementById('url-error').textContent='';document.getElementById('url-input').value='';
+  document.getElementById('player-overlay').style.display='none';document.getElementById('player-top').style.display='block';
+  document.getElementById('player-bottom').style.display='none';document.getElementById('lock-toast').classList.add('hidden');
+  document.getElementById('yt-iframe').src='https://www.youtube.com/embed/'+id+'?autoplay=1&controls=0&disablekb=1&fs=0&rel=0&iv_load_policy=3&playsinline=1&enablejsapi=1';
+  buildNextVideos(id);show('player-screen');
+}
+
+function lockControls(){
+  sessionStartTime=Date.now();
+  currentVideoDuration=null;
+  try{document.getElementById('yt-iframe').contentWindow.postMessage(JSON.stringify({event:'command',func:'playVideo',args:''}),'https://www.youtube.com');}catch(e){}
+  try{document.getElementById('yt-iframe').contentWindow.postMessage(JSON.stringify({event:'listening'}),'https://www.youtube.com');}catch(e){}
+  document.getElementById('player-overlay').style.display='block';document.getElementById('player-top').style.display='none';
+  document.getElementById('player-bottom').style.display='block';document.getElementById('next-videos').style.display='none';
+  document.querySelector('.next-title').style.display='none';
+  var toast=document.getElementById('lock-toast');toast.classList.remove('hidden');toast.textContent='Locked';
+  setTimeout(function(){toast.classList.add('hidden');},1500);
+}
+window.addEventListener('message',function(e){
+  if(e.origin!=='https://www.youtube.com')return;
+  try{
+    var data=JSON.parse(e.data);
+    if(data.event==='infoDelivery'&&data.info&&data.info.duration){
+      if(!currentVideoDuration)currentVideoDuration=data.info.duration;
+    }
+  }catch(ex){}
+});
+
+function buildNextVideos(currentId){
+  var f=[];
+  if(currentUser&&Object.keys(personalVideosData).length){
+    Object.keys(personalVideosData).forEach(function(cat){personalVideosData[cat].forEach(function(v){if(v.id!==currentId)f.push(v);});});
+  } else {
+    var age=document.getElementById('age-select').value;
+    f=allVideos.filter(function(v){return(v.age||'').toLowerCase()===age&&v.id!==currentId;});
+    if(!f.length)f=(FALLBACK[age]||[]).filter(function(v){return v.id!==currentId;});
+  }
+  var html='';
+  f.slice(0,3).forEach(function(v){
+    html+='<button class="next-video-btn" onclick="prepareVideo(\''+v.id+'\')">'
+      +'<div class="next-play-icon"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>'
+      +'<div><div class="next-video-title">'+escHtml(v.title)+'</div><div class="next-video-sub">'+escHtml(v.channel||'')+'</div></div></button>';
+  });
+  document.getElementById('next-videos').innerHTML=html||'<div style="font-size:12px;color:#888;">No more videos.</div>';
+}
+
+function closeVideo(){
+  if(currentUser&&sessionStartTime&&pendingId){
+    var elapsed=Math.round((Date.now()-sessionStartTime)/1000);
+    var watchTime=currentVideoDuration?Math.min(elapsed,Math.round(currentVideoDuration)):elapsed;
+    if(watchTime>5){
+         var now=new Date();
+    var month=now.toISOString().substring(0,7);
+    var year=String(now.getFullYear());
+    var sessionRef=db.collection('users').doc(currentUser.uid).collection('sessions').add({
+      videoId:pendingId,
+      title:currentVideoTitle,
+      watchTime:watchTime,
+      completionRate:currentVideoDuration?Math.min(100,Math.round((watchTime/currentVideoDuration)*100)):null,
+      source:currentVideoSource,
+      watchedAt:firebase.firestore.FieldValue.serverTimestamp()
+    }).catch(function(e){console.error('session write failed:',e);});
+    var statsUpdate={};
+    statsUpdate['stats.'+month+'.watchTime']=firebase.firestore.FieldValue.increment(watchTime);
+    statsUpdate['stats.'+year+'.watchTime']=firebase.firestore.FieldValue.increment(watchTime);
+    statsUpdate['stats.all.watchTime']=firebase.firestore.FieldValue.increment(watchTime);
+    statsUpdate['stats.'+month+'.videos']=firebase.firestore.FieldValue.arrayUnion(pendingId);
+    statsUpdate['stats.'+year+'.videos']=firebase.firestore.FieldValue.arrayUnion(pendingId);
+    statsUpdate['stats.all.videos']=firebase.firestore.FieldValue.arrayUnion(pendingId);
+    db.collection('users').doc(currentUser.uid).update(statsUpdate)
+    .catch(function(e){console.error('stats update failed:',e);});
+    }
+  }
+  sessionStartTime=null; 
+  currentVideoDuration=null;
+  document.getElementById('yt-iframe').src='';
+  document.getElementById('player-overlay').style.display='none';
+  document.getElementById('player-top').style.display='block';
+  document.getElementById('player-bottom').style.display='none';
+  show('home');
+}
+function showHome(){show('home');}
+function requestClose(){pinAction='close';showPin('Parent PIN required','Enter your PIN to close this video');}
+function requestSettings(){pinAction='settings';showPin('Parent PIN required','Enter your PIN to open Settings');}
+function showPin(title,sub){pinBuffer='';updateDots();document.getElementById('pin-error').textContent='';document.getElementById('pin-title').textContent=title;document.getElementById('pin-subtitle').textContent=sub;document.getElementById('pin-overlay').style.display='flex';}
+function pinPress(d){if(pinBuffer.length>=4)return;pinBuffer+=d;updateDots();if(pinBuffer.length===4)setTimeout(checkPin,120);}
+function pinClear(){pinBuffer=pinBuffer.slice(0,-1);updateDots();}
+function pinCancel(){
+  document.getElementById('pin-overlay').style.display='none';pinBuffer='';pinAction=null;
+  var p=document.getElementById('player-screen');
+  if(p&&p.style.display==='flex'){try{document.getElementById('yt-iframe').contentWindow.postMessage(JSON.stringify({event:'command',func:'playVideo',args:''}),'https://www.youtube.com');}catch(e){}}
+}
+function updateDots(){for(var i=0;i<4;i++)document.getElementById('d'+i).className='dot'+(i<pinBuffer.length?' filled':'');}
+var videoToDelete = null;
+var categoryToDelete = null;
+
+function requestDeleteVideo(videoId, category) {
+  videoToDelete = videoId;
+  categoryToDelete = category;
+  pinAction = 'delete_video';
+  showPin('Delete Video', 'Enter Parent PIN to remove');
+}
+
+function executeDeleteVideo() {
+  if (!currentUser || !videoToDelete) return;
+  
+  showToast('Deleting video...');
+  
+  // Fetch current array, filter out the specific video, and rewrite
+  db.collection('users').doc(currentUser.uid).get().then(function(doc) {
+    if (doc.exists) {
+      var videos = doc.data().videos || [];
+      var updatedVideos = videos.filter(function(v) {
+        return !(v.videoId === videoToDelete && (v.category || 'My Videos') === categoryToDelete);
+      });
+      return db.collection('users').doc(currentUser.uid).update({ videos: updatedVideos });
+    }
+  }).then(function() {
+    showToast('Video deleted');
+    loadPersonalVideosFromFirestore(currentUser); // Refresh the UI
+  }).catch(function(e) {
+    console.error(e);
+    showToast('Failed to delete video', true);
+  }).finally(function() {
+    videoToDelete = null;
+    categoryToDelete = null;
+  });
+}
+
+  
+  function checkPin(){
+  if(pinBuffer===parentPin){
+    document.getElementById('pin-overlay').style.display='none';
+    if(pinAction==='close')closeVideo();
+    if(pinAction==='settings'){sessionStorage.setItem('pin_verified','1');window.location.href='parent.html';}
+    if(pinAction==='delete_video') executeDeleteVideo();
+  } else {
+    document.getElementById('pin-error').textContent='Incorrect PIN — try again';
+    pinBuffer='';
+    updateDots();
+  }
+}
+
+
+/* ── SETTINGS ── */
+function saveSettings(){
+  var np=document.getElementById('new-pin').value.trim();
+  if(!/^\d{4}$/.test(np)){showToast('Please enter exactly 4 digits.',true);return;}
+  parentPin=np;localStorage.setItem('et_pin',np);
+  if(currentUser){db.collection('users').doc(currentUser.uid).set({pin:np},{merge:true});}
+  showToast('PIN updated!');showHome();
+}
+
+function forgotPin(){
+  if(!currentUser){showToast('Please sign in first.',true);return;}
+  var actionCodeSettings={url:window.location.href,handleCodeInApp:true};
+  auth.sendSignInLinkToEmail(currentUser.email,actionCodeSettings)
+  .then(function(){
+    localStorage.setItem('et_email_for_signin',currentUser.email);
+    localStorage.setItem('et_redirect_intent','reset_pin');
+    showToast('Check your email for a reset link.');
+    document.getElementById('pin-overlay').style.display='none';
+  }).catch(function(){
+    showToast('Could not send reset email. Please try again.',true);
+  });
+}
+
+/* ── LOGO LONG PRESS ── */
+var logoTimer;
+var logo=document.getElementById('logo');
+logo.addEventListener('touchstart',function(e){e.preventDefault();logoTimer=setTimeout(requestSettings,800);},{passive:false});
+logo.addEventListener('touchend',function(){clearTimeout(logoTimer);});
+
+/* ── BACK BUTTON TRAP ── */
+history.pushState(null,'','#');history.pushState(null,'','#');
+window.addEventListener('popstate',function(){
+  history.pushState(null,'','#');
+  var p=document.getElementById('player-screen');
+  if(p&&p.style.display==='flex'){requestClose();}
+});
+
+/* ── INSTALL POPUP ── */
+var installPopupShown=false;
+function showInstallPopupIfNeeded(){
+  if(installPopupShown||localStorage.getItem('et_no_install_prompt'))return;
+  var isStandalone=window.navigator.standalone===true||window.matchMedia('(display-mode: standalone)').matches;
+  if(!isStandalone){installPopupShown=true;setTimeout(function(){document.getElementById('install-popup').style.display='flex';},3000);}
+}
+
+/* ── ANALYTICS ── */
+function getDeviceId(){if(currentUser)return'auth_'+currentUser.uid;var s=localStorage.getItem('et_device_id');if(s)return s;var fp=[screen.width,screen.height,Intl.DateTimeFormat().resolvedOptions().timeZone,navigator.language,navigator.platform,screen.colorDepth].join('|');var id='dev_'+btoa(fp).substring(0,12)+'_'+Math.random().toString(36).substring(2,9);localStorage.setItem('et_device_id',id);return id;}
+function getDeviceType(){var ua=navigator.userAgent;if(/iPad/.test(ua))return'ipad';if(/iPhone/.test(ua))return'iphone';if(/Android/.test(ua))return'android';if(/Macintosh/.test(ua))return'mac';if(/Windows/.test(ua))return'windows';return'other';}
+
+var etSession={start:Date.now(),videosPlayed:0,tabUsed:'leisure',gradeSelected:null,subjectSelected:null,isStandalone:window.navigator.standalone===true||window.matchMedia('(display-mode: standalone)').matches};
+
+function trackSessionStart(){gtag('event','et_session_start',{device_id:getDeviceId(),is_standalone:etSession.isStandalone,is_signed_in:!!currentUser,device_type:getDeviceType(),user_agent:navigator.userAgent.substring(0,100)});}
+var sessionEndTracked=false;
+function trackSessionEndOnce(){if(sessionEndTracked)return;sessionEndTracked=true;var d=Math.round((Date.now()-etSession.start)/1000);if(d<5)return;gtag('event','et_session_end',{device_id:getDeviceId(),duration_seconds:d,videos_played:etSession.videosPlayed,tab_used:etSession.tabUsed,grade_selected:etSession.gradeSelected,subject_selected:etSession.subjectSelected,is_standalone:etSession.isStandalone,is_signed_in:!!currentUser});}
+window.addEventListener('pagehide',trackSessionEndOnce);
+function trackVideoPlayed(id,source,grade,subject){etSession.videosPlayed++;gtag('event','et_video_played',{device_id:getDeviceId(),video_id:id,source:source,grade:grade||null,subject:subject||null,is_standalone:etSession.isStandalone,is_signed_in:!!currentUser});}
+function trackTabSwitch(tab){if(tab==='educational'&&etSession.tabUsed==='leisure')etSession.tabUsed='both';else if(etSession.tabUsed!=='both')etSession.tabUsed=tab;gtag('event','et_tab_switched',{device_id:getDeviceId(),tab:tab});}
+function trackCurriculumSelected(grade,subject){etSession.gradeSelected=grade;etSession.subjectSelected=subject;gtag('event','et_curriculum_selected',{device_id:getDeviceId(),grade:grade,subject:subject});}
+
+/* ── BOOT ── */
+document.addEventListener('DOMContentLoaded',function(){trackSessionStart();});
+auth.getRedirectResult().then(function(result){
+  if(result&&result.user){document.getElementById('welcome-modal').style.display='none';}
+  var intent=localStorage.getItem('et_redirect_intent');
+  if(intent==='reset_pin'){
+    localStorage.removeItem('et_redirect_intent');
+    window.location.href='parent.html?setup=true';
+  }
+}).catch(function(e){console.error('boot redirect error:',e);}).finally(function(){
+   isProcessingRedirect = false;  
+  loadAppConfig();
+  loadVideos();
+  switchTab('educational');
+});
+// Show welcome modal only after 500ms, if user is still not signed in
+setTimeout(function() {
+  if (!currentUser && appConfig.signinEnabled && !localStorage.getItem('et_email')) {
+    // Make sure we are not returning from a Google redirect (which would already have a user)
+    var isSignInLink = firebase.auth().isSignInWithEmailLink(window.location.href);
+    if (!isSignInLink) {
+      document.getElementById('welcome-modal').style.display = 'flex';
+    }
+  }
+}, 550);
+  
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('/sw.js').then(function(reg) {
+      reg.onupdatefound = function() {
+        var installingWorker = reg.installing;
+        installingWorker.onstatechange = function() {
+          // If a new service worker is installed and takes over, force a reload
+          if (installingWorker.state === 'installed' && navigator.serviceWorker.controller) {
+            console.log('New version available! Refreshing...');
+            window.location.reload(true);
+          }
+        };
+      };
+    }).catch(function(e) {
+      console.error('Service Worker registration failed:', e);
+    });
+  });
+}
+window.addEventListener('resize', function() {
+    if (document.getElementById('personal-card').style.display !== 'none') {
+        // We pass 'true' to jump back to page 1 on rotate to prevent odd slicing overlaps
+        renderPersonalCategory(true); 
+    }
+});
+
+</script>
+</body>
+</html>
