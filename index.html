@@ -995,7 +995,8 @@ function renderPersonalCategory(){
   var videos=personalVideosData[cat]||[];
   var html='';
   videos.forEach(function(v){
-    html+='<div class="video-item" onclick="prepareVideo(\''+escAttr(v.id)+'\')">'
+    html+='<div class="video-item" style="position:relative;" onclick="prepareVideo(\''+escAttr(v.id)+'\')">'
+      +'<button class="btn-delete-vid" onclick="event.stopPropagation(); requestDeleteVideo(\''+escAttr(v.id)+'\', \''+escAttr(cat)+'\')">&times;</button>'
       +'<div class="video-thumb"><img src="https://img.youtube.com/vi/'+escAttr(v.id)+'/mqdefault.jpg" alt="" loading="lazy"/></div>'
       +'<div class="video-info"><div class="video-title">'+escHtml(v.title||v.id)+'</div></div></div>';
   });
@@ -1355,13 +1356,56 @@ function pinCancel(){
   if(p&&p.style.display==='flex'){try{document.getElementById('yt-iframe').contentWindow.postMessage(JSON.stringify({event:'command',func:'playVideo',args:''}),'https://www.youtube.com');}catch(e){}}
 }
 function updateDots(){for(var i=0;i<4;i++)document.getElementById('d'+i).className='dot'+(i<pinBuffer.length?' filled':'');}
-function checkPin(){
+var videoToDelete = null;
+var categoryToDelete = null;
+
+function requestDeleteVideo(videoId, category) {
+  videoToDelete = videoId;
+  categoryToDelete = category;
+  pinAction = 'delete_video';
+  showPin('Delete Video', 'Enter Parent PIN to remove');
+}
+
+function executeDeleteVideo() {
+  if (!currentUser || !videoToDelete) return;
+  
+  showToast('Deleting video...');
+  
+  // Fetch current array, filter out the specific video, and rewrite
+  db.collection('users').doc(currentUser.uid).get().then(function(doc) {
+    if (doc.exists) {
+      var videos = doc.data().videos || [];
+      var updatedVideos = videos.filter(function(v) {
+        return !(v.videoId === videoToDelete && (v.category || 'My Videos') === categoryToDelete);
+      });
+      return db.collection('users').doc(currentUser.uid).update({ videos: updatedVideos });
+    }
+  }).then(function() {
+    showToast('Video deleted');
+    loadPersonalVideosFromFirestore(currentUser); // Refresh the UI
+  }).catch(function(e) {
+    console.error(e);
+    showToast('Failed to delete video', true);
+  }).finally(function() {
+    videoToDelete = null;
+    categoryToDelete = null;
+  });
+}
+
+  
+  function checkPin(){
   if(pinBuffer===parentPin){
     document.getElementById('pin-overlay').style.display='none';
     if(pinAction==='close')closeVideo();
     if(pinAction==='settings'){sessionStorage.setItem('pin_verified','1');window.location.href='parent.html';}
-  } else {document.getElementById('pin-error').textContent='Incorrect PIN — try again';pinBuffer='';updateDots();}
+    if(pinAction==='delete_video') executeDeleteVideo();
+  } else {
+    document.getElementById('pin-error').textContent='Incorrect PIN — try again';
+    pinBuffer='';
+    updateDots();
+  }
 }
+
 
 /* ── SETTINGS ── */
 function saveSettings(){
