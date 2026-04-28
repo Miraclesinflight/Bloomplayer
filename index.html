@@ -37,19 +37,23 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',-apple-system,s
 .screen{display:none;flex-direction:column;min-height:100vh;}
 #home{display:flex;}
 
-.app-nav {
-    position: sticky;
-    top: 0;
-    z-index: 50;
-    background: var(--bg);
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 16px 20px; /* Unified padding */
-    width: 100%;
-    max-width: 800px; /* Restrict width on desktop */
-    margin: 0 auto; /* Center on desktop */
+/* 1. Mobile (Default): 16px edges everywhere */
+.app-nav { position:sticky; top:0; z-index:50; background:var(--bg); border-bottom:1px solid var(--border); display:flex; align-items:center; gap:12px; padding:16px; width:100%; box-sizing: border-box; }
+.beta-strip { background:var(--card); border-bottom:1px solid var(--border); padding:10px 16px; width:100%; display:none; align-items:center; justify-content:space-between; gap:12px; box-sizing: border-box; }
+.app-content { display:flex; flex-direction:column; gap:16px; padding:16px; width:100%; box-sizing: border-box; }
+
+/* 2. iPad / Tablets: 24px edges everywhere */
+@media(min-width: 640px) {
+  .app-nav { padding: 16px 24px; }
+  .beta-strip { padding: 12px 24px; }
+  .app-content { padding: 20px 24px; }
+}
+
+/* 3. Laptops / Desktops: 40px edges everywhere */
+@media(min-width: 1024px) {
+  .app-nav { padding: 16px 40px; }
+  .beta-strip { padding: 12px 40px; }
+  .app-content { padding: 24px 40px; }
 }
 
 /* Add this new class for the delete button */
