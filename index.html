@@ -1436,7 +1436,6 @@ function extractId(url){
 }
 function handleWatch(){var id=extractId(document.getElementById('url-input').value.trim());if(!id){document.getElementById('url-error').textContent='Please paste a valid YouTube link.';return;}prepareVideo(id);}
 function directPlay(videoId, list = null, categoryName = "Video") {
-    // 1. Auto-detect the list if it wasn't passed in
     if (!list) {
         if (categoryName === 'Leisure') {
             var age = document.getElementById('age-select').value;
@@ -1455,27 +1454,28 @@ function directPlay(videoId, list = null, categoryName = "Video") {
     }
 
     currentPlaylist = list || [{id: videoId}];
-    currentIndex = currentPlaylist.findIndex(v => (v.id || v.videoId || v.id_status) === videoId);
+    currentIndex = currentPlaylist.findIndex(v => (v.id || v.videoId) === videoId);
     if (currentIndex === -1) currentIndex = 0;
     currentCategoryName = categoryName;
 
-    // 2. Switch UI
+    // Show the screen
     document.getElementById('home').style.display = 'none';
-    document.getElementById('player-screen').style.display = 'flex';
+    document.getElementById('player-screen').style.display = 'block';
 
-    // 3. Enable the Shield (Blocks taps/pausing)
+    // IMPORTANT: Hide shield for a moment so the video can initialize
     var shield = document.getElementById('player-shield');
     if (shield) {
-        shield.style.display = 'block';
+        shield.style.display = 'none';
+        setTimeout(function() { shield.style.display = 'block'; }, 1000);
     }
 
-    // 4. Reset Session Tracking (for your analytics)
     sessionStartTime = Date.now();
     pendingId = videoId; 
 
     updatePlayerStatus();
     loadVideoById(videoId);
 }
+
 
 
 function updatePlayerStatus() {
@@ -1488,17 +1488,18 @@ function loadVideoById(videoId) {
     currentVideoId = videoId;
     const container = document.getElementById('player-container');
     
-    // We use the YouTube IFrame API "enablejsapi=1" so we can listen for the 'ended' state
+    // We add &mute=1 to ensure the video starts automatically without a touch
     container.innerHTML = `
         <iframe id="yt-player" 
-            src="https://www.youtube.com/embed/${videoId}?autoplay=1&controls=0&modestbranding=1&rel=0&iv_load_policy=3&disablekb=1&playsinline=1&enablejsapi=1" 
+            src="https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&controls=0&modestbranding=1&rel=0&iv_load_policy=3&disablekb=1&playsinline=1&enablejsapi=1" 
+            style="width:100%; height:100%; border:none;"
             allow="autoplay; encrypted-media" 
             allowfullscreen>
         </iframe>`;
 
-    // Setup the listener for when the video ends
     setupVideoEndListener();
 }
+
 
 function setupVideoEndListener() {
     // This waits for the iframe to send a message that the video is done
