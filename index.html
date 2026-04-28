@@ -357,6 +357,16 @@ html, body, #home, .screen {
     </div>
 
     <div id="view-discover">
+          <div class="card" id="paste-card">
+        <div class="card-header">Paste a Link</div>
+        <div class="input-desc">Find a video on YouTube, copy the link and paste it here. Your child watches without any controls — no rewind, no skip, no loop.</div>
+        <div class="input-wrap">
+          <input id="url-input" type="url" inputmode="url" placeholder="youtube.com/watch?v=..."/>
+          <button class="btn-watch" onclick="handleWatch()">Watch</button>
+        </div>
+        <div class="error-msg" id="url-error"></div>
+      </div>
+
       <div class="card" id="suggested-card">
         <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:12px; flex-wrap:wrap;">
           <div class="card-header" style="margin-bottom:0; white-space:nowrap;">Discover &amp; Learn</div>
@@ -396,15 +406,6 @@ html, body, #home, .screen {
 
     <div id="view-library" style="display: none; flex-direction: column; gap: 16px;">
       
-      <div class="card" id="paste-card">
-        <div class="card-header">Paste a Link</div>
-        <div class="input-desc">Find a video on YouTube, copy the link and paste it here. Your child watches without any controls — no rewind, no skip, no loop.</div>
-        <div class="input-wrap">
-          <input id="url-input" type="url" inputmode="url" placeholder="youtube.com/watch?v=..."/>
-          <button class="btn-watch" onclick="handleWatch()">Watch</button>
-        </div>
-        <div class="error-msg" id="url-error"></div>
-      </div>
 
       <div class="card" id="personal-card" style="display:none;">
         <div class="section-header" style="flex-wrap: wrap; gap: 12px;">
