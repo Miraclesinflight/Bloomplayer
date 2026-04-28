@@ -1052,7 +1052,7 @@ function renderPersonalCategory(resetPage) {
 
   var html = '';
   videosToShow.forEach(function(v){
-    html += '<div class="video-item" style="position:relative;" onclick="prepareVideo(\''+escAttr(v.id)+'\')">'
+    html += '<div class="video-item" style="position:relative;" onclick="directPlay(\''+escAttr(v.id)+'\')">'
       + '<button class="btn-delete-vid" onclick="event.stopPropagation(); requestDeleteVideo(\''+escAttr(v.id)+'\', \''+escAttr(cat)+'\')">&times;</button>'
       + '<div class="video-thumb"><img src="https://img.youtube.com/vi/'+escAttr(v.id)+'/mqdefault.jpg" alt="" loading="lazy"/></div>'
       + '<div class="video-info"><div class="video-title">'+escHtml(v.title||v.id)+'</div></div></div>';
@@ -1262,7 +1262,7 @@ function renderEducationalVideos(){
   else{f.forEach(function(v){
     var id=(v.id||v.youtube_id||'').trim().replace(/[^a-zA-Z0-9_-]/g,'');
     trackCurriculumSelected(grade,subject);
-    html+='<div class="video-item" onclick="prepareVideo(\''+escAttr(id)+'\',\'educational\',\''+escAttr(grade)+'\',\''+escAttr(subject)+'\')">'
+    html+='<div class="video-item" onclick="directPlay(\''+escAttr(id)+'\',\'educational\',\''+escAttr(grade)+'\',\''+escAttr(subject)+'\')">'
       +'<div class="video-thumb"><img src="https://img.youtube.com/vi/'+escAttr(id)+'/mqdefault.jpg" alt="" loading="lazy"/></div>'
       +'<div class="video-info"><div class="video-title">'+escHtml(v.title||v.chapter||'')+'</div>'
       +'<div class="video-sub">'+escHtml(v.channel||'')+'</div>'
@@ -1288,9 +1288,9 @@ function renderVideos(){
   if(!f.length){html='<div class="empty-state">No videos yet.</div>';}
   else{f.forEach(function(v){
     html+='<div class="video-item">'
-      +'<div class="video-thumb" onclick="prepareVideo(\''+v.id+'\')">'
+      +'<div class="video-thumb" onclick="directPlay(\''+v.id+'\')">'
       +'<img src="https://img.youtube.com/vi/'+v.id+'/mqdefault.jpg" alt="" loading="lazy"/></div>'
-      +'<div class="video-info" onclick="prepareVideo(\''+v.id+'\')">'
+      +'<div class="video-info" onclick="directPlay(\''+v.id+'\')">'
       +'<div class="video-title">'+escHtml(v.title)+'</div>'
       +'<div class="video-sub">'+escHtml(v.channel||'')+'</div>'
       +'<div class="video-tag">'+escHtml(v.tag||'')+'</div>'
@@ -1329,8 +1329,25 @@ function extractId(url){
   return null;
 }
 function handleWatch(){var id=extractId(document.getElementById('url-input').value.trim());if(!id){document.getElementById('url-error').textContent='Please paste a valid YouTube link.';return;}prepareVideo(id);}
+function directPlay(videoId) {
+    // 1. Set the global video ID
+    currentVideoId = videoId;
+    
+    // 2. Hide the main app UI
+    document.getElementById('home').style.display = 'none';
+    
+    // 3. Show the player screen
+    var screen = document.getElementById('player-screen');
+    screen.style.display = 'flex';
+    
+    // 4. Inject the YouTube iframe with autoplay enabled
+    document.getElementById('player-container').innerHTML = 
+        '<iframe src="https://www.youtube.com/embed/' + videoId + 
+        '?autoplay=1&controls=0&modestbranding=1&rel=0&iv_load_policy=3&disablekb=1&playsinline=1" ' +
+        'allow="autoplay; encrypted-media" allowfullscreen></iframe>';
+}
 
-function prepareVideo(id,source,grade,subject){
+/*function prepareVideo(id,source,grade,subject){
   pendingId=id;currentVideoSource=source||'leisure';currentVideoGrade=grade||null;currentVideoSubject=subject||null;
   currentVideoTitle='';
   if(currentVideoSource==='educational'){
@@ -1350,7 +1367,7 @@ function prepareVideo(id,source,grade,subject){
   document.getElementById('player-bottom').style.display='none';document.getElementById('lock-toast').classList.add('hidden');
   document.getElementById('yt-iframe').src='https://www.youtube.com/embed/'+id+'?autoplay=1&controls=0&disablekb=1&fs=0&rel=0&iv_load_policy=3&playsinline=1&enablejsapi=1';
   buildNextVideos(id);show('player-screen');
-}
+}*/
 
 function lockControls(){
   sessionStartTime=Date.now();
@@ -1384,7 +1401,7 @@ function buildNextVideos(currentId){
   }
   var html='';
   f.slice(0,3).forEach(function(v){
-    html+='<button class="next-video-btn" onclick="prepareVideo(\''+v.id+'\')">'
+    html+='<button class="next-video-btn" onclick="directPlay(\''+v.id+'\')">'
       +'<div class="next-play-icon"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>'
       +'<div><div class="next-video-title">'+escHtml(v.title)+'</div><div class="next-video-sub">'+escHtml(v.channel||'')+'</div></div></button>';
   });
