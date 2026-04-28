@@ -1810,11 +1810,11 @@ window.addEventListener('resize', function() {
   <div id="player-container"></div>
   <div id="player-shield"></div>
 
-  <div id="ready-overlay">
+<div id="ready-overlay" style="display:none; position:absolute; inset:0; z-index:20; background:rgba(0,0,0,0.8); flex-direction:column; align-items:center; justify-content:center;">
     <button class="btn-start-video" onclick="startPlaybackSession()">
       Tap to start video
     </button>
-  </div>
+</div>
 
   <div class="player-ui-layer">
     <button class="btn-exit-minimal" onclick="requestPlayerExit()">Exit to Library</button>
