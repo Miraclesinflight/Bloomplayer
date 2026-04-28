@@ -348,84 +348,95 @@ html, body, #home, .screen {
   </div>
 
   <div class="app-content">
-       <div class="card" id="personal-card" style="display:none;">
-      <div class="section-header" style="flex-wrap: wrap; gap: 12px;">
-        <div class="section-left">
-          <div class="card-header" style="margin-bottom: 0;">My Videos</div>
+
+    <div style="position: sticky; top: 80px; z-index: 45; background: var(--bg); padding: 8px 0 16px 0; margin-top: -8px;">
+      <div class="tab-bar">
+        <button class="tab-btn active" id="btn-view-discover" onclick="switchMainView('discover')">Discover</button>
+        <button class="tab-btn" id="btn-view-library" onclick="switchMainView('library')">My Library</button>
+      </div>
+    </div>
+
+    <div id="view-discover">
+      <div class="card" id="suggested-card">
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:12px; flex-wrap:wrap;">
+          <div class="card-header" style="margin-bottom:0; white-space:nowrap;">Discover &amp; Learn</div>
+          <div class="tab-bar">
+            <button class="tab-btn active" id="tab-btn-educational" onclick="switchTab('educational')">Educational</button>
+            <button class="tab-btn" id="tab-btn-leisure" onclick="switchTab('leisure')">Leisure</button>
+          </div>
         </div>
-        <div style="display:flex;align-items:center;gap:8px; flex-wrap: wrap;">
-          <select class="age-select" id="category-select" onchange="renderPersonalCategory(true)"></select>
-          <button class="btn-add-video" onclick="showAddVideoModal()">+ Add</button>
+        <div style="border-bottom:1px solid var(--border);margin-bottom:16px;"></div>
+        <div id="tab-leisure" style="display:none;">
+          <div class="section-header" style="justify-content:flex-end;">
+            <select class="age-select" id="age-select" onchange="renderVideos()">
+              <option value="teenplus">Teen+ (16+)</option>
+              <option value="teen">Teen (12-16)</option>
+              <option value="junior">Junior (8-12)</option>
+              <option value="primary">Primary (5-8)</option>
+              <option value="prek">Pre-K (3-5)</option>
+              <option value="toddler">Toddler (2-3)</option>
+            </select>
+          </div>
+          <div class="video-list" id="video-list"><div class="loading-state">Loading videos...</div></div>
+        </div>
+        <div id="tab-educational">
+          <div class="edu-controls" style="justify-content:flex-end;">
+            <select class="edu-select" id="grade-select" onchange="updateSubjectOptions();renderEducationalVideos();">
+              <option value="9">Grade 9</option>
+              <option value="10">Grade 10</option>
+              <option value="11">Grade 11</option>
+              <option value="12">Grade 12</option>
+            </select>
+            <select class="edu-select" id="subject-select" onchange="renderEducationalVideos()"></select>
+          </div>
+          <div class="video-list" id="edu-video-list"><div class="loading-state">Loading curriculum...</div></div>
         </div>
       </div>
-      <div class="video-list" id="personal-video-list"></div>
+    </div>
+
+    <div id="view-library" style="display: none; flex-direction: column; gap: 16px;">
       
-      <div id="personal-pagination" style="display:none; align-items:center; justify-content:space-between; margin-top:16px; padding-top:16px; border-top:1px solid var(--border);">
-        <button id="btn-prev-page" onclick="changePersonalPage(-1)" class="btn-page">Prev</button>
-        <span id="page-info" style="font-size:13px; color:var(--text-3); font-weight:600;"></span>
-        <button id="btn-next-page" onclick="changePersonalPage(1)" class="btn-page">Next</button>
-      </div>
-    </div>
-
-    <div class="card" id="no-videos-card" style="display:none;">
-      <div class="section-header">
-        <div class="section-left">
-          <div class="card-header">My Videos</div>
+      <div class="card" id="paste-card">
+        <div class="card-header">Paste a Link</div>
+        <div class="input-desc">Find a video on YouTube, copy the link and paste it here. Your child watches without any controls — no rewind, no skip, no loop.</div>
+        <div class="input-wrap">
+          <input id="url-input" type="url" inputmode="url" placeholder="youtube.com/watch?v=..."/>
+          <button class="btn-watch" onclick="handleWatch()">Watch</button>
         </div>
-        <button class="btn-add-video" onclick="showAddVideoModal()">+ Add video</button>
+        <div class="error-msg" id="url-error"></div>
       </div>
-      <div class="empty-state">No videos yet — tap + Add to build your list.</div>
-    </div>
 
-    <div class="card" id="paste-card">
-      <div class="card-header">Paste a Link</div>
-      <div class="input-desc">Find a video on YouTube, copy the link and paste it here. Your child watches without any controls — no rewind, no skip, no loop.</div>
-      <div class="input-wrap">
-        <input id="url-input" type="url" inputmode="url" placeholder="youtube.com/watch?v=..."/>
-        <button class="btn-watch" onclick="handleWatch()">Watch</button>
-      </div>
-      <div class="error-msg" id="url-error"></div>
-    </div>
-
-<div class="card" id="suggested-card">
-  <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:12px; flex-wrap:wrap;">
-    <div class="card-header" style="margin-bottom:0; white-space:nowrap;">Discover &amp; Learn</div>
-        <div class="tab-bar">
-          <button class="tab-btn active" id="tab-btn-educational" onclick="switchTab('educational')">Educational</button>
-          <button class="tab-btn" id="tab-btn-leisure" onclick="switchTab('leisure')">Leisure</button>
+      <div class="card" id="personal-card" style="display:none;">
+        <div class="section-header" style="flex-wrap: wrap; gap: 12px;">
+          <div class="section-left">
+            <div class="card-header" style="margin-bottom: 0;">My Videos</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px; flex-wrap: wrap;">
+            <select class="age-select" id="category-select" onchange="renderPersonalCategory(true)"></select>
+            <button class="btn-add-video" onclick="showAddVideoModal()">+ Add</button>
+          </div>
+        </div>
+        <div class="video-list" id="personal-video-list"></div>
+        <div id="personal-pagination" style="display:none; align-items:center; justify-content:space-between; margin-top:16px; padding-top:16px; border-top:1px solid var(--border);">
+          <button id="btn-prev-page" onclick="changePersonalPage(-1)" class="btn-page">Prev</button>
+          <span id="page-info" style="font-size:13px; color:var(--text-3); font-weight:600;"></span>
+          <button id="btn-next-page" onclick="changePersonalPage(1)" class="btn-page">Next</button>
         </div>
       </div>
-      <div style="border-bottom:1px solid var(--border);margin-bottom:16px;"></div>
-      <div id="tab-leisure" style="display:none;">
-        <div class="section-header" style="justify-content:flex-end;">
-          <select class="age-select" id="age-select" onchange="renderVideos()">
-            <option value="teenplus">Teen+ (16+)</option>
-            <option value="teen">Teen (12-16)</option>
-            <option value="junior">Junior (8-12)</option>
-            <option value="primary">Primary (5-8)</option>
-            <option value="prek">Pre-K (3-5)</option>
-            <option value="toddler">Toddler (2-3)</option>
-          </select>
-        </div>
-        <div class="video-list" id="video-list"><div class="loading-state">Loading videos...</div></div>
-      </div>
-      <div id="tab-educational">
-        <div class="edu-controls" style="justify-content:flex-end;">
-          <select class="edu-select" id="grade-select" onchange="updateSubjectOptions();renderEducationalVideos();">
-            <option value="9">Grade 9</option>
-            <option value="10">Grade 10</option>
-            <option value="11">Grade 11</option>
-            <option value="12">Grade 12</option>
-          </select>
-          <select class="edu-select" id="subject-select" onchange="renderEducationalVideos()"></select>
-        </div>
-        <div class="video-list" id="edu-video-list"><div class="loading-state">Loading curriculum...</div></div>
-      </div>
-    </div>
 
-    <div class="info-card">
+      <div class="card" id="no-videos-card" style="display:none;">
+        <div class="section-header">
+          <div class="section-left">
+            <div class="card-header">My Videos</div>
+          </div>
+          <button class="btn-add-video" onclick="showAddVideoModal()">+ Add video</button>
+        </div>
+        <div class="empty-state">No videos yet — tap + Add to build your list.</div>
+      </div>
+
+    </div> <div class="info-card">
       <p id="info-card-text"><strong>For parents:</strong> Select your child's age above to see suitable videos. Videos play with no controls visible — your child cannot rewind, skip, or scrub. Closing always requires the parent PIN. <strong>Default PIN is 1234.</strong> Long press the logo to open Settings.</p>
-    </div> 
+    </div>
 
     <div class="kofi-bar">
       <a href="https://ko-fi.com/BloomPlayer" target="_blank">If this helped your child, support BloomPlayer on Ko-fi</a>
@@ -1587,6 +1598,25 @@ window.addEventListener('resize', function() {
         renderPersonalCategory(true); 
     }
 });
+  function switchMainView(view) {
+  if (view === 'discover') {
+    document.getElementById('view-discover').style.display = 'block';
+    document.getElementById('view-library').style.display = 'none';
+    document.getElementById('btn-view-discover').classList.add('active');
+    document.getElementById('btn-view-library').classList.remove('active');
+  } else {
+    document.getElementById('view-discover').style.display = 'none';
+    document.getElementById('view-library').style.display = 'flex';
+    document.getElementById('btn-view-discover').classList.remove('active');
+    document.getElementById('btn-view-library').classList.add('active');
+    
+    // Force the pagination math to recalculate now that the library grid is visible
+    if (currentUser && document.getElementById('personal-card').style.display !== 'none') {
+        renderPersonalCategory(false);
+    }
+  }
+}
+
 
 </script>
 </body>
