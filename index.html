@@ -228,20 +228,29 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',-apple-system,s
 
 .tab-btn {
     flex: 1;
-    padding: 8px 16px;
+    padding: 8px 10px; /* Reduced side padding for mobile */
     background: transparent;
     border: none;
-    /* Remove the old border-bottom */
     border-bottom: none; 
-    font-size: 15px;
-    font-weight: 300;          /* Bolded for professionalism */
-    color: var(--text-3);      /* Muted color when inactive */
+    font-size: 14.5px; /* Slightly smaller to prevent truncation */
+    font-weight: 600; /* Bumped weight slightly for readability */
+    color: var(--text-3);
     font-family: 'Nunito';
     cursor: pointer;
     text-align: center;
-    border-radius: 50px;       /* Individual pills inside the track */
+    border-radius: 50px;
     transition: all 0.2s ease;
+    white-space: nowrap; /* Ensures the word itself doesn't break */
 }
+
+/* Let the tabs breathe more on bigger screens */
+@media(min-width: 640px) {
+    .tab-btn {
+        padding: 8px 16px;
+        font-size: 15px;
+    }
+}
+
 
 /* ── ACTIVE STATE: BOLD COLOR ── */
 .tab-btn.active {
@@ -295,11 +304,11 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',-apple-system,s
   <div class="app-content">
 
     <div class="card" id="personal-card" style="display:none;">
-      <div class="section-header">
-        <div class="section-left">
-          <div class="card-header">My Videos</div>
-        </div>
-        <div style="display:flex;align-items:center;gap:8px;">
+   <div class="section-header" style="flex-wrap: wrap; gap: 12px;">
+  <div class="section-left">
+    <div class="card-header" style="margin-bottom: 0;">My Videos</div>
+  </div>
+  <div style="display:flex;align-items:center;gap:8px; flex-wrap: wrap;">
           <select class="age-select" id="category-select" onchange="renderPersonalCategory()"></select>
           <button class="btn-add-video" onclick="showAddVideoModal()">+ Add</button>
         </div>
@@ -327,9 +336,9 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',-apple-system,s
       <div class="error-msg" id="url-error"></div>
     </div>
 
-    <div class="card" id="suggested-card">
-      <div style="display:flex;align-items:center;gap:16px;margin-bottom:10px;">
-        <div class="card-header" style="margin-bottom:0;white-space:nowrap;">Discover &amp; Learn</div>
+<div class="card" id="suggested-card">
+  <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:12px; flex-wrap:wrap;">
+    <div class="card-header" style="margin-bottom:0; white-space:nowrap;">Discover &amp; Learn</div>
         <div class="tab-bar">
           <button class="tab-btn active" id="tab-btn-educational" onclick="switchTab('educational')">Educational</button>
           <button class="tab-btn" id="tab-btn-leisure" onclick="switchTab('leisure')">Leisure</button>
