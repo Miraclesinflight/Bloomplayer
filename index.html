@@ -1521,14 +1521,23 @@ function requestPlayerExit() {
 }
 
 function closeVideo() {
-  isSessionStarted = false; // Reset blessing for next session
-  document.getElementById('player-container').innerHTML = '';
+  // 1. RESET the blessing flag so the next manual video selection shows the button
+  isSessionStarted = false;
+
+  // 2. Kill the video/iframe
+  var container = document.getElementById('player-container');
+  if(container) container.innerHTML = '';
+  
+  // 3. Hide the player and go home
   document.getElementById('player-screen').style.display = 'none';
   document.getElementById('home').style.display = 'flex';
+  
+  // 4. Reset playlist tracking
   currentPlaylist = [];
   currentIndex = 0;
   pinAction = null;
 }
+
 
 
 function updatePlayerStatus() {
