@@ -133,12 +133,109 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',-apple-system,s
 .kofi-bar a{font-size:17px;color:var(--text-3);text-decoration:none;}
 .app-footer{text-align:center;font-size:13px;color:var(--text-3);padding:4px 0 20px;}
 .app-footer a{color:var(--text-3);text-decoration:none;}
+/* --- THE FULLSCREEN PLAYER --- */
+#player-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: #000;
+    z-index: 9999;
+    display: none;
+    flex-direction: column;
+    overflow: hidden;
+}
 
-#player-screen{background:#000;width:100%;}
-.player-top{background:var(--player-bg);padding:17px 20px;width:100%;}
-.player-instruction{font-size:15px;color:#aaa;margin-bottom:12px;line-height:1.5;text-align:center;}
-.btn-lock{width:100%;padding:17px;border-radius:10px;background:var(--red);border:none;color:white;font-size:17px;font-weight:700;font-family:nunito;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;}
-.player-wrap{position:relative;width:100%;background:#000;}
+#player-container {
+    flex: 1;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#player-container iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+/* --- THE DISCREET BOTTOM BAR --- */
+.player-bottom-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    /* frosted glass effect */
+    background: rgba(20, 20, 20, 0.7);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    /* Extra padding for iPhone "Home" swipe area */
+    padding-bottom: max(16px, env(safe-area-inset-bottom)); 
+    z-index: 10001;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.player-status-text {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 14px;
+    font-weight: 600;
+    font-family: 'Nunito', sans-serif;
+}
+
+.btn-exit-player {
+    background: var(--red);
+    color: white;
+    border: none;
+    padding: 8px 18px;
+    border-radius: 50px;
+    font-size: 14px;
+    font-weight: 700;
+    font-family: 'Nunito', sans-serif;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.btn-exit-player:active {
+    transform: scale(0.95);
+}
+
+/* Fullscreen black wrapper for the player */
+/*#player-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: #000;
+    z-index: 9999; /* Ensure it stays on top of everything */
+    display: none; /* Controlled by JS */
+    flex-direction: column;
+}
+
+/* The actual container for the YouTube iframe */
+#player-container {
+    flex: 1;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #000;
+}
+
+/* Ensure the iframe itself is forced to fill the container */
+#player-container iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
 #yt-iframe{display:block;width:100%;aspect-ratio:16/9;border:none;}
 .player-overlay{display:none;position:absolute;top:0;left:0;width:100%;height:100%;z-index:10;}
 .lock-toast{position:absolute;top:16px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.85);color:white;font-size:17px;font-weight:700;padding:10px 20px;border-radius:20px;z-index:15;white-space:nowrap;transition:opacity 0.3s;border:1px solid rgba(255,255,255,0.15);}
@@ -151,7 +248,7 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',-apple-system,s
 .next-play-icon svg{width:12px;height:12px;fill:white;}
 .next-video-title{font-size:15px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .next-video-sub{font-size:13px;color:#888;margin-top:2px;}
-
+*/
 #pin-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:100;flex-direction:column;align-items:center;justify-content:center;gap:18px;}
 .pin-icon{width:52px;height:52px;background:var(--player-btn-bg);border-radius:17px;display:flex;align-items:center;justify-content:center;margin-bottom:4px;}
 .pin-icon svg{width:22px;height:22px;fill:#94A3B8;}
@@ -213,9 +310,7 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',-apple-system,s
 .btn-back{width:100%;padding:17px;border-radius:10px;background:var(--card);color:var(--text);border:1px solid var(--border);font-size:17px;font-family:nunito;cursor:pointer;}
 .player-back-bar{background:var(--player-bg);padding:8px 20px;width:100%;}
 .player-back-bar button{width:100%;padding:12px;border-radius:8px;background:none;border:1px solid #444;color:#888;font-size:15px;font-family:nunito;cursor:pointer;}
-/*.tab-bar{display:flex;flex:1;border:1px solid var(--border);border-radius:10px;overflow:hidden;}*/
-/*.tab-btn{flex:1;padding:6px 16px;background:none;border:none;border-bottom:2px solid transparent;font-size:15px;font-weight:600;color:var(--text-3);font-family:nunito;cursor:pointer;text-align:center;}
-.tab-btn.active{color:var(--red);background:var(--red-light);border-bottom:2px solid var(--red);}*/
+
   /* ── UPDATED TAB BAR ── */
 .tab-bar {
     display: flex;
@@ -307,21 +402,6 @@ html, body, #home, .screen {
 }
 .btn-page:active { background: var(--card2); }
 .btn-page:disabled { opacity: 0.4; cursor: not-allowed; background: transparent; }
-#player-container {
-    flex: 1;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #000;
-}
-
-#player-container iframe {
-    width: 100%;
-    height: 100%;
-    border: none;
-}
 
 </style>
 
