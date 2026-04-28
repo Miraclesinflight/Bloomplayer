@@ -1,4 +1,7 @@
 var CACHE = 'bloomplayer-v1';
+// Update this version number to force users' devices to download the newest code
+const CACHE_VERSION = 'v4.1'; 
+
 var FILES = [
   '/',
   '/index.html',
