@@ -1480,7 +1480,7 @@ function directPlay(videoId, list = null, categoryName = "Video") {
     document.getElementById('player-screen').style.display = 'flex';
     
     // 3. Handle Overlay Logic
-    if (!isSessionStarted) {
+    if (!isSessionStarted === false) {
         document.getElementById('ready-overlay').style.display = 'flex';
         document.getElementById('player-shield').style.display = 'none';
     } else {
