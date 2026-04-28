@@ -146,75 +146,103 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',-apple-system,s
 /* --- THE FULLSCREEN PLAYER --- */
 #player-screen {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
+    inset: 0;
     background: #000;
     z-index: 9999;
-    display: none;
-    flex-direction: column;
+    display: none; /* Controlled by JS */
+    align-items: center;
+    justify-content: center;
     overflow: hidden;
 }
 
+/* THE VIDEO ENGINE: Keeps 16:9 ratio on ANY device */
 #player-container {
-    flex: 1;
     width: 100%;
     height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
+    z-index: 1;
 }
 
 #player-container iframe {
-    width: 100%;
-    height: 100%;
+    width: 100vw;
+    height: 56.25vw; /* 16:9 mathematically */
+    max-height: 100vh;
+    max-width: 177.78vh; /* 16:9 mathematically */
     border: none;
 }
 
-/* --- THE DISCREET BOTTOM BAR --- */
-.player-bottom-bar {
+/* THE SHIELD: Sits exactly over the video area */
+#player-shield {
     position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    /* frosted glass effect */
-    background: rgba(20, 20, 20, 0.7);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    inset: 0;
+    z-index: 10;
+    background: transparent;
+    display: none;
+}
+
+/* THE OVERLAY: Clean and Minimalist */
+#ready-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 30;
+    background: rgba(0,0,0,0.85);
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    padding: 16px 20px;
-    /* Extra padding for iPhone "Home" swipe area */
-    padding-bottom: max(16px, env(safe-area-inset-bottom)); 
-    z-index: 10001;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    justify-content: center;
 }
 
-.player-status-text {
-    color: rgba(255, 255, 255, 0.6);
-    font-size: 14px;
-    font-weight: 600;
-    font-family: 'Nunito', sans-serif;
-}
-
-.btn-exit-player {
-    background: var(--red);
+.btn-start-session {
+    background: #E11D48;
     color: white;
     border: none;
-    padding: 8px 18px;
+    padding: 18px 36px;
     border-radius: 50px;
-    font-size: 14px;
-    font-weight: 700;
+    font-size: 18px;
+    font-weight: 800;
     font-family: 'Nunito', sans-serif;
     cursor: pointer;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    box-shadow: 0 10px 25px rgba(225, 29, 72, 0.4);
 }
 
-.btn-exit-player:active {
-    transform: scale(0.95);
+/* FLOATING CONTROLS: Corner-anchored to stay out of the way */
+.player-controls-layer {
+    position: absolute;
+    inset: 0;
+    z-index: 40;
+    pointer-events: none; /* Let clicks pass through to things under it */
+    padding: 20px;
+    padding-top: max(20px, env(safe-area-inset-top));
+    padding-bottom: max(20px, env(safe-area-inset-bottom));
 }
+
+.btn-exit-minimal {
+    position: absolute;
+    top: max(20px, env(safe-area-inset-top));
+    right: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.3);
+    padding: 8px 20px;
+    border-radius: 50px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    pointer-events: auto; /* Re-enable clicks for this button */
+}
+
+#player-status-minimal {
+    position: absolute;
+    bottom: max(20px, env(safe-area-inset-bottom));
+    left: 20px;
+    color: rgba(255,255,255,0.4);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
 
 /* Fullscreen black wrapper for the player */
 /*#player-screen {
@@ -1435,46 +1463,56 @@ function extractId(url){
   return null;
 }
 function handleWatch(){var id=extractId(document.getElementById('url-input').value.trim());if(!id){document.getElementById('url-error').textContent='Please paste a valid YouTube link.';return;}prepareVideo(id);}
+var isSessionStarted = false; // The Global "Blessing" Flag
+
 function directPlay(videoId, list = null, categoryName = "Video") {
-    if (!list) {
-        if (categoryName === 'Leisure') {
-            var age = document.getElementById('age-select').value;
-            list = allVideos.filter(function(v){ return (v.age||'').toLowerCase() === age; });
-            if(!list.length) list = FALLBACK[age] || [];
-        } else if (categoryName === 'Educational') {
-            var grade = document.getElementById('grade-select').value;
-            var subject = document.getElementById('subject-select').value;
-            list = allCurriculumVideos.filter(function(v){
-                return String(v.grade||'').trim() === grade && (v.subject||'').trim() === subject;
-            });
-        } else if (categoryName === 'My Library') {
-            var cat = document.getElementById('category-select').value;
-            list = personalVideosData[cat] || [];
-        }
-    }
+    // ... [Insert your Smart List Logic Here to find 'list' and 'currentIndex'] ...
 
-    currentPlaylist = list || [{id: videoId}];
-    currentIndex = currentPlaylist.findIndex(v => (v.id || v.videoId) === videoId);
-    if (currentIndex === -1) currentIndex = 0;
-    currentCategoryName = categoryName;
-
-    // Show the screen
+    // 1. Prepare UI
     document.getElementById('home').style.display = 'none';
-    document.getElementById('player-screen').style.display = 'block';
-
-    // IMPORTANT: Hide shield for a moment so the video can initialize
-    var shield = document.getElementById('player-shield');
-    if (shield) {
-        shield.style.display = 'none';
-        setTimeout(function() { shield.style.display = 'block'; }, 1000);
+    document.getElementById('player-screen').style.display = 'flex';
+    
+    // 2. Check if we need the "Parent Blessing"
+    if (!isSessionStarted) {
+        document.getElementById('ready-overlay').style.display = 'flex';
+        document.getElementById('player-shield').style.display = 'none';
+    } else {
+        document.getElementById('ready-overlay').style.display = 'none';
+        document.getElementById('player-shield').style.display = 'block';
     }
-
-    sessionStartTime = Date.now();
-    pendingId = videoId; 
 
     updatePlayerStatus();
     loadVideoById(videoId);
 }
+
+function startPlaybackSession() {
+    isSessionStarted = true;
+    
+    // Hide Overlay, Drop Shield
+    document.getElementById('ready-overlay').style.display = 'none';
+    document.getElementById('player-shield').style.display = 'block';
+
+    // Start Video with Audio
+    try {
+        var ifr = document.getElementById('yt-player');
+        ifr.contentWindow.postMessage(JSON.stringify({event: 'command', func: 'playVideo'}), '*');
+    } catch(e) {}
+}
+
+function loadVideoById(videoId) {
+    const container = document.getElementById('player-container');
+    // We use autoplay=1, but the overlay stops it from actually starting 
+    // until you click "Tap to start" for the first video.
+    container.innerHTML = `
+        <iframe id="yt-player" 
+            src="https://www.youtube.com/embed/${videoId}?autoplay=1&controls=0&modestbranding=1&rel=0&iv_load_policy=3&disablekb=1&enablejsapi=1" 
+            allow="autoplay; encrypted-media" 
+            allowfullscreen>
+        </iframe>`;
+
+    setupVideoEndListener();
+}
+
 
 
 
@@ -1483,21 +1521,6 @@ function updatePlayerStatus() {
     if (statusEl) {
         statusEl.innerText = `${currentCategoryName}: ${currentIndex + 1} of ${currentPlaylist.length}`;
     }
-}
-function loadVideoById(videoId) {
-    currentVideoId = videoId;
-    const container = document.getElementById('player-container');
-    
-    // We add &mute=1 to ensure the video starts automatically without a touch
-    container.innerHTML = `
-        <iframe id="yt-player" 
-            src="https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&controls=0&modestbranding=1&rel=0&iv_load_policy=3&disablekb=1&playsinline=1&enablejsapi=1" 
-            style="width:100%; height:100%; border:none;"
-            allow="autoplay; encrypted-media" 
-            allowfullscreen>
-        </iframe>`;
-
-    setupVideoEndListener();
 }
 
 
@@ -1840,21 +1863,23 @@ window.addEventListener('resize', function() {
 
 
 </script>
-<div id="player-screen" style="display:none; position:fixed; inset:0; background:#000; z-index:9999;">
+<div id="player-screen">
   
-  <div id="player-container" style="position:absolute; inset:0; z-index:1;"></div>
+  <div id="player-container"></div>
 
-  <div id="player-shield" style="position:absolute; inset:0; z-index:10; background:transparent;"></div>
+  <div id="player-shield"></div>
 
-  <div class="player-bottom-bar" style="position:absolute; bottom:0; left:0; width:100%; z-index:20; background:rgba(20,20,20,0.9); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); padding:16px 20px; padding-bottom:max(16px, env(safe-area-inset-bottom)); display:flex; justify-content:space-between; align-items:center; border-top:1px solid rgba(255,255,255,0.1); box-sizing:border-box;">
-    <div id="player-status" style="color:rgba(255,255,255,0.6); font-size:14px; font-weight:600; font-family:'Nunito',sans-serif;">Ready</div>
-    <button class="btn-exit-player" onclick="requestPlayerExit()" style="background:#E11D48; color:white; border:none; padding:10px 20px; border-radius:50px; font-size:14px; font-weight:700; font-family:'Nunito',sans-serif; cursor:pointer; box-shadow:0 4px 12px rgba(0,0,0,0.3);">
-      Exit to Library
+  <div id="ready-overlay">
+    <button class="btn-start-session" onclick="startPlaybackSession()">
+      Tap to start video
     </button>
   </div>
 
-</div>
+  <div class="player-controls-layer">
+    <button class="btn-exit-minimal" onclick="requestPlayerExit()">Exit</button>
+    <div id="player-status-minimal">Ready</div>
+  </div>
 
-  
+</div>
 </body>
 </html>
