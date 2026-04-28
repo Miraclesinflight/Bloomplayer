@@ -21,6 +21,11 @@
 <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,400;1,400&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-4LPVCYGQP9"></script>
 <script>
+
+  let currentPlaylist = []; // Stores the current list of video objects
+let currentIndex = 0;    // Tracks which number we are on
+let currentCategoryName = ""; // Stores "Leisure", "Educational", etc.
+
   window.dataLayer=window.dataLayer||[];
   function gtag(){dataLayer.push(arguments);}
   gtag('js',new Date());
@@ -214,12 +219,12 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',-apple-system,s
     width: 100vw;
     height: 100vh;
     background: #000;
-    z-index: 9999; /* Ensure it stays on top of everything */
-    display: none; /* Controlled by JS */
+    z-index: 9999; 
+    display: none; 
     flex-direction: column;
 }
 
-/* The actual container for the YouTube iframe */
+
 #player-container {
     flex: 1;
     width: 100%;
@@ -229,8 +234,7 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',-apple-system,s
     justify-content: center;
     background: #000;
 }
-
-/* Ensure the iframe itself is forced to fill the container */
+/
 #player-container iframe {
     width: 100%;
     height: 100%;
@@ -1147,7 +1151,8 @@ function renderPersonalCategory(resetPage) {
 
   var html = '';
   videosToShow.forEach(function(v){
-    html += '<div class="video-item" style="position:relative;" onclick="directPlay(\''+escAttr(v.id)+'\')">'
+    html += '<div class="video-item" style="position:relative;" 'onclick="directPlay(\''+escAttr(v.id)+'\', userVideos, \'My Library\')">'
+
       + '<button class="btn-delete-vid" onclick="event.stopPropagation(); requestDeleteVideo(\''+escAttr(v.id)+'\', \''+escAttr(cat)+'\')">&times;</button>'
       + '<div class="video-thumb"><img src="https://img.youtube.com/vi/'+escAttr(v.id)+'/mqdefault.jpg" alt="" loading="lazy"/></div>'
       + '<div class="video-info"><div class="video-title">'+escHtml(v.title||v.id)+'</div></div></div>';
@@ -1357,7 +1362,8 @@ function renderEducationalVideos(){
   else{f.forEach(function(v){
     var id=(v.id||v.youtube_id||'').trim().replace(/[^a-zA-Z0-9_-]/g,'');
     trackCurriculumSelected(grade,subject);
-    html+='<div class="video-item" onclick="directPlay(\''+escAttr(id)+'\',\'educational\',\''+escAttr(grade)+'\',\''+escAttr(subject)+'\')">'
+/*    html+='<div class="video-item" onclick="directPlay(\''+escAttr(id)+'\',\'educational\',\''+escAttr(grade)+'\',\''+escAttr(subject)+'\')">'*/
+     html+='<div class="video-item" o'onclick="directPlay(\''+escAttr(id)+'\', educationalVideos, \'Educational\')">'
       +'<div class="video-thumb"><img src="https://img.youtube.com/vi/'+escAttr(id)+'/mqdefault.jpg" alt="" loading="lazy"/></div>'
       +'<div class="video-info"><div class="video-title">'+escHtml(v.title||v.chapter||'')+'</div>'
       +'<div class="video-sub">'+escHtml(v.channel||'')+'</div>'
@@ -1383,9 +1389,9 @@ function renderVideos(){
   if(!f.length){html='<div class="empty-state">No videos yet.</div>';}
   else{f.forEach(function(v){
     html+='<div class="video-item">'
-      +'<div class="video-thumb" onclick="directPlay(\''+v.id+'\')">'
+      +'<div class="video-thumb" onclick="directPlay(\''+v.id+'\', f, \'Leisure\')">'
       +'<img src="https://img.youtube.com/vi/'+v.id+'/mqdefault.jpg" alt="" loading="lazy"/></div>'
-      +'<div class="video-info" onclick="directPlay(\''+v.id+'\')">'
+      +'<div class="video-info" onclick="directPlay(\''+v.id+'\', f, \'Leisure\')">'
       +'<div class="video-title">'+escHtml(v.title)+'</div>'
       +'<div class="video-sub">'+escHtml(v.channel||'')+'</div>'
       +'<div class="video-tag">'+escHtml(v.tag||'')+'</div>'
@@ -1424,25 +1430,78 @@ function extractId(url){
   return null;
 }
 function handleWatch(){var id=extractId(document.getElementById('url-input').value.trim());if(!id){document.getElementById('url-error').textContent='Please paste a valid YouTube link.';return;}prepareVideo(id);}
-function directPlay(videoId) {
-    if (!videoId) {
-        console.error("No video ID provided!");
-        return;
+function directPlay(videoId, list = null, categoryName = "Video") {
+    // 1. Setup the playlist context
+    if (list) {
+        currentPlaylist = list;
+        currentIndex = list.findIndex(v => v.id === videoId);
+        currentCategoryName = categoryName;
+    } else {
+        // Fallback for "Quick Watch" or single links
+        currentPlaylist = [{id: videoId}];
+        currentIndex = 0;
+        currentCategoryName = "Quick Watch";
     }
-    
-    // This variable must match whatever your PIN/Close logic uses
-    currentVideoId = videoId; 
 
+    // 2. Switch UI
     document.getElementById('home').style.display = 'none';
     document.getElementById('player-screen').style.display = 'flex';
-    
-    // Force the HTML injection
-    var container = document.getElementById('player-container');
-    container.innerHTML = '<iframe src="https://www.youtube.com/embed/' + videoId + 
-        '?autoplay=1&controls=0&modestbranding=1&rel=0&iv_load_policy=3&disablekb=1&playsinline=1" ' +
-        'style="width:100%; height:100%; border:none;" ' +
-        'allow="autoplay; encrypted-media" allowfullscreen></iframe>';
+
+    // 3. Update the Bottom Bar Text
+    updatePlayerStatus();
+
+    // 4. Load the Video
+    loadVideoById(videoId);
 }
+
+function updatePlayerStatus() {
+    const statusEl = document.getElementById('player-status');
+    if (statusEl) {
+        statusEl.innerText = `${currentCategoryName}: ${currentIndex + 1} of ${currentPlaylist.length}`;
+    }
+}
+function loadVideoById(videoId) {
+    currentVideoId = videoId;
+    const container = document.getElementById('player-container');
+    
+    // We use the YouTube IFrame API "enablejsapi=1" so we can listen for the 'ended' state
+    container.innerHTML = `
+        <iframe id="yt-player" 
+            src="https://www.youtube.com/embed/${videoId}?autoplay=1&controls=0&modestbranding=1&rel=0&iv_load_policy=3&disablekb=1&playsinline=1&enablejsapi=1" 
+            allow="autoplay; encrypted-media" 
+            allowfullscreen>
+        </iframe>`;
+
+    // Setup the listener for when the video ends
+    setupVideoEndListener();
+}
+
+function setupVideoEndListener() {
+    // This waits for the iframe to send a message that the video is done
+    window.onmessage = function(event) {
+        if (event.origin !== 'https://www.youtube.com') return;
+        try {
+            const data = JSON.parse(event.data);
+            if (data.event === 'infoDelivery' && data.info && data.info.playerState === 0) {
+                // playerState 0 means "ENDED"
+                playNextInList();
+            }
+        } catch (e) {}
+    };
+}
+
+function playNextInList() {
+    if (currentIndex < currentPlaylist.length - 1) {
+        // There is another video!
+        currentIndex++;
+        updatePlayerStatus();
+        loadVideoById(currentPlaylist[currentIndex].id);
+    } else {
+        // No more videos (Option B: Stop and return)
+        requestPlayerExit(); // This triggers the PIN to exit, or you can use closeVideo() to just go back
+    }
+}
+
 
 
 /*function prepareVideo(id,source,grade,subject){
@@ -1488,7 +1547,7 @@ window.addEventListener('message',function(e){
   }catch(ex){}
 });
 
-function buildNextVideos(currentId){
+/*function buildNextVideos(currentId){
   var f=[];
   if(currentUser&&Object.keys(personalVideosData).length){
     Object.keys(personalVideosData).forEach(function(cat){personalVideosData[cat].forEach(function(v){if(v.id!==currentId)f.push(v);});});
@@ -1504,7 +1563,7 @@ function buildNextVideos(currentId){
       +'<div><div class="next-video-title">'+escHtml(v.title)+'</div><div class="next-video-sub">'+escHtml(v.channel||'')+'</div></div></button>';
   });
   document.getElementById('next-videos').innerHTML=html||'<div style="font-size:12px;color:#888;">No more videos.</div>';
-}
+}*/
 
 function closeVideo(){
   if(currentUser&&sessionStartTime&&pendingId){
@@ -1735,5 +1794,21 @@ window.addEventListener('resize', function() {
 
 
 </script>
+<div id="player-screen">
+  
+  <div id="player-container"></div>
+
+  <div class="player-bottom-bar">
+    <div class="player-status-text" id="player-status">
+      Ready
+    </div>
+    <button class="btn-exit-player" onclick="requestPlayerExit()">
+      Exit to Library
+    </button>
+  </div>
+
+</div>
+
+  
 </body>
 </html>
