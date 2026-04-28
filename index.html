@@ -810,6 +810,7 @@ var isProcessingRedirect = true;
 var currentPlaylist = [];
 var currentIndex = 0;
 var currentCategoryName = "";
+var isSessionStarted = false;
 
 
 /* ── APP CONFIG ── */
@@ -1450,7 +1451,6 @@ function extractId(url){
   return null;
 }
 function handleWatch(){var id=extractId(document.getElementById('url-input').value.trim());if(!id){document.getElementById('url-error').textContent='Please paste a valid YouTube link.';return;}prepareVideo(id);}
-var isSessionStarted = false; // Add this to your top variables
 
 function directPlay(videoId, list = null, categoryName = "Video") {
     // 1. Identify the list context
@@ -1480,7 +1480,7 @@ function directPlay(videoId, list = null, categoryName = "Video") {
     document.getElementById('player-screen').style.display = 'flex';
     
     // 3. Handle Overlay Logic
-    if (!isSessionStarted === false) {
+    if (isSessionStarted === false) {
         document.getElementById('ready-overlay').style.display = 'flex';
         document.getElementById('player-shield').style.display = 'none';
     } else {
