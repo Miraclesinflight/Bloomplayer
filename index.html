@@ -1403,24 +1403,32 @@ function switchTab(tab){
 }
 
 function renderVideos(){
-  var age=document.getElementById('age-select').value;
-  var f=allVideos.filter(function(v){return(v.age||'').toLowerCase()===age;});
-  if(!f.length)f=FALLBACK[age]||[];
-  var html='';
-  if(!f.length){html='<div class="empty-state">No videos yet.</div>';}
-  else{f.forEach(function(v){
-    html+='<div class="video-item">'
-      +'<div class="video-thumb" onclick="directPlay(\''+v.id+'\', f, \'Leisure\')">'
-      +'<img src="https://img.youtube.com/vi/'+v.id+'/mqdefault.jpg" alt="" loading="lazy"/></div>'
-      +'<div class="video-info" onclick="directPlay(\''+v.id+'\', f, \'Leisure\')">'
-      +'<div class="video-title">'+escHtml(v.title)+'</div>'
-      +'<div class="video-sub">'+escHtml(v.channel||'')+'</div>'
-      +'<div class="video-tag">'+escHtml(v.tag||'')+'</div>'
-      +'<button class="report-btn" onclick="event.stopPropagation();openReportModal(\''+escAttr(v.id)+'\',\''+escAttr(v.title)+'\')">Suggest a fix</button>'
-      +'</div></div>';
-  });}
-  document.getElementById('video-list').innerHTML=html;
+  var age = document.getElementById('age-select').value;
+  // Filter the master list
+  var filtered = allVideos.filter(function(v){ return (v.age||'').toLowerCase() === age; });
+  if(!filtered.length) filtered = FALLBACK[age] || [];
+  
+  var html = '';
+  if(!filtered.length){
+    html = '<div class="empty-state">No videos yet.</div>';
+  } else {
+    filtered.forEach(function(v){
+      html += '<div class="video-item" onclick="directPlay(\'' + v.id + '\', null, \'Leisure\')">'
+        + '<div class="video-thumb">'
+        +   '<img src="https://img.youtube.com/vi/' + v.id + '/mqdefault.jpg" alt="" loading="lazy"/>'
+        + '</div>'
+        + '<div class="video-info">'
+        +   '<div class="video-title">' + escHtml(v.title) + '</div>'
+        +   '<div class="video-sub">' + escHtml(v.channel || '') + '</div>'
+        +   '<div class="video-tag">' + escHtml(v.tag || '') + '</div>'
+        +   '<button class="report-btn" onclick="event.stopPropagation();openReportModal(\'' + escAttr(v.id) + '\',\'' + escAttr(v.title) + '\')">Suggest a fix</button>'
+        + '</div>'
+        + '</div>';
+    });
+  }
+  document.getElementById('video-list').innerHTML = html;
 }
+
 
 /* ── REPORT MODAL ── */
 function openReportModal(id,title){
