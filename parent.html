@@ -46,7 +46,7 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',-apple-system,s
 .setup-logo{width:64px;height:64px;border-radius:18px;margin:0 auto 16px;}
 .setup-title{font-size:22px;font-weight:700;color:white;letter-spacing:-0.3px;margin-bottom:8px;}
 .setup-sub{font-size:14px;color:#94A3B8;line-height:1.6;max-width:320px;margin:0 auto;}
-.setup-done{margin-top:32px;width:100%;max-width:320px;padding:16px;border-radius:12px;background:var(--green);color:white;border:none;font-size:16px;font-weight:700;font-family:inherit;cursor:pointer;}
+/*.setup-done{margin-top:32px;width:100%;max-width:320px;padding:16px;border-radius:12px;background:var(--green);color:white;border:none;font-size:16px;font-weight:700;font-family:inherit;cursor:pointer;}*/
 
 /* ── PIN MODAL (setup) ── */
 /* ── PIN MODAL (setup) ── */
@@ -132,13 +132,13 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',-apple-system,s
 .setting-right{display:flex;align-items:center;gap:8px;flex-shrink:0;margin-left:12px;}
 .chevron{color:var(--text-3);font-size:18px;}
 
-/* ── TOGGLE ── */
+/* ── TOGGLE ── 
 .toggle{position:relative;width:44px;height:26px;flex-shrink:0;}
 .toggle input{opacity:0;width:0;height:0;position:absolute;}
 .slider{position:absolute;inset:0;background:#CBD5E1;border-radius:26px;cursor:pointer;transition:0.2s;}
 .slider:before{content:'';position:absolute;height:20px;width:20px;left:3px;bottom:3px;background:white;border-radius:50%;transition:0.2s;box-shadow:0 1px 3px rgba(0,0,0,0.2);}
 input:checked+.slider{background:var(--green);}
-input:checked+.slider:before{transform:translateX(18px);}
+input:checked+.slider:before{transform:translateX(18px);}*/
 
 /* ── PIN DOTS DISPLAY ── */
 .pin-display{display:flex;gap:6px;align-items:center;}
@@ -153,10 +153,31 @@ input:checked+.slider:before{transform:translateX(18px);}
 .account-email{font-size:12px;color:var(--text-3);margin-top:1px;}
 
 /* ── DANGER ── */
-.danger-row{display:flex;align-items:center;justify-content:space-between;padding:15px 16px;cursor:pointer;}
-.danger-row:active{background:var(--red-dim);}
-.danger-name{font-size:14px;font-weight:600;color:var(--red);}
-.danger-desc{font-size:12px;color:var(--text-3);margin-top:2px;}
+.danger-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px 16px;
+  cursor: pointer;
+  border-top: 1px solid var(--border); /* Keeps it aligned with the list */
+}
+
+.danger-row:active {
+  background: #FFF1F2; /* A very light red tint for the warning feel */
+}
+
+.danger-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #BE123C; /* A deeper "Danger" red */
+}
+
+.danger-desc {
+  font-size: 12px;
+  color: var(--text-3);
+  margin-top: 2px;
+}
+
 
 /* ── BACK BUTTON ── */
 .btn-back-full{width:100%;padding:14px;border-radius:var(--radius);background:var(--card);color:var(--text-2);border:1px solid var(--border);font-size:15px;font-family:inherit;cursor:pointer;font-weight:500;box-shadow:var(--shadow);}
@@ -482,13 +503,13 @@ input:checked+.slider:before{transform:translateX(18px);}
         </div>
         <span class="chevron">&#8250;</span>
       </div>
-      <div class="setting-row" onclick="deleteAccount()">
-        <div class="setting-left">
-          <div class="setting-name" style="color:var(--red);">Delete account</div>
-          <div class="setting-desc">Permanently deletes your account and all data</div>
-        </div>
-        <span class="chevron">&#8250;</span>
-      </div>
+    <div class="danger-row" onclick="deleteAccount()">
+  <div class="setting-left">
+    <div class="danger-name">Delete account</div>
+    <div class="danger-desc">Permanently deletes your account and all data</div>
+  </div>
+  <span class="chevron" style="color: #BE123C;">&#8250;</span>
+</div>
     </div>
     <button class="btn-back-full" onclick="goBack()" style="margin-top:12px;">&#8592; Back to BloomPlayer</button>
     <div class="version">BloomPlayer</div>
@@ -555,12 +576,6 @@ auth.onAuthStateChanged(function(user){
     return;
   }
   currentUser=user;
- /* if(isSetupMode){
-    document.getElementById('setup-screen').style.display='flex';
-    setTimeout(function(){
-      document.getElementById('setup-pin-modal').style.display='flex';
-    },3000);
-  } else */
     if(isSetupMode){
     const splash = document.getElementById('setup-screen');
     const pinModal = document.getElementById('setup-pin-modal');
