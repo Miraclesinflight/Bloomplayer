@@ -132,13 +132,23 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',-apple-system,s
 .setting-right{display:flex;align-items:center;gap:8px;flex-shrink:0;margin-left:12px;}
 .chevron{color:var(--text-3);font-size:18px;}
 
-/* ── TOGGLE ── 
-.toggle{position:relative;width:44px;height:26px;flex-shrink:0;}
-.toggle input{opacity:0;width:0;height:0;position:absolute;}
-.slider{position:absolute;inset:0;background:#CBD5E1;border-radius:26px;cursor:pointer;transition:0.2s;}
-.slider:before{content:'';position:absolute;height:20px;width:20px;left:3px;bottom:3px;background:white;border-radius:50%;transition:0.2s;box-shadow:0 1px 3px rgba(0,0,0,0.2);}
-input:checked+.slider{background:var(--green);}
-input:checked+.slider:before{transform:translateX(18px);}*/
+.btn-exit-parent {
+  padding: 8px 16px;
+  border-radius: 10px;
+  background: var(--red);
+  color: white;
+  border: none;
+  font-size: 13px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(204, 149, 68, 0.2);
+}
+
+.btn-exit-parent:active {
+  transform: scale(0.96);
+  opacity: 0.9;
+}
 
 /* ── PIN DOTS DISPLAY ── */
 .pin-display{display:flex;gap:6px;align-items:center;}
@@ -177,11 +187,6 @@ input:checked+.slider:before{transform:translateX(18px);}*/
   color: var(--text-3);
   margin-top: 2px;
 }
-
-
-/* ── BACK BUTTON ── */
-.btn-back-full{width:100%;padding:14px;border-radius:var(--radius);background:var(--card);color:var(--text-2);border:1px solid var(--border);font-size:15px;font-family:inherit;cursor:pointer;font-weight:500;box-shadow:var(--shadow);}
-.btn-back-full:active{background:var(--card2);}
 
 .version{text-align:center;font-size:11px;color:var(--text-3);padding:8px 0;}
 
@@ -400,14 +405,16 @@ input:checked+.slider:before{transform:translateX(18px);}*/
 <div id="parent-content">
 
   <nav class="top-nav">
-    <div class="nav-left">
-      <img src="icon.png" alt="BloomPlayer" onerror="this.style.background='#10B981';"/>
-      <div>
-        <div class="nav-title">Parent Mode</div>
-        <div class="nav-sub">I hope they never know.</div>
-      </div>
+  <div class="nav-left">
+    <img src="icon.png" alt="BloomPlayer" onerror="this.style.background='#10B981';"/>
+    <div>
+      <div class="nav-title">Parent Mode</div>
+      <div class="nav-sub">I hope they never know.</div>
     </div>
-  </nav>
+  </div>
+  <button class="btn-exit-parent" onclick="goBack()">Back to BloomPlayer</button>
+</nav>
+
 
   <div class="parent-badge">
     &#128274; You're in Parent Mode — your child can't see this
@@ -509,12 +516,6 @@ input:checked+.slider:before{transform:translateX(18px);}*/
     <div class="danger-desc">Permanently deletes your account and all data</div>
   </div>
   <span class="chevron" style="color: #BE123C;">&#8250;</span>
-</div>
-    </div>
-    <button class="btn-back-full" onclick="goBack()" style="margin-top:12px;">&#8592; Back to BloomPlayer</button>
-    <div class="version">BloomPlayer</div>
-  </div>
-
 </div>
 
 <script>
