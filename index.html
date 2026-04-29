@@ -811,7 +811,8 @@ var currentPlaylist = [];
 var currentIndex = 0;
 var currentCategoryName = "";
 var isSessionStarted = false;
-
+var allVideos = []; // Initialize to empty array
+var leisureLoaded = false; // Twin of curriculumLoaded
 
 /* ── APP CONFIG ── */
 var appConfig={signinEnabled:false,inviteCodeEnabled:false,betaFeaturesEnabled:false,betaLimit:99,betaUsageCount:0};
@@ -1325,12 +1326,21 @@ function parseCSV(t){var l=t.trim().split('\n');if(l.length<2)return[];var h=l[0
 function splitCSV(line){var cols=[],cur='',inQ=false;for(var i=0;i<line.length;i++){var c=line[i];if(c==='"'){inQ=!inQ;}else if(c===','&&!inQ){cols.push(cur);cur='';}else{cur+=c;}}cols.push(cur);return cols;}
 
 function loadVideos(){
-  fetch(CSV_URL).then(function(r){return r.text();}).then(function(csv){
-    var rows=parseCSV(csv);
-    allVideos=rows.filter(function(r){var s=(r.status||'').toLowerCase();return s===''||s==='approved';});
+  fetch(CSV_URL).then(function(r){ return r.text(); }).then(function(csv){
+    var rows = parseCSV(csv);
+    allVideos = rows.filter(function(r){
+      var s = (r.status || '').toLowerCase();
+      return s === '' || s === 'approved';
+    });
+    leisureLoaded = true; // Mark as loaded
     renderVideos();
-  }).catch(function(){renderVideos();});
+  }).catch(function(err){
+    console.error("Leisure fetch failed:", err);
+    leisureLoaded = true; // Set to true so renderVideos() doesn't think it's still loading
+    renderVideos();
+  });
 }
+
 
 function loadCurriculumVideos(){
   if(curriculumLoaded)return;
@@ -1403,9 +1413,21 @@ function switchTab(tab){
 }
 
 function renderVideos(){
-  var age = document.getElementById('age-select').value;
-  // Filter the master list
-  var filtered = allVideos.filter(function(v){ return (v.age||'').toLowerCase() === age; });
+  // 1. Check if loaded, just like Educational
+  if(!leisureLoaded){
+    document.getElementById('video-list').innerHTML = '<div class="loading-state">Loading videos...</div>';
+    return;
+  }
+
+  var ageEl = document.getElementById('age-select');
+  if(!ageEl) return;
+  var age = ageEl.value;
+  
+  // 2. Filter safely
+  var filtered = allVideos.filter(function(v){ 
+    return (v.age || '').toLowerCase() === age; 
+  });
+  
   if(!filtered.length) filtered = FALLBACK[age] || [];
   
   var html = '';
@@ -1413,7 +1435,9 @@ function renderVideos(){
     html = '<div class="empty-state">No videos yet.</div>';
   } else {
     filtered.forEach(function(v){
-      html += '<div class="video-item" onclick="directPlay(\'' + v.id + '\', null, \'Leisure\')">'
+      // MATCHING EDUCATIONAL: Pass null for the list, 
+      // let directPlay handle the category logic.
+      html += '<div class="video-item" onclick="directPlay(\'' + escAttr(v.id) + '\', null, \'Leisure\')">'
         + '<div class="video-thumb">'
         +   '<img src="https://img.youtube.com/vi/' + v.id + '/mqdefault.jpg" alt="" loading="lazy"/>'
         + '</div>'
@@ -1428,6 +1452,7 @@ function renderVideos(){
   }
   document.getElementById('video-list').innerHTML = html;
 }
+
 
 
 /* ── REPORT MODAL ── */
@@ -1461,44 +1486,63 @@ function extractId(url){
 function handleWatch(){var id=extractId(document.getElementById('url-input').value.trim());if(!id){document.getElementById('url-error').textContent='Please paste a valid YouTube link.';return;}prepareVideo(id);}
 
 function directPlay(videoId, list = null, categoryName = "Video") {
-    // 1. Identify the list context
+    // 1. Identify the list context (The "Pull" Logic)
     if (!list) {
         if (categoryName === 'Leisure') {
-            var age = document.getElementById('age-select').value;
-            list = allVideos.filter(function(v){ return (v.age||'').toLowerCase() === age; });
+            var ageEl = document.getElementById('age-select');
+            var age = ageEl ? ageEl.value : 'all';
+            list = allVideos.filter(function(v){ 
+                return (v.age || '').toLowerCase() === age.toLowerCase(); 
+            });
             if(!list.length) list = FALLBACK[age] || [];
-        } else if (categoryName === 'Educational') {
+        } 
+        else if (categoryName === 'Educational') {
             var grade = document.getElementById('grade-select').value;
             var subject = document.getElementById('subject-select').value;
             list = allCurriculumVideos.filter(function(v){
-                return String(v.grade||'').trim() === grade && (v.subject||'').trim() === subject;
+                return String(v.grade || '').trim() === grade && (v.subject || '').trim() === subject;
             });
-        } else if (categoryName === 'My Library') {
-            var cat = document.getElementById('category-select').value;
+        } 
+        else if (categoryName === 'My Library') {
+            var catEl = document.getElementById('category-select');
+            var cat = catEl ? catEl.value : 'General';
             list = personalVideosData[cat] || [];
         }
     }
 
-    currentPlaylist = list || [{id: videoId}];
-    currentIndex = currentPlaylist.findIndex(v => (v.id || v.videoId) === videoId);
+    // 2. Set the Playlist State
+    currentPlaylist = (list && list.length > 0) ? list : [{id: videoId}];
+    
+    // Find where we are in the list
+    currentIndex = currentPlaylist.findIndex(function(v) {
+        var id = v.id || v.videoId;
+        return id === videoId;
+    });
+    if (currentIndex === -1) currentIndex = 0;
+
     currentCategoryName = categoryName;
 
-    // 2. Open Screen
+    // 3. Transition UI
     document.getElementById('home').style.display = 'none';
     document.getElementById('player-screen').style.display = 'flex';
     
-    // 3. Handle Overlay Logic
+    // 4. Handle the "Parent Blessing" (Overlay vs. Shield)
+    // If the session hasn't started, we show the button and HIDE the shield 
+    // so the parent's tap actually registers.
     if (isSessionStarted === false) {
         document.getElementById('ready-overlay').style.display = 'flex';
         document.getElementById('player-shield').style.display = 'none';
     } else {
+        // If already blessed, hide overlay and drop the shield to block the child.
         document.getElementById('ready-overlay').style.display = 'none';
         document.getElementById('player-shield').style.display = 'block';
     }
 
+    // 5. Fire the Player
     updatePlayerStatus();
     loadVideoById(videoId);
 }
+
 
 function startPlaybackSession() {
     isSessionStarted = true;
