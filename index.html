@@ -92,7 +92,7 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',-apple-system,s
 }
 
 .nav-brand { display: flex; align-items: center; gap: 10px; cursor: pointer; user-select: none; flex: 1; min-width: 0; }
-.nav-brand img { width: 48px; height: 48px; border-radius: 14px; flex-shrink: 0; }
+.nav-brand img { width: 48px; height: 48px; border-radius: 14px; flex-shrink: 0;-webkit-touch-callout: none;-webkit-user-select: none;user-select: none;pointer-events: auto;}
 .nav-brand > div { min-width: 0; display: flex; flex-direction: column; }
 .brand-name { font-size: 20px; font-weight: 700; letter-spacing: -0.3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .brand-tag { font-size: 14px; color: #2D2922; font-style: normal; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -1742,10 +1742,21 @@ function forgotPin(){
 }
 
 /* ── LOGO LONG PRESS ── */
+/* ── LOGO LONG PRESS ── */
 var logoTimer;
-var logo=document.getElementById('logo');
-logo.addEventListener('touchstart',function(e){e.preventDefault();logoTimer=setTimeout(requestSettings,800);},{passive:false});
-logo.addEventListener('touchend',function(){clearTimeout(logoTimer);});
+var logo = document.getElementById('logo');
+
+// Blocks the "Save Image" popup on long-press
+logo.oncontextmenu = function(e) { e.preventDefault(); };
+
+logo.addEventListener('touchstart', function(e) {
+  e.preventDefault();
+  logoTimer = setTimeout(requestSettings, 800);
+}, {passive: false});
+
+logo.addEventListener('touchend', function() {
+  clearTimeout(logoTimer);
+});
 
 /* ── BACK BUTTON TRAP ── */
 history.pushState(null,'','#');history.pushState(null,'','#');
