@@ -1654,6 +1654,7 @@ function executeDeleteVideo() {
   if(pinBuffer===parentPin){
     document.getElementById('pin-overlay').style.display='none';
    if (pinAction === 'close') {
+     isSessionStarted = false;
   closeVideo();
   pinAction = null; // Clear the action
 }
