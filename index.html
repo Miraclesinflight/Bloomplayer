@@ -810,7 +810,7 @@ var isProcessingRedirect = true;
 var currentPlaylist = [];
 var currentIndex = 0;
 var currentCategoryName = "";
-var window.isSessionStarted = false;
+var isSessionStarted = false;
 
 
 /* ── APP CONFIG ── */
@@ -1480,7 +1480,7 @@ function directPlay(videoId, list = null, categoryName = "Video") {
     document.getElementById('player-screen').style.display = 'flex';
     
     // 3. Handle Overlay Logic
-    if (window.isSessionStarted === false) {
+    if (isSessionStarted === false) {
         document.getElementById('ready-overlay').style.display = 'flex';
         document.getElementById('player-shield').style.display = 'none';
     } else {
@@ -1493,7 +1493,7 @@ function directPlay(videoId, list = null, categoryName = "Video") {
 }
 
 function startPlaybackSession() {
-    window.isSessionStarted = true;
+    isSessionStarted = true;
     document.getElementById('ready-overlay').style.display = 'none';
     document.getElementById('player-shield').style.display = 'block';
 
@@ -1522,7 +1522,7 @@ function requestPlayerExit() {
 
 function closeVideo() {
   // 1. RESET FIRST: This ensures the state is 'false' before we go back to the library
-  window.isSessionStarted = false; 
+  isSessionStarted = false; 
   console.log("Session Reset: Ready for next manual selection");
 
   // 2. Kill the video/iframe
