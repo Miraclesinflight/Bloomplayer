@@ -426,6 +426,25 @@ html, body, #home, .screen {
 }
 .btn-page:active { background: var(--card2); }
 .btn-page:disabled { opacity: 0.4; cursor: not-allowed; background: transparent; }
+/* --- Fix Tagline Truncation on Mobile --- */
+@media (max-width: 480px) {
+    /* Target the subtitle/tagline under the BloomPlayer name */
+    .header-info span, 
+    .brand-subtitle,
+    header p { 
+        white-space: normal !important; /* Allow it to wrap instead of cutting off */
+        font-size: 10px !important;    /* Slightly smaller to fit better */
+        line-height: 1.2;
+        display: block;
+        max-width: 150px;              /* Keeps it from pushing the profile pic away */
+    }
+
+    /* Give the text container more breathing room */
+    .header-text-container {
+        flex: 1; 
+        min-width: 0; /* Forces the flexbox to calculate width correctly */
+    }
+}
 
 </style>
 
