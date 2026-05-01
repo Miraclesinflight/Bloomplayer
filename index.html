@@ -432,12 +432,74 @@ html, body, #home, .screen {
   stroke-linejoin: round;
 }
 
-.soft-square span {
-  font-size: 18px;
-  font-weight: 600;
-  font-family: inherit;
-  line-height: 1;
+.soft-square {
+  width: 40px;
+  height: 40px;
+  background-color: #D1D9D1;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.1s ease;
+  border: none;
+  padding: 0;
+  overflow: hidden; /* Crucial for the profile pic */
 }
+
+.sidebar-drawer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 280px;
+  height: 100%;
+  background: #F4F7F4; /* Very light sage */
+  z-index: 1001;
+  transform: translateX(-100%);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  box-shadow: 4px 0 15px rgba(0,0,0,0.05);
+}
+
+.sidebar-drawer.active { transform: translateX(0); }
+
+.sidebar-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.3);
+  display: none;
+  z-index: 1000;
+}
+
+.sidebar-header { padding: 24px; border-bottom: 1px solid #E2E8E2; }
+.sidebar-header h3 { margin: 12px 0 0; font-size: 16px; color: #4A554A; }
+
+.sidebar-content { flex: 1; padding: 16px; }
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #6B7C6B;
+  transition: background 0.2s;
+}
+
+.menu-item:hover { background: #E8EEE8; }
+
+/* Making the Mission button look special */
+.mission-btn {
+  margin-top: 10px;
+  background: #DDE5DD;
+  font-weight: 600;
+  color: #4A554A;
+}
+
+.sidebar-footer { padding: 16px; border-top: 1px solid #E2E8E2; }
+.signout-item { color: #A85555; } /* Subdued red for signout */
 
 </style>
 
@@ -457,20 +519,29 @@ html, body, #home, .screen {
         <div class="brand-tag">I hope they never know.</div>
       </div>
     </div>
-  <div class="nav-right" style="display:flex; gap:10px; align-items:center;">
-  
+ <div class="nav-right" style="display:flex; gap:8px; align-items:center;">
+
+  <div class="soft-square" style="overflow:hidden;">
+    <img src="profile-pic.jpg" alt="Profile" style="width:100%; height:100%; object-fit:cover;" onerror="this.src='https://ui-avatars.com/api/?name=G&background=D1D9D1&color=6B7C6B'">
+  </div>
+
   <button class="soft-square" onclick="openPinPad()">
-    <svg width="20" height="20" viewBox="0 0 24 24">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <circle cx="12" cy="12" r="3"></circle>
       <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
     </svg>
   </button>
 
-  <div class="soft-square">
-    <span>G</span>
-  </div>
+  <button class="soft-square" onclick="window.location.href='/faq'">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"></circle>
+      <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+      <line x1="12" y1="17" x2="12.01" y2="17"></line>
+    </svg>
+  </button>
 
 </div>
+
   </nav>
 
   <div class="beta-strip" id="beta-strip">
@@ -883,12 +954,7 @@ function loadAppConfig(){
   }).catch(function(){onConfigLoaded();});
 }
 
-/*function onConfigLoaded(){
-  if(!appConfig.signinEnabled){updateAuthUI(currentUser);showInstallPopupIfNeeded();return;}
-  if(currentUser){updateAuthUI(currentUser);showInstallPopupIfNeeded();return;}
-  if(userEmail){updateAuthUI(null);showInstallPopupIfNeeded();return;}
-  auth.onAuthStateChanged(function(user){if(user)return;document.getElementById('welcome-modal').style.display='flex';},{onlyOnce:true});
-}*/
+
 function finalizeAppLoad() {
   if (configReady && authReady) {
     document.getElementById('app-splash').style.display = 'none';
@@ -914,18 +980,6 @@ function onConfigLoaded(){
   configReady = true;
   finalizeAppLoad();
 }
-
-/* ── WELCOME MODAL ── */
-/*function welcomeSignInWithGoogle(){
-  document.getElementById('welcome-error').textContent='';
-  var p=new firebase.auth.GoogleAuthProvider();
-  p.setCustomParameters({prompt:'select_account'});
-  auth.signInWithPopup(p).catch(function(e){
-    if(e.code==='auth/popup-blocked'){auth.signInWithRedirect(p);}
-    else if(e.code!=='auth/cancelled-popup-request'&&e.code!=='auth/popup-closed-by-user'){showToast('Sign in failed. Please try again.',true);}
-  });
-}*/
-
   
 function welcomeSignInWithGoogle(){
   document.getElementById('welcome-error').textContent='';
@@ -968,6 +1022,24 @@ function emailSignOut(){
   userEmail=null;localStorage.removeItem('et_email');updateAuthUI(null);
   document.getElementById('welcome-error').textContent='';
   if(appConfig.signinEnabled){document.getElementById('welcome-modal').style.display='flex';}
+}
+function onPinSuccess() {
+  // 1. Hide the PIN pad modal
+  document.getElementById('pinModal').style.display = 'none';
+  
+  // 2. Open the Sidebar
+  document.getElementById('parentSidebar').classList.add('active');
+  document.getElementById('sidebarOverlay').style.display = 'block';
+}
+
+function closeSidebar() {
+  document.getElementById('parentSidebar').classList.remove('active');
+  document.getElementById('sidebarOverlay').style.display = 'none';
+}
+
+function handleSignOut() {
+  // Your existing sign-out logic here
+  console.log("Signing out...");
 }
 
 /* ── SIGN OUT ── */
@@ -1900,6 +1972,47 @@ function show(id){document.querySelectorAll('.screen').forEach(function(s){s.sty
   </div>
 
 </div>
+<div id="parentSidebar" class="sidebar-drawer">
+  <div class="sidebar-header">
+    <div class="soft-square"><span>G</span></div>
+    <h3>Parent Portal</h3>
+    <button class="close-sidebar" onclick="closeSidebar()">×</button>
+  </div>
+
+  <div class="sidebar-content">
+    <div class="menu-item" onclick="location.href='parent.html'">
+      <div class="icon-wrap">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
+      </div>
+      <span>Parent Dashboard</span>
+    </div>
+
+    <div class="menu-item mission-btn" onclick="window.open('https://paypal.me/geetha', '_blank')">
+      <div class="icon-wrap">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+      </div>
+      <span>Support the Mission</span>
+    </div>
+
+    <div class="menu-item" onclick="location.href='faq.html'">
+      <div class="icon-wrap">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+      </div>
+      <span>Help & FAQ</span>
+    </div>
+  </div>
+
+  <div class="sidebar-footer">
+    <div class="menu-item signout-item" onclick="handleSignOut()">
+      <div class="icon-wrap">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+      </div>
+      <span>Sign Out</span>
+    </div>
+  </div>
+</div>
+
+<div id="sidebarOverlay" class="sidebar-overlay" onclick="closeSidebar()"></div>
 
 </body>
 </html>
