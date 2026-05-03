@@ -273,36 +273,59 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',-apple-system,s
 .welcome-input::placeholder{color:var(--text-3);}
 .btn-continue{width:100%;padding:15px;border-radius:10px;background:#CC9544;border:none;color:#0d1117;font-size:15px;font-weight:700;font-family:nunito;cursor:pointer;margin-bottom:10px;}
 /* The new primary Google button (Crisp white with shadow, keeping your sizes) */
+/* The new primary Google button (Golden Ochre) */
 .btn-google {
   width: 100%;
-  padding: 17px;
+  padding: 15px;
   border-radius: 10px;
-  background: #FFFFFF; /* Changed from --badge-bg to pop as the primary option */
-  border: 1.5px solid var(--border);
-  color: var(--text);
+  background: #CC9544; /* Your signature Ochre */
+  border: none;
+  color: #1A1A1A; /* Dark text for contrast */
   font-size: 17px;
-  font-weight: 600;
-  font-family: nunito;
+  font-weight: 700;
+  font-family: inherit;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05); /* Subtle lift */
-  margin-bottom: 20px; /* Spacing before the 'or' divider */
-  transition: background 0.2s, box-shadow 0.2s;
+  gap: 12px;
+  box-shadow: 0 4px 12px rgba(204, 149, 68, 0.25); /* Subtle gold glow */
+  margin-bottom: 20px;
+  transition: transform 0.1s, box-shadow 0.1s;
 }
 
 .btn-google:active {
-  background: #F8FAF8;
+  transform: scale(0.98);
   box-shadow: none;
 }
 
+/* Creates a crisp white circle behind the Google G */
 .btn-google svg {
-  width: 18px;
-  height: 18px;
+  width: 24px;
+  height: 24px;
+  background: #FFFFFF;
+  border-radius: 50%;
+  padding: 4px;
   flex-shrink: 0;
 }
+
+/* The secondary email button (Warm Tan to complement the gold) */
+.btn-continue {
+  width: 100%;
+  padding: 15px;
+  border-radius: 10px;
+  background: #E5D5BC; 
+  border: 1px solid #D4C1A5;
+  color: #4A3E2B;
+  font-size: 15px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  margin-bottom: 10px;
+  transition: background 0.2s;
+}
+
+.btn-continue:active { background: #D4C1A5; }
 
   
 /* The new 'or' divider */
@@ -326,23 +349,6 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',-apple-system,s
 .auth-divider::before { margin-right: 12px; }
 .auth-divider::after { margin-left: 12px; }
 
-/* The secondary email button (Muted sage) */
-.btn-continue {
-  width: 100%;
-  padding: 15px;
-  border-radius: 10px;
-  background: #D1D9D1; 
-  border: 1px solid #C5CDC5;
-  color: var(--text-2);
-  font-size: 15px;
-  font-weight: 700;
-  font-family: inherit;
-  cursor: pointer;
-  margin-bottom: 10px;
-  transition: background 0.2s;
-}
-
-.btn-continue:active { background: #C5CDC5; }
   
 .welcome-error{font-size:17px;color:var(--red);margin-bottom:8px;min-height:16px;text-align:center;}
 .welcome-footer{text-align:center;margin-top:16px;padding:0 4px;width:100%;}
