@@ -1025,8 +1025,7 @@ html, body, #home, .screen {
   /*var configIsLoaded = false;*/
   var configReady = false;
   var authReady = false;
-
-
+  var isRoutingToSetup = false; // NEW: Tells the app we are teleporting
 
 function showToast(msg,isError){
   var t=document.getElementById('app-toast');
@@ -1129,7 +1128,11 @@ function loadAppConfig(){
 
 function finalizeAppLoad() {
   try {
-    // Safely check variables so it never crashes
+    // NEW: If we are teleporting the user to parent.html, DO NOT drop the curtain!
+    if (typeof isRoutingToSetup !== 'undefined' && isRoutingToSetup === true) {
+      return; 
+    }
+
     var isConfigReady = (typeof configReady !== 'undefined') ? configReady : true;
     var isAuthReady = (typeof authReady !== 'undefined') ? authReady : true;
 
@@ -1140,7 +1143,6 @@ function finalizeAppLoad() {
       var userExists = (typeof currentUser !== 'undefined' && currentUser !== null);
       var signinEnabled = (typeof appConfig !== 'undefined' && appConfig && appConfig.signinEnabled);
 
-      // 1. Arrange Modal
       if (welcomeModal) {
         if (isRedirect) {
           sessionStorage.removeItem('et_google_redirect');
@@ -1152,7 +1154,6 @@ function finalizeAppLoad() {
         }
       }
 
-      // 2. Hide old logo splash
       var splash = document.getElementById('app-splash');
       if (splash && splash.style.display !== 'none') {
         splash.style.transition = 'opacity 0.4s ease';
@@ -1160,7 +1161,6 @@ function finalizeAppLoad() {
         setTimeout(function() { splash.style.display = 'none'; }, 400);
       }
       
-      // 3. HIDE THE NEW CURTAIN (This fixes the green screen!)
       var curtain = document.getElementById('bloom-auth-curtain');
       if (curtain && curtain.style.display !== 'none') {
         curtain.style.transition = 'opacity 0.4s ease';
@@ -1170,15 +1170,12 @@ function finalizeAppLoad() {
     }
   } catch (error) {
     console.error("Error in finalizeAppLoad:", error);
-    // FAILSAFE: If anything breaks, force the blockers to hide so you aren't locked out
     var splashFallback = document.getElementById('app-splash');
     if (splashFallback) splashFallback.style.display = 'none';
     var curtainFallback = document.getElementById('bloom-auth-curtain');
     if (curtainFallback) curtainFallback.style.display = 'none';
   }
 }
-
-
 
 
 function onConfigLoaded(){
@@ -1409,6 +1406,7 @@ function updateAuthUI(user) {
 
 
 /* ── AUTH STATE CHANGE ── */
+/* ── AUTH STATE CHANGE ── */
 auth.onAuthStateChanged(function(user){
   authReady = true;
   if(user){
@@ -1418,17 +1416,20 @@ auth.onAuthStateChanged(function(user){
     showInstallPopupIfNeeded();
     startInactivityWatch();
     
+    // Lock the curtain down while the database thinks!
+    isRoutingToSetup = true; 
+    
     db.collection('users').doc(user.uid).get().then(function(doc){
       if(!doc.exists){
         
-        // NEW: Abandonment Check for completely new users
         if (!sessionStorage.getItem('bloom_setup_active')) {
           auth.signOut().then(function() { window.location.reload(); });
-          return; // Stop execution
+          return; 
         }
 
         saveUserTier(user,'general',function(){
           loadUserProfile(user);
+          // Teleporting! Curtain stays down.
           window.location.href='parent.html?setup=true';
         });
         
@@ -1437,38 +1438,45 @@ auth.onAuthStateChanged(function(user){
         userTier=data.tier||'general';
         localStorage.setItem('et_tier',userTier);
         
-        if(data.pin){
-          parentPin=data.pin;
-          localStorage.setItem('et_pin',data.pin);
-        }
-        if(data.betaInvited){
-          localStorage.setItem('et_beta_invited','true');
-        }
+        if(data.pin){ parentPin=data.pin; localStorage.setItem('et_pin',data.pin); }
+        if(data.betaInvited){ localStorage.setItem('et_beta_invited','true'); }
         
         updateBetaUI();
         loadUserProfile(user);
         
         if(!data.onboarded){
-          
-          // NEW: Abandonment Check for users who created an account but didn't finish PIN setup
           if (!sessionStorage.getItem('bloom_setup_active')) {
             auth.signOut().then(function() { window.location.reload(); });
-            return; // Stop execution
+            return; 
           }
-          
+          // Teleporting! Curtain stays down.
           window.location.href='parent.html?setup=true';
+        } else {
+          // Fully onboarded. Unlock the curtain and drop it safely.
+          isRoutingToSetup = false; 
+          finalizeAppLoad();
         }
       }
     }).catch(function(){
       loadUserProfile(user);
+      isRoutingToSetup = false;
+      finalizeAppLoad(); 
     });
     
   } else {
     currentUser=null;
     updateAuthUI(null);
+    isRoutingToSetup = false;
+    finalizeAppLoad(); 
   }
-  finalizeAppLoad(); 
 });
+
+/* DELETE THIS OLD BLOCK IF YOU STILL SEE IT:
+setTimeout(function() {
+  if (!currentUser && appConfig.signinEnabled && !localStorage.getItem('et_email')) { ... }
+}, 550);
+*/
+
 /* ── LOAD USER PROFILE ── */
 function loadUserProfile(user){
   db.collection('users').doc(user.uid).get().then(function(doc){
