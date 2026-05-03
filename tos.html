@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+<title>Terms of Service - BloomPlayer</title>
+<meta name="theme-color" content="#C2CDC2"/>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --bg: #F4F7F4;
+    --card: #FFFFFF;
+    --text: #2D2922;
+    --text-2: #4A554A;
+    --text-3: #6B7C6B;
+    --border: #E2E8E2;
+    --red: #A85555;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body { background: var(--bg); color: var(--text); font-family: 'Nunito', sans-serif; line-height: 1.6; }
+  
+  .app-nav { position: sticky; top: 0; background: var(--bg); border-bottom: 1px solid var(--border); padding: 16px 20px; display: flex; align-items: center; z-index: 50; }
+  .soft-square { width: 40px; height: 40px; background-color: #D1D9D1; border-radius: 12px; display: flex; align-items: center; justify-content: center; cursor: pointer; border: none; color: #6B7C6B; }
+  .nav-title { flex: 1; text-align: center; font-size: 18px; font-weight: 700; color: var(--text); margin-right: 40px; } /* Offset for center alignment */
+
+  .content-wrap { max-width: 680px; margin: 0 auto; padding: 32px 20px 80px; }
+  .doc-title { font-size: 28px; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 8px; }
+  .doc-date { font-size: 14px; color: var(--text-3); font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 32px; display: block; }
+  
+  .doc-section { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin-bottom: 20px; }
+  h2 { font-size: 18px; font-weight: 700; color: var(--text); margin-bottom: 12px; }
+  p { font-size: 15px; color: var(--text-2); margin-bottom: 16px; }
+  p:last-child { margin-bottom: 0; }
+  ul { margin-left: 20px; margin-bottom: 16px; font-size: 15px; color: var(--text-2); }
+  li { margin-bottom: 8px; }
+  
+  a { color: var(--red); text-decoration: none; font-weight: 600; }
+  a:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+
+  <nav class="app-nav">
+    <button class="soft-square" onclick="window.history.back() || (window.location.href='index.html')">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="19" y1="12" x2="5" y2="12"></line>
+        <polyline points="12 19 5 12 12 5"></polyline>
+      </svg>
+    </button>
+    <div class="nav-title">Terms of Service</div>
+  </nav>
+
+  <div class="content-wrap">
+    <div class="doc-title">Terms of Service</div>
+    <span class="doc-date">Last Updated: May 2026</span>
+
+    <div class="doc-section">
+      <h2>1. Welcome to BloomPlayer</h2>
+      <p>BloomPlayer is a tool designed to help parents and guardians provide a focused, low-stimulus video viewing experience for their children. By using BloomPlayer, you agree to these Terms of Service. If you do not agree, please do not use the app.</p>
+    </div>
+
+    <div class="doc-section">
+      <h2>2. Parent & Guardian Responsibility</h2>
+      <p>BloomPlayer is intended to be configured and managed by adults. As a parent or guardian, you agree that:</p>
+      <ul>
+        <li>You are responsible for selecting and approving the videos available to your child.</li>
+        <li>You will safeguard your Parent PIN to prevent unauthorized access to settings.</li>
+        <li>BloomPlayer acts as a secure player interface, but we do not actively monitor, endorse, or guarantee the absolute safety of third-party video content.</li>
+      </ul>
+    </div>
+
+    <div class="doc-section">
+      <h2>3. Video Content, Ownership & Affiliation</h2>
+      <p>All video content accessed through BloomPlayer remains the sole property of its respective creators, channels, and copyright holders. BloomPlayer does not claim ownership over any linked videos or media.</p>
+      <p>BloomPlayer is an independent tool providing a modified, low-stimulus viewing interface. We are not affiliated with, sponsored by, or endorsed by the original video creators, nor do we have any direct relationship with the channels featured in the app.</p>
+      <p>Because BloomPlayer utilizes YouTube's embedded player to deliver this content, by using our service, you are also bound by the <a href="https://www.youtube.com/t/terms" target="_blank">YouTube Terms of Service</a>.</p>
+    </div>
+
+    <div class="doc-section">
+      <h2>4. Your Account</h2>
+      <p>To use certain features, such as building a custom video library, you must create an account. You are responsible for keeping your login credentials secure. We reserve the right to suspend accounts that violate these terms or attempt to bypass the app's security mechanisms.</p>
+    </div>
+
+    <div class="doc-section">
+      <h2>5. Disclaimer of Warranties</h2>
+      <p>BloomPlayer is provided "as is." While we strive to create a peaceful and secure environment, we cannot guarantee that the app will be entirely error-free or uninterrupted. BloomPlayer is a supplementary tool for parents, not a replacement for parental supervision.</p>
+    </div>
+
+    <div class="doc-section">
+      <h2>6. Contact Us</h2>
+      <p>If you have any questions about these Terms, the mission, or how to use the app, please email us at <a href="mailto:hello@bloomplayer.com">hello@bloomplayer.com</a>.</p>
+    </div>
+  </div>
+
+</body>
+</html>
