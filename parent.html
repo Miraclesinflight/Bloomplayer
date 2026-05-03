@@ -1001,39 +1001,70 @@ function exportSessions(){
 
 
 /* ── SIGN OUT ── */
-function signOut(){
-  showConfirm('Sign out of BloomPlayer?','You\'ll need to sign in again next visit.','Sign out',function(){
-    auth.signOut().then(function(){
-      localStorage.removeItem('et_tier');
-      localStorage.removeItem('et_email');
-      window.location.href='index.html';
-    });
-  });
+/* ── SIGN OUT ── */
+function signOut() {
+  showConfirm(
+    'Sign out of BloomPlayer?',
+    'You\'ll need to sign in again next visit.',
+    'Sign out',
+    function() {
+      auth.signOut().then(function() {
+        // Fully clear the device's local memory so the next user starts fresh
+        localStorage.removeItem('et_tier');
+        localStorage.removeItem('et_email');
+        localStorage.removeItem('et_pin');
+        localStorage.removeItem('et_active_profile');
+        localStorage.removeItem('et_profile_age');
+        localStorage.removeItem('et_hide_age');
+        localStorage.removeItem('et_device_id');
+        
+        // Note: We intentionally leave 'bloom_tour_completed' so the device 
+        // doesn't force them to take the tour again just because they signed out.
+        
+        window.location.href = 'index.html';
+      });
+    }
+  );
 }
 
+
 /* ── DELETE ACCOUNT ── */
-function deleteAccount(){
+function deleteAccount() {
   showConfirm(
     'Delete your account?',
     'This permanently deletes your account, PIN, video list and all data. This cannot be undone.',
     'Delete everything',
-    function(){
+    function() {
       showConfirm(
         'Are you absolutely sure?',
         'All your videos, PIN, and account data will be permanently deleted.',
         'Yes, delete my account',
-        function(){
-          var user=currentUser;
+        function() {
+          // Always grab the freshest auth object
+          var user = auth.currentUser;
+          if (!user) return;
+
+          // 1. Delete Subcollections first
           Promise.all([
             db.collection('users').doc(user.uid).collection('profiles').get(),
             db.collection('users').doc(user.uid).collection('videos').get()
-          ]).then(function(results){
-            var batch=db.batch();
-            results.forEach(function(snap){snap.forEach(function(doc){batch.delete(doc.ref);});});
+          ]).then(function(results) {
+            var batch = db.batch();
+            results.forEach(function(snap) {
+              snap.forEach(function(doc) { batch.delete(doc.ref); });
+            });
             return batch.commit();
-          }).then(function(){
+            
+          }).then(function() {
+            // 2. Delete the main User doc
             return db.collection('users').doc(user.uid).delete();
-          }).then(function(){
+            
+          }).then(function() {
+            // 3. Delete the Auth user (this automatically signs you out of Firebase)
+            return user.delete();
+            
+          }).then(function() {
+            // 4. ONLY clear local storage if Firebase deletion actually worked
             localStorage.removeItem('et_pin');
             localStorage.removeItem('et_tier');
             localStorage.removeItem('et_email');
@@ -1041,16 +1072,22 @@ function deleteAccount(){
             localStorage.removeItem('et_profile_age');
             localStorage.removeItem('et_hide_age');
             localStorage.removeItem('et_device_id');
-          }).then(function(){
-            return user.delete();
-          }).then(function(){
-            window.location.href='index.html';
-          }).catch(function(e){
-            console.error('deleteAccount error:',e);
-            if(e.code==='auth/requires-recent-login'){
-              showToast('Please sign out and sign in again before deleting your account.',true);
+            window.location.href = 'index.html';
+            
+          }).catch(function(e) {
+            console.error('deleteAccount error:', e);
+            
+            // 5. Bulletproof Error Handling
+            if (e.code === 'auth/requires-recent-login') {
+              // Alert ensures they see it, overriding all modals
+              alert('Security Check: Firebase requires a fresh login to delete your account. We will sign you out now—please log back in and try again.');
+              
+              // Force the sign-out to guarantee they do it
+              auth.signOut().then(function() {
+                window.location.href = 'index.html';
+              });
             } else {
-              showToast('Could not delete account. Please try again.',true);
+              alert('Could not delete account: ' + e.message);
             }
           });
         }
@@ -1058,6 +1095,7 @@ function deleteAccount(){
     }
   );
 }
+
 
 /* ── BACK ── */
 function goBack(){
