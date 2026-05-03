@@ -615,6 +615,7 @@ var changePinBuffer='';
 var changePinNewPin='';
 var changePinStep=1;
 
+
 /* ── AUTH ── */
 auth.onAuthStateChanged(function(user){
   if(!user||user.isAnonymous){
@@ -622,33 +623,37 @@ auth.onAuthStateChanged(function(user){
     return;
   }
   currentUser=user;
-    if(isSetupMode){
+  
+  if(isSetupMode){
     const splash = document.getElementById('setup-screen');
     const pinModal = document.getElementById('setup-pin-modal');
 
     splash.style.display = 'flex';
 
-    // 1. Wait the 3 seconds you just set
     setTimeout(function(){
-      
-      // 2. Add a quick fade out (0.5s) so it doesn't just "snap"
       splash.style.transition = 'opacity 0.5s ease';
       splash.style.opacity = '0';
-
-      // 3. Swap the displays after the fade finishes
       setTimeout(function(){
         splash.style.display = 'none';
         pinModal.style.display = 'flex';
       }, 500);
-
-    }, 3000); // Your updated timing
+    }, 3000); 
     
   } else {
     document.getElementById('parent-content').style.display='flex';
     renderParentMode();
     loadParentMode(user);
   }
+  
+  // NEW: HIDE THE CURTAIN ONCE FIREBASE IS READY
+  var curtain = document.getElementById('bloom-auth-curtain');
+  if (curtain) {
+    curtain.style.transition = 'opacity 0.4s ease';
+    curtain.style.opacity = '0';
+    setTimeout(function() { curtain.style.display = 'none'; }, 400);
+  }
 });
+
 
 function loadParentMode(user){
   db.collection('users').doc(user.uid).get().then(function(doc){
