@@ -1402,10 +1402,30 @@ function saveUserTier(user,tier,callback){
 }
 
 /* ── INACTIVITY ── */
-var INACTIVITY_MS=15*60*1000,inactivityTimer=null;
-function resetInactivityTimer(){if(!currentUser)return;clearTimeout(inactivityTimer);inactivityTimer=setTimeout(function(){var p=document.getElementById('player-screen');if(p&&p.style.display==='flex')return;signOut();},INACTIVITY_MS);}
-function startInactivityWatch(){['touchstart','mousemove','keydown','scroll'].forEach(function(e){document.addEventListener(e,resetInactivityTimer,{passive:true});});resetInactivityTimer();}
-function stopInactivityWatch(){clearTimeout(inactivityTimer);inactivityTimer=null;}
+var INACTIVITY_MS = 30 * 60 * 1000; 
+var inactivityTimer = null;
+
+function resetInactivityTimer() {
+  if (!currentUser) return;
+  clearTimeout(inactivityTimer);
+  inactivityTimer = setTimeout(function() {
+    var p = document.getElementById('player-screen');
+    if (p && p.style.display === 'flex') return; 
+    signOut();
+  }, INACTIVITY_MS);
+}
+
+function startInactivityWatch() {
+  ['touchstart', 'mousemove', 'keydown', 'scroll'].forEach(function(e) {
+    document.addEventListener(e, resetInactivityTimer, {passive: true});
+  });
+  resetInactivityTimer();
+}
+
+function stopInactivityWatch() {
+  clearTimeout(inactivityTimer);
+  inactivityTimer = null;
+}
 
 /* ── CURATOR VIDEOS (CSV) ── */
 var CSV_URL='https://docs.google.com/spreadsheets/d/e/2PACX-1vSMkmJi2zz99BE6d7STDfVXiBgd1eyfZSdIx4TUsst05Xm4m7G6tz9zGTJXmoVku1DQpmC52vWpOlhI/pub?output=csv';
