@@ -1128,37 +1128,53 @@ function loadAppConfig(){
 
 
 function finalizeAppLoad() {
-  if (configReady && authReady) {
+  try {
+    // 1. SAFE VARIABLE CHECKS (Prevents fatal crashes if these aren't defined yet)
+    var isConfigReady = (typeof configReady !== 'undefined') ? configReady : true;
+    var isAuthReady = (typeof authReady !== 'undefined') ? authReady : true;
 
-    /* --- 1. SAFELY ARRANGE UI (ONLY IF ELEMENTS EXIST) --- */
-    var welcomeModal = document.getElementById('welcome-modal');
-    
-    // Only try to show/hide the modal if we are on a page that actually has it
-    if (welcomeModal) {
-      if (sessionStorage.getItem('et_google_redirect')) {
-        sessionStorage.removeItem('et_google_redirect');
-        welcomeModal.style.display = 'none';
-        
-      } else if (!currentUser && typeof appConfig !== 'undefined' && appConfig.signinEnabled && !localStorage.getItem('et_email')) {
-        welcomeModal.style.display = 'flex';
-        
-      } else {
-        welcomeModal.style.display = 'none';
+    // Only proceed if the app has actually finished loading its data
+    if (isConfigReady && isAuthReady) {
+      
+      var welcomeModal = document.getElementById('welcome-modal');
+      var isRedirect = sessionStorage.getItem('et_google_redirect');
+      
+      // Safely check if user and config exist without triggering errors
+      var userExists = (typeof currentUser !== 'undefined' && currentUser !== null);
+      var signinEnabled = (typeof appConfig !== 'undefined' && appConfig && appConfig.signinEnabled);
+
+      // 2. ARRANGE THE UI (If the modal exists on this page)
+      if (welcomeModal) {
+        if (isRedirect) {
+          sessionStorage.removeItem('et_google_redirect');
+          welcomeModal.style.display = 'none';
+        } else if (!userExists && signinEnabled && !localStorage.getItem('et_email')) {
+          welcomeModal.style.display = 'flex';
+        } else {
+          welcomeModal.style.display = 'none';
+        }
+      }
+
+      // 3. RAISE THE CURTAIN
+      var splash = document.getElementById('app-splash');
+      if (splash && splash.style.display !== 'none') {
+        splash.style.transition = 'opacity 0.4s ease';
+        splash.style.opacity = '0';
+        setTimeout(function() {
+          splash.style.display = 'none';
+        }, 400);
       }
     }
-
-    /* --- 2. RAISE THE CURTAIN --- */
-    var splash = document.getElementById('app-splash');
-    if (splash && splash.style.display !== 'none') {
-      splash.style.transition = 'opacity 0.4s ease';
-      splash.style.opacity = '0';
-      
-      setTimeout(function() {
-        splash.style.display = 'none';
-      }, 400);
-    }
+  } catch (error) {
+    // 4. THE FAILSAFE
+    console.error("Error in finalizeAppLoad:", error);
+    // If absolutely anything goes wrong above, force the splash screen to hide 
+    // so you are never permanently locked out of your own app!
+    var splashFallback = document.getElementById('app-splash');
+    if (splashFallback) splashFallback.style.display = 'none';
   }
 }
+
 
 
 function onConfigLoaded(){
