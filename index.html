@@ -1129,21 +1129,18 @@ function loadAppConfig(){
 
 function finalizeAppLoad() {
   try {
-    // 1. SAFE VARIABLE CHECKS (Prevents fatal crashes if these aren't defined yet)
+    // Safely check variables so it never crashes
     var isConfigReady = (typeof configReady !== 'undefined') ? configReady : true;
     var isAuthReady = (typeof authReady !== 'undefined') ? authReady : true;
 
-    // Only proceed if the app has actually finished loading its data
     if (isConfigReady && isAuthReady) {
       
       var welcomeModal = document.getElementById('welcome-modal');
       var isRedirect = sessionStorage.getItem('et_google_redirect');
-      
-      // Safely check if user and config exist without triggering errors
       var userExists = (typeof currentUser !== 'undefined' && currentUser !== null);
       var signinEnabled = (typeof appConfig !== 'undefined' && appConfig && appConfig.signinEnabled);
 
-      // 2. ARRANGE THE UI (If the modal exists on this page)
+      // 1. Arrange Modal
       if (welcomeModal) {
         if (isRedirect) {
           sessionStorage.removeItem('et_google_redirect');
@@ -1155,25 +1152,32 @@ function finalizeAppLoad() {
         }
       }
 
-      // 3. RAISE THE CURTAIN
+      // 2. Hide old logo splash
       var splash = document.getElementById('app-splash');
       if (splash && splash.style.display !== 'none') {
         splash.style.transition = 'opacity 0.4s ease';
         splash.style.opacity = '0';
-        setTimeout(function() {
-          splash.style.display = 'none';
-        }, 400);
+        setTimeout(function() { splash.style.display = 'none'; }, 400);
+      }
+      
+      // 3. HIDE THE NEW CURTAIN (This fixes the green screen!)
+      var curtain = document.getElementById('bloom-auth-curtain');
+      if (curtain && curtain.style.display !== 'none') {
+        curtain.style.transition = 'opacity 0.4s ease';
+        curtain.style.opacity = '0';
+        setTimeout(function() { curtain.style.display = 'none'; }, 400);
       }
     }
   } catch (error) {
-    // 4. THE FAILSAFE
     console.error("Error in finalizeAppLoad:", error);
-    // If absolutely anything goes wrong above, force the splash screen to hide 
-    // so you are never permanently locked out of your own app!
+    // FAILSAFE: If anything breaks, force the blockers to hide so you aren't locked out
     var splashFallback = document.getElementById('app-splash');
     if (splashFallback) splashFallback.style.display = 'none';
+    var curtainFallback = document.getElementById('bloom-auth-curtain');
+    if (curtainFallback) curtainFallback.style.display = 'none';
   }
 }
+
 
 
 
