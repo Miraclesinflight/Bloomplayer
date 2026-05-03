@@ -1354,7 +1354,7 @@ function handleSignOut() {
 
 /* ── SIGN OUT ── */
 function signOut(){
-  stopInactivityWatch();
+ /* stopInactivityWatch();*/
   auth.signOut().then(function(){
     currentUser=null;personalVideosData={};userTier='general';
     localStorage.removeItem('et_tier');
@@ -1414,7 +1414,7 @@ auth.onAuthStateChanged(function(user){
     document.getElementById('welcome-modal').style.display='none';
     updateAuthUI(user);
     showInstallPopupIfNeeded();
-    startInactivityWatch();
+    /*startInactivityWatch();*/
     
     // Lock the curtain down while the database thinks!
     isRoutingToSetup = true; 
@@ -1751,7 +1751,7 @@ function saveUserTier(user,tier,callback){
   .then(function(){if(callback)callback();}).catch(function(){if(callback)callback();});
 }
 
-/* ── INACTIVITY ── */
+/* ── INACTIVITY ── 
 var INACTIVITY_MS = 30 * 60 * 1000; 
 var inactivityTimer = null;
 
@@ -1775,7 +1775,7 @@ function startInactivityWatch() {
 function stopInactivityWatch() {
   clearTimeout(inactivityTimer);
   inactivityTimer = null;
-}
+}*/
 
 /* ── CURATOR VIDEOS (CSV) ── */
 var CSV_URL='https://docs.google.com/spreadsheets/d/e/2PACX-1vSMkmJi2zz99BE6d7STDfVXiBgd1eyfZSdIx4TUsst05Xm4m7G6tz9zGTJXmoVku1DQpmC52vWpOlhI/pub?output=csv';
