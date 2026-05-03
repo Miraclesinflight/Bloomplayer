@@ -265,7 +265,7 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',-apple-system,s
 .welcome-box{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:28px 22px 24px;width:100%;}
 .welcome-letter{background:var(--badge-bg);border:1px solid var(--border);border-left:3px solid #CC9544;border-radius:0 10px 10px 0;padding:17px 16px;margin-bottom:20px;}
 .welcome-letter-eyebrow{font-size:14px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:8px;}
-.welcome-letter-body{font-family:'Nunito';font-size:24px;color:var(--text-2);text-align:justify;line-height:1.8;}
+.welcome-letter-body{font-family:'Nunito';font-size:20px;color:var(--text-2);text-align:justify;line-height:1.8;}
 .welcome-letter-sign{display:block;font-family:'Nunito';font-size:18px;color:var(--text-3);font-style:italic;font-weight:450;text-align:center;margin-top:10px;}
 .welcome-field-label{font-size:11px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:0.7px;display:block;margin-bottom:6px;}
 .welcome-input{width:100%;padding:13px 15px;border-radius:10px;border:1.5px solid var(--border);background:var(--input-bg);color:var(--text);font-size:17px;font-family:nunito;outline:none;margin-bottom:16px;}
@@ -576,6 +576,92 @@ html, body, #home, .screen {
 
 .sidebar-footer { padding: 16px; border-top: 1px solid #E2E8E2; }
 .signout-item { color: #A85555; } /* Subdued red for signout */
+/* ── ONBOARDING TOUR STYLES ── */
+
+/* Darkens the screen behind the tour */
+#tour-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(45, 41, 34, 0.85); /* Dark, warm gray */
+  z-index: 9998;
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+}
+
+/* The Tour Bubble */
+#tour-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #FFFFFF;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 360px;
+  padding: 24px;
+  z-index: 10000;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+}
+
+.tour-eyebrow {
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #CC9544; /* Golden Ochre */
+  margin-bottom: 8px;
+}
+
+#tour-modal h3 { 
+  font-size: 20px; 
+  font-weight: 700; 
+  color: var(--text); 
+  margin-bottom: 8px; 
+}
+
+#tour-modal p { 
+  font-size: 15px; 
+  color: var(--text-2); 
+  line-height: 1.5; 
+  margin-bottom: 24px; 
+}
+
+.tour-footer { 
+  display: flex; 
+  justify-content: space-between; 
+  align-items: center; 
+}
+
+.btn-tour-skip {
+  background: none; 
+  border: none; 
+  color: var(--text-3);
+  font-size: 14px; 
+  font-weight: 600; 
+  font-family: inherit; 
+  cursor: pointer;
+}
+
+.btn-tour-next {
+  background: #CC9544; 
+  color: #1A1A1A; 
+  border: none;
+  padding: 10px 20px; 
+  border-radius: 8px; 
+  font-size: 15px; 
+  font-weight: 700;
+  font-family: inherit; 
+  cursor: pointer;
+}
+
+/* The magic class that pulls the highlighted element to the front */
+.tour-highlight-active {
+  position: relative !important;
+  z-index: 9999 !important;
+  background: var(--card) !important;
+  border-radius: 16px !important;
+  pointer-events: none; /* Stops them from clicking it during the tour */
+}
 
 </style>
 
@@ -1064,7 +1150,106 @@ function onConfigLoaded(){
   configReady = true;
   finalizeAppLoad();
 }
+  /* ── ONBOARDING TOUR ── */
+let currentTourStep = 0;
+
+// We added a 'view' property to tell the tour which tab to open
+const tourSteps = [
+  {
+    targetId: 'paste-card', 
+    view: 'discover',
+    title: '1. Watch Any Video',
+    text: 'Find any video on YouTube, copy the link, and paste it here. We strip away ads, comments, and sidebars for a safe viewing experience.'
+  },
+  {
+    targetId: 'suggested-card', 
+    view: 'discover',
+    title: '2. Curated Content',
+    text: 'Don\'t have a link? Browse our pre-screened library under the Educational or Leisure tabs, organized by age and grade level.'
+  },
+  {
+    targetId: 'no-videos-card', // Highlights the Library tab button itself
+    view: 'library',
+    title: '3. Build Your Library',
+    text: 'Save your own approved videos into specific categories here. Your child can only watch what you add.'
+  }
+];
+
+function startTour() {
+  if (localStorage.getItem('bloom_tour_completed') === 'true') return;
   
+  document.getElementById('tour-overlay').style.display = 'block';
+  document.getElementById('tour-modal').style.display = 'block';
+  
+  // Ensure we start on the discover tab
+  switchMainView('discover'); 
+  renderTourStep();
+}
+
+function renderTourStep() {
+  // 1. Remove highlight from ALL previous elements
+  tourSteps.forEach(step => {
+    const el = document.getElementById(step.targetId);
+    if (el) el.classList.remove('tour-highlight-active');
+  });
+
+  // 2. Get current step info
+  const step = tourSteps[currentTourStep];
+  
+  // 3. Switch the view dynamically!
+  if (step.view) {
+    switchMainView(step.view);
+  }
+  
+  // 4. Update the text bubble
+  document.getElementById('tour-step-counter').innerText = `Step ${currentTourStep + 1} of ${tourSteps.length}`;
+  document.getElementById('tour-title').innerText = step.title;
+  document.getElementById('tour-text').innerText = step.text;
+  
+  // 5. Change button text on the last step
+  const nextBtn = document.querySelector('.btn-tour-next');
+  if (currentTourStep === tourSteps.length - 1) {
+    nextBtn.innerText = "Got it, let's go!";
+  } else {
+    nextBtn.innerHTML = "Next &rarr;";
+  }
+
+  // 6. Highlight the new element and gently scroll it into view
+  const targetEl = document.getElementById(step.targetId);
+  if (targetEl) {
+    targetEl.classList.add('tour-highlight-active');
+    targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}
+
+function nextTourStep() {
+  if (currentTourStep < tourSteps.length - 1) {
+    currentTourStep++;
+    renderTourStep();
+  } else {
+    endTour();
+  }
+}
+
+function endTour() {
+  // Mark as completed
+  localStorage.setItem('bloom_tour_completed', 'true');
+  
+  // Hide UI
+  document.getElementById('tour-overlay').style.display = 'none';
+  document.getElementById('tour-modal').style.display = 'none';
+  
+  // Remove lingering highlights
+  tourSteps.forEach(step => {
+    const el = document.getElementById(step.targetId);
+    if (el) el.classList.remove('tour-highlight-active');
+  });
+  
+  // Safely return the user to the home screen
+  switchMainView('discover');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
 function welcomeSignInWithGoogle(){
   document.getElementById('welcome-error').textContent='';
   // Set a flag that we are about to redirect to Google
@@ -1159,6 +1344,8 @@ function updateAuthUI(user) {
     if (infoCard) infoCard.closest('.info-card').style.display = 'none';
     
     updateBetaUI();
+      // Fires the onboarding tour (it will auto-cancel if already completed)
+    setTimeout(startTour, 1000);
   } else {
     // Revert to default "G" if signed out
     if (profilePic) {
@@ -2130,6 +2317,18 @@ function show(id){document.querySelectorAll('.screen').forEach(function(s){s.sty
 </div>
 
 <div id="sidebarOverlay" class="sidebar-overlay" onclick="closeSidebar()"></div>
+<div id="tour-overlay" style="display: none;"></div>
+<div id="tour-modal" style="display: none;">
+  <div class="tour-content">
+    <div id="tour-step-counter" class="tour-eyebrow">Step 1 of 3</div>
+    <h3 id="tour-title">Paste a Link</h3>
+    <p id="tour-text">Find any video on YouTube, copy the link, and paste it here.</p>
+    <div class="tour-footer">
+      <button class="btn-tour-skip" onclick="endTour()">Skip Tour</button>
+      <button class="btn-tour-next" onclick="nextTourStep()">Next &rarr;</button>
+    </div>
+  </div>
+</div>
 
 </body>
 </html>
