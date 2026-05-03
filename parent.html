@@ -314,11 +314,13 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',-apple-system,s
     </svg>
   </div>
 
-  <div class="setup-pin-step" style="color: var(--accent);">Step 1 of 2</div>
-  <div class="setup-pin-title" style="font-weight: bold;">Choose your PIN</div>
-  <div class="setup-pin-sub" style="color: var(--text-3);">You'll use this to access Parent Mode and exit videos.</div>
+  <div id="setup-pin-step" class="setup-pin-step" style="color: var(--accent);">Step 1 of 2</div>
+  <div id="setup-pin-title" class="setup-pin-title" style="font-weight: bold;">Choose your PIN</div>
+  <div id="setup-pin-sub" class="setup-pin-sub" style="color: var(--text-3);">You'll use this to access Parent Mode and exit videos.</div>
 
-    <div class="pin-dots">
+  <div id="setup-pin-error" style="color: var(--red); font-size: 14px; text-align: center; height: 20px; margin-top: 10px; font-weight: 600;"></div>
+
+  <div class="pin-dots">
     <div class="dot" id="sp0" style="border: 2px solid var(--border);"></div>
     <div class="dot" id="sp1" style="border: 2px solid var(--border);"></div>
     <div class="dot" id="sp2" style="border: 2px solid var(--border);"></div>
