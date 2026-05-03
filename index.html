@@ -1128,26 +1128,39 @@ function loadAppConfig(){
 
 
 function finalizeAppLoad() {
+  // Only proceed if BOTH Firebase auth and your config are fully loaded
   if (configReady && authReady) {
-    document.getElementById('app-splash').style.display = 'none';
 
-    // If we just came back from a Google redirect, do NOT show the welcome modal
+    /* --- 1. ARRANGE THE UI BEHIND THE CURTAIN --- */
     if (sessionStorage.getItem('et_google_redirect')) {
-      // Clear the flag so it doesn't interfere next time
+      // Case A: Just came back from Google redirect. Hide modal.
       sessionStorage.removeItem('et_google_redirect');
-      // Also make sure modal is hidden
       document.getElementById('welcome-modal').style.display = 'none';
-      return;
+      
+    } else if (!currentUser && appConfig.signinEnabled && !localStorage.getItem('et_email')) {
+      // Case B: Normal logged-out user. Show modal.
+      document.getElementById('welcome-modal').style.display = 'flex';
+      
+    } else {
+      // Case C: Logged-in user or sign-in disabled. Hide modal.
+      document.getElementById('welcome-modal').style.display = 'none';
     }
 
-    // Normal case: show modal only if user is not signed in and sign-in is enabled
-    if (!currentUser && appConfig.signinEnabled && !localStorage.getItem('et_email')) {
-      document.getElementById('welcome-modal').style.display = 'flex';
-    } else {
-      document.getElementById('welcome-modal').style.display = 'none';
+    /* --- 2. RAISE THE CURTAIN --- */
+    var splash = document.getElementById('app-splash');
+    if (splash && splash.style.display !== 'none') {
+      // Add a smooth CSS fade
+      splash.style.transition = 'opacity 0.4s ease';
+      splash.style.opacity = '0';
+      
+      // Wait for the fade to finish, then remove it completely
+      setTimeout(function() {
+        splash.style.display = 'none';
+      }, 400);
     }
   }
 }
+
 function onConfigLoaded(){
   configReady = true;
   finalizeAppLoad();
