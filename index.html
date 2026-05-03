@@ -1250,23 +1250,32 @@ function endTour() {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-function welcomeSignInWithGoogle(){
-  document.getElementById('welcome-error').textContent='';
-  // Set a flag that we are about to redirect to Google
+function welcomeSignInWithGoogle() {
+  document.getElementById('welcome-error').textContent = '';
+  
+  // Your existing flag for the redirect fallback
   sessionStorage.setItem('et_google_redirect', '1');
+  
+  // NEW: The breadcrumb that proves they started the setup in this exact browser session
+  sessionStorage.setItem('bloom_setup_active', 'true');
+  
   var p = new firebase.auth.GoogleAuthProvider();
-  p.setCustomParameters({prompt:'select_account'});
-  auth.signInWithPopup(p).catch(function(e){
-    if(e.code === 'auth/popup-blocked'){
-      // Popup blocked – redirect will happen, flag already set
+  p.setCustomParameters({prompt: 'select_account'});
+  
+  auth.signInWithPopup(p).catch(function(e) {
+    if(e.code === 'auth/popup-blocked') {
+      // Popup blocked – redirect will happen, flags are already safely set
       auth.signInWithRedirect(p);
-    } else if(e.code !== 'auth/cancelled-popup-request' && e.code !== 'auth/popup-closed-by-user'){
-      // On error, clear the flag
+    } else if(e.code !== 'auth/cancelled-popup-request' && e.code !== 'auth/popup-closed-by-user') {
+      // On an actual error, clear BOTH flags so the app resets cleanly
       sessionStorage.removeItem('et_google_redirect');
+      sessionStorage.removeItem('bloom_setup_active');
+      
       showToast('Sign in failed. Please try again.', true);
     }
   });
 }
+
 
 
 function welcomeContinueWithEmail(){
@@ -1373,31 +1382,58 @@ auth.onAuthStateChanged(function(user){
     updateAuthUI(user);
     showInstallPopupIfNeeded();
     startInactivityWatch();
-   db.collection('users').doc(user.uid).get().then(function(doc){
-  if(!doc.exists){
-    saveUserTier(user,'general',function(){
+    
+    db.collection('users').doc(user.uid).get().then(function(doc){
+      if(!doc.exists){
+        
+        // NEW: Abandonment Check for completely new users
+        if (!sessionStorage.getItem('bloom_setup_active')) {
+          auth.signOut().then(function() { window.location.reload(); });
+          return; // Stop execution
+        }
+
+        saveUserTier(user,'general',function(){
+          loadUserProfile(user);
+          window.location.href='parent.html?setup=true';
+        });
+        
+      } else {
+        var data=doc.data();
+        userTier=data.tier||'general';
+        localStorage.setItem('et_tier',userTier);
+        
+        if(data.pin){
+          parentPin=data.pin;
+          localStorage.setItem('et_pin',data.pin);
+        }
+        if(data.betaInvited){
+          localStorage.setItem('et_beta_invited','true');
+        }
+        
+        updateBetaUI();
+        loadUserProfile(user);
+        
+        if(!data.onboarded){
+          
+          // NEW: Abandonment Check for users who created an account but didn't finish PIN setup
+          if (!sessionStorage.getItem('bloom_setup_active')) {
+            auth.signOut().then(function() { window.location.reload(); });
+            return; // Stop execution
+          }
+          
+          window.location.href='parent.html?setup=true';
+        }
+      }
+    }).catch(function(){
       loadUserProfile(user);
-      window.location.href='parent.html?setup=true';
-/*      document.getElementById('home').style.display='flex'; */
     });
-  } else {
-    var data=doc.data();
-    userTier=data.tier||'general';
-    localStorage.setItem('et_tier',userTier);
-    if(data.pin){parentPin=data.pin;localStorage.setItem('et_pin',data.pin);}
-    if(data.betaInvited){localStorage.setItem('et_beta_invited','true');}
-    updateBetaUI();
-    loadUserProfile(user);
-    if(!data.onboarded){window.location.href='parent.html?setup=true';}
-  }
-}).catch(function(){loadUserProfile(user);});
+    
   } else {
     currentUser=null;
     updateAuthUI(null);
   }
-    finalizeAppLoad(); 
+  finalizeAppLoad(); 
 });
-
 /* ── LOAD USER PROFILE ── */
 function loadUserProfile(user){
   db.collection('users').doc(user.uid).get().then(function(doc){
