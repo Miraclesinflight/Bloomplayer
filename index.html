@@ -1128,38 +1128,38 @@ function loadAppConfig(){
 
 
 function finalizeAppLoad() {
-  // Only proceed if BOTH Firebase auth and your config are fully loaded
   if (configReady && authReady) {
 
-    /* --- 1. ARRANGE THE UI BEHIND THE CURTAIN --- */
-    if (sessionStorage.getItem('et_google_redirect')) {
-      // Case A: Just came back from Google redirect. Hide modal.
-      sessionStorage.removeItem('et_google_redirect');
-      document.getElementById('welcome-modal').style.display = 'none';
-      
-    } else if (!currentUser && appConfig.signinEnabled && !localStorage.getItem('et_email')) {
-      // Case B: Normal logged-out user. Show modal.
-      document.getElementById('welcome-modal').style.display = 'flex';
-      
-    } else {
-      // Case C: Logged-in user or sign-in disabled. Hide modal.
-      document.getElementById('welcome-modal').style.display = 'none';
+    /* --- 1. SAFELY ARRANGE UI (ONLY IF ELEMENTS EXIST) --- */
+    var welcomeModal = document.getElementById('welcome-modal');
+    
+    // Only try to show/hide the modal if we are on a page that actually has it
+    if (welcomeModal) {
+      if (sessionStorage.getItem('et_google_redirect')) {
+        sessionStorage.removeItem('et_google_redirect');
+        welcomeModal.style.display = 'none';
+        
+      } else if (!currentUser && typeof appConfig !== 'undefined' && appConfig.signinEnabled && !localStorage.getItem('et_email')) {
+        welcomeModal.style.display = 'flex';
+        
+      } else {
+        welcomeModal.style.display = 'none';
+      }
     }
 
     /* --- 2. RAISE THE CURTAIN --- */
     var splash = document.getElementById('app-splash');
     if (splash && splash.style.display !== 'none') {
-      // Add a smooth CSS fade
       splash.style.transition = 'opacity 0.4s ease';
       splash.style.opacity = '0';
       
-      // Wait for the fade to finish, then remove it completely
       setTimeout(function() {
         splash.style.display = 'none';
       }, 400);
     }
   }
 }
+
 
 function onConfigLoaded(){
   configReady = true;
