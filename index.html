@@ -35,7 +35,7 @@
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 body{background:var(--bg);color:var(--text);font-family:'Nunito',-apple-system,sans-serif;min-height:100vh;}
 .screen{display:none;flex-direction:column;min-height:100vh;}
-#home{display:flex;}
+#home{display:none;}
 
 .app-nav { position: sticky; top: 0; z-index: 50; background: var(--bg); border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; width: 100%; padding: 16px; box-sizing: border-box; }
 
@@ -1274,7 +1274,7 @@ function loadAppConfig(){
 
 function finalizeAppLoad() {
   try {
-    // NEW: If we are teleporting the user to parent.html, DO NOT drop the curtain!
+    // NEW: If we are teleporting the user to setup, DO NOT drop the curtain!
     if (typeof isRoutingToSetup !== 'undefined' && isRoutingToSetup === true) {
       return; 
     }
@@ -1285,21 +1285,29 @@ function finalizeAppLoad() {
     if (isConfigReady && isAuthReady) {
       
       var welcomeModal = document.getElementById('welcome-modal');
+      var homeScreen = document.getElementById('home'); // Grab the main app container
       var isRedirect = sessionStorage.getItem('et_google_redirect');
       var userExists = (typeof currentUser !== 'undefined' && currentUser !== null);
       var signinEnabled = (typeof appConfig !== 'undefined' && appConfig && appConfig.signinEnabled);
 
+      // 1. Arrange Modal and Main App Visibility
       if (welcomeModal) {
         if (isRedirect) {
           sessionStorage.removeItem('et_google_redirect');
           welcomeModal.style.display = 'none';
+          if (homeScreen) homeScreen.style.display = 'flex'; // Turn app ON
+          
         } else if (!userExists && signinEnabled && !localStorage.getItem('et_email')) {
           welcomeModal.style.display = 'flex';
+          if (homeScreen) homeScreen.style.display = 'none'; // Keep app OFF
+          
         } else {
           welcomeModal.style.display = 'none';
+          if (homeScreen) homeScreen.style.display = 'flex'; // Turn app ON
         }
       }
 
+      // 2. Hide old logo splash
       var splash = document.getElementById('app-splash');
       if (splash && splash.style.display !== 'none') {
         splash.style.transition = 'opacity 0.4s ease';
@@ -1307,6 +1315,7 @@ function finalizeAppLoad() {
         setTimeout(function() { splash.style.display = 'none'; }, 400);
       }
       
+      // 3. Drop the new curtain
       var curtain = document.getElementById('bloom-auth-curtain');
       if (curtain && curtain.style.display !== 'none') {
         curtain.style.transition = 'opacity 0.4s ease';
@@ -1320,8 +1329,13 @@ function finalizeAppLoad() {
     if (splashFallback) splashFallback.style.display = 'none';
     var curtainFallback = document.getElementById('bloom-auth-curtain');
     if (curtainFallback) curtainFallback.style.display = 'none';
+    
+    // Failsafe: if an error occurs, ensure the main app is visible so you aren't locked out
+    var homeFallback = document.getElementById('home');
+    if (homeFallback) homeFallback.style.display = 'flex';
   }
 }
+
 
 
 function onConfigLoaded(){
