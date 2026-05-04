@@ -1631,11 +1631,6 @@ auth.onAuthStateChanged(function(user){
   }
 });
 
-/* DELETE THIS OLD BLOCK IF YOU STILL SEE IT:
-setTimeout(function() {
-  if (!currentUser && appConfig.signinEnabled && !localStorage.getItem('et_email')) { ... }
-}, 550);
-*/
 
 /* ── LOAD USER PROFILE ── */
 function loadUserProfile(user){
@@ -2414,16 +2409,7 @@ auth.getRedirectResult().then(function(result){
   loadVideos();
   switchTab('educational');
 });
-// Show welcome modal only after 500ms, if user is still not signed in
-setTimeout(function() {
-  if (!currentUser && appConfig.signinEnabled && !localStorage.getItem('et_email')) {
-    // Make sure we are not returning from a Google redirect (which would already have a user)
-    var isSignInLink = firebase.auth().isSignInWithEmailLink(window.location.href);
-    if (!isSignInLink) {
-      document.getElementById('welcome-modal').style.display = 'flex';
-    }
-  }
-}, 550);
+
   
 
 if ('serviceWorker' in navigator) {
