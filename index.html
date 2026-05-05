@@ -1531,15 +1531,25 @@ function handleSignOut() {
 }
 
 /* ── SIGN OUT ── */
-function signOut(){
- /* stopInactivityWatch();*/
-  auth.signOut().then(function(){
-    currentUser=null;personalVideosData={};userTier='general';
+/* ── SIGN OUT ── */
+function signOut() {
+  auth.signOut().then(function() {
+    // 1. Stop any playing video immediately so audio doesn't linger
+    var player = document.getElementById('player-screen');
+    if (player && player.style.display === 'flex') { 
+      closeVideo(); 
+    }
+
+    // 2. Wipe all local data so no "ghost" session remains
     localStorage.removeItem('et_tier');
-    updateAuthUI(null);
-    var player=document.getElementById('player-screen');
-    if(player&&player.style.display==='flex'){closeVideo();}
-    if(appConfig.signinEnabled&&!localStorage.getItem('et_email')){document.getElementById('welcome-modal').style.display='flex';}
+    localStorage.removeItem('et_email');
+    localStorage.removeItem('et_pin');
+    localStorage.removeItem('et_active_profile');
+    localStorage.removeItem('et_profile_age');
+    sessionStorage.removeItem('bloom_setup_active');
+    
+    // 3. Force a hard reload to cleanly reboot into the Welcome Modal
+    window.location.reload();
   });
 }
 
