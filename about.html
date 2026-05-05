@@ -26,7 +26,15 @@
 body{background:var(--bg);color:var(--text);font-family:'Inter',-apple-system,sans-serif;line-height:1.7;}
 
 /* ── Single width token used everywhere ── */
-.wrap{width:100%;max-width:900px;margin-left:auto;margin-right:auto;padding-left:clamp(16px,4vw,40px);padding-right:clamp(16px,4vw,40px);}
+/* ── Single width token used everywhere ── */
+.wrap { 
+  width: 100%; 
+  max-width: 780px; /* Tightened from 900px for perfect reading width */
+  margin-left: auto; 
+  margin-right: auto; 
+  padding-left: clamp(16px, 4vw, 40px); 
+  padding-right: clamp(16px, 4vw, 40px); 
+}
 
 nav{display:flex;align-items:center;justify-content:space-between;padding-top:20px;padding-bottom:20px;}
 .nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text);}
@@ -51,7 +59,12 @@ nav{display:flex;align-items:center;justify-content:space-between;padding-top:20
 .stat-label{font-size:12px;color:var(--text-3);margin-top:4px;line-height:1.4;}
 
 .why-section{padding-top:0;}
-.why-grid{display:flex;flex-direction:column;gap:12px;margin-top:20px;}
+.why-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* Forces cards to sit side-by-side */
+  gap: 16px;
+  margin-top: 20px;
+}
 .why-item{display:flex;gap:16px;align-items:flex-start;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:18px;}
 .why-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;background:var(--red-light);}
 .why-title{font-size:15px;font-weight:600;margin-bottom:4px;color:var(--text);}
@@ -77,10 +90,12 @@ nav{display:flex;align-items:center;justify-content:space-between;padding-top:20
 footer{border-top:1px solid var(--border);padding:24px;text-align:center;font-size:12px;color:var(--text-3);}
 footer a{color:var(--red);text-decoration:none;}
 
-@media(max-width:480px){
-  .stats{grid-template-columns:1fr;}
-  .hero h1{letter-spacing:-0.5px;}
+@media(max-width: 640px) {
+  .stats { grid-template-columns: 1fr; }
+  .why-grid { grid-template-columns: 1fr; }
+  .hero h1 { letter-spacing: -0.5px; }
 }
+
 </style>
 </head>
 <body>
@@ -154,7 +169,7 @@ footer a{color:var(--red);text-decoration:none;}
       </div>
       <div>
         <div class="why-title">Parent PIN to exit</div>
-        <div class="why-text">Closing a video requires a 4-digit PIN. The child stays in a safe, controlled viewing experience until a parent decides otherwise. Default PIN is <strong>1234</strong> — change it in Settings.</div>
+        <div class="why-text">Our kids are smart.. on an attempt to be smarter, we require a 4-digit PIN thats needed for most flows including closind videos. The child stays in a safe, controlled viewing experience until a parent decides otherwise.</div>
       </div>
     </div>
 
