@@ -29,11 +29,11 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',-apple-system,sa
 /* ── Single width token used everywhere ── */
 .wrap { 
   width: 100%; 
-  max-width: 780px; /* Tightened from 900px for perfect reading width */
+  max-width: 900px; /* Wide enough for laptops, but keeps text readable */
   margin-left: auto; 
   margin-right: auto; 
-  padding-left: clamp(16px, 4vw, 40px); 
-  padding-right: clamp(16px, 4vw, 40px); 
+  padding-left: clamp(16px, 5vw, 40px); 
+  padding-right: clamp(16px, 5vw, 40px); 
 }
 
 nav{display:flex;align-items:center;justify-content:space-between;padding-top:20px;padding-bottom:20px;}
@@ -53,33 +53,54 @@ nav{display:flex;align-items:center;justify-content:space-between;padding-top:20
 .story .highlight{background:var(--red-light);border-left:3px solid var(--red);padding:16px 20px;border-radius:0 10px 10px 0;margin:28px 0;}
 .story .highlight p{color:var(--text);font-size:18px;font-style:italic;margin:0;}
 
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:40px;margin-bottom:40px;}
-.stat{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;text-align:center;}
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin-top: 40px;
+  margin-bottom: 40px;
+}
+  .stat{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;text-align:center;}
 .stat-number{font-size:28px;font-weight:800;color:var(--red);letter-spacing:-1px;}
 .stat-label{font-size:12px;color:var(--text-3);margin-top:4px;line-height:1.4;}
 
 .why-section{padding-top:0;}
 .why-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr); /* Forces cards to sit side-by-side */
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
   gap: 16px;
   margin-top: 20px;
 }
-.why-item{display:flex;gap:16px;align-items:flex-start;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:18px;}
+  .why-item{display:flex;gap:16px;align-items:flex-start;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:18px;}
 .why-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;background:var(--red-light);}
 .why-title{font-size:15px;font-weight:600;margin-bottom:4px;color:var(--text);}
 .why-text{font-size:13px;color:var(--text-2);line-height:1.6;}
 
 .night-banner{margin-top:40px;}
-.night-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:28px;}
-.night-card h3{font-size:20px;font-weight:800;margin-bottom:10px;letter-spacing:-0.5px;color:var(--text);}
-.night-card p{font-size:14px;color:var(--text-2);line-height:1.7;}
+.night-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: clamp(24px, 5vw, 40px); /* Scales padding smoothly across devices */
+  max-width: 640px; /* Stops it from stretching too wide on laptops */
+  margin: 0 auto; /* Centers the card perfectly */
+}
+.night-card h3 { font-size: 20px; font-weight: 800; margin-bottom: 10px; letter-spacing: -0.5px; color: var(--text); }
+.night-card p { font-size: 15px; color: var(--text-2); line-height: 1.7; }
 
 .donate-section{margin-top:40px;padding-bottom:60px;}
-.donate-card{background:var(--card);border:2px dashed var(--border);border-radius:var(--radius);padding:28px;text-align:center;}
-.donate-emoji{font-size:40px;margin-bottom:12px;}
-.donate-card h3{font-size:20px;font-weight:700;margin-bottom:8px;color:var(--text);}
-.donate-card p{font-size:14px;color:var(--text-2);margin-bottom:20px;line-height:1.6;}
+.donate-card {
+  background: var(--card);
+  border: 2px dashed var(--border);
+  border-radius: var(--radius);
+  padding: clamp(24px, 5vw, 40px); /* Scales padding smoothly */
+  text-align: center;
+  max-width: 640px; /* Keeps the text highly readable */
+  margin: 0 auto; /* Centers the card perfectly */
+}
+.donate-emoji { font-size: 40px; margin-bottom: 12px; }
+.donate-card h3 { font-size: 20px; font-weight: 700; margin-bottom: 8px; color: var(--text); }
+.donate-card p { font-size: 15px; color: var(--text-2); margin-bottom: 24px; line-height: 1.7; }
 .donate-btn{display:inline-block;background:var(--red);color:white;font-size:15px;font-weight:600;padding:14px 28px;border-radius:12px;text-decoration:none;font-family:inherit;}
 .donate-note{font-size:12px;color:var(--text-3);margin-top:12px;}
 
@@ -205,13 +226,13 @@ footer a{color:var(--red);text-decoration:none;}
 
 <div class="donate-section wrap">
   <div class="donate-card">
-    <div class="donate-emoji">&#128155;</div>
     <h3>This exists because I refused to give up.</h3>
-  <p>Seven years ago I tried to build this and couldn't. This time, it finally came to life—through sheer effort and a lot of late nights. My goal is to keep BloomPlayer free for as long as I can, so any support goes directly toward paying for the domain and keeping the app running. If this tool has helped your family, please consider donating. But the ultimate goal is simple: to make this app completely unnecessary the day the major video platforms decide to build this feature themselves. <strong>For free.</strong> That would be the real win. Because no parent should have to pay to help their child.</p>
-  <a class="donate-btn" href="https://ko-fi.com/BloomPlayer" target="_blank">Support if you want to</a>
+    <p>Seven years ago I tried to build this and couldn't. This time, it finally came to life—through sheer effort and a lot of late nights. My goal is to keep BloomPlayer free for as long as I can, so any support goes directly toward paying for the domain and keeping the app running. If this tool has helped your family, please consider donating. But the ultimate goal is simple: to make this app completely unnecessary the day the major video platforms decide to build this feature themselves. <strong>For free.</strong> That would be the real win. Because no parent should have to pay to help their child.</p>
+    <a class="donate-btn" href="https://ko-fi.com/BloomPlayer" target="_blank">Support if you want to</a>
     <div class="donate-note">No pressure. Seriously. Go use the app instead.</div>
   </div>
 </div>
+
 
 <footer>
   Made with love by a mom. &nbsp;·&nbsp;
