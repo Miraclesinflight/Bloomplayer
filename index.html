@@ -1624,7 +1624,7 @@ auth.onAuthStateChanged(function(user){
           return; 
         }
 
-        saveUserTier(user,'general',function(){
+        saveUserTier(user,'beta',function(){
           loadUserProfile(user);
           // Teleporting! Curtain stays down.
           startSetupFlow();
