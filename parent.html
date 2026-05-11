@@ -110,20 +110,25 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',-apple-system,s
 /* ── TOP NAV ── */
 .top-nav {
   width: 100vw;
-  margin-left: calc(-5%); /* Offsets the parent margin to keep nav edge-to-edge */
+  margin-left: calc(-5.5%); /* Offsets the parent margin to keep nav edge-to-edge */
+  padding: 16px 5%;        /* Keeps the text aligned with your content */
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 16px 5%; /* Matches the page gutter */
   border-bottom: 1px solid var(--border);
   background: var(--card);
   position: sticky;
   top: 0;
   z-index: 10;
 }
-  .nav-left{display:flex;align-items:center;gap:10px;}
+.nav-left{display:flex;align-items:center;gap:10px;}
 .nav-left img{width:40px;height:40px;border-radius:12px;}
-.nav-title{font-size:17px;font-weight:700;letter-spacing:-0.3px;color:var(--text);}
+.nav-title {
+  font-size: 16px; /* Slightly smaller for that professional look */
+  font-weight: 700;
+  letter-spacing: -0.2px;
+  color: var(--text);
+}
 .nav-sub{font-size:11px;color:var(--text-3);margin-top:1px;font-family:'Lora',serif;font-style:italic;}
 
 /* ── PARENT BADGE ── */
@@ -252,44 +257,41 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',-apple-system,s
 .avatar-preview-label{font-size:13px;color:var(--text-3);line-height:1.5;}
 
   /* ── TWO COLUMN LAYOUT ── */
-.page-layout{display:flex;flex-direction:column;width:100%;}
+.page-layout {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-top: 20px;
+}
 @media(min-width:700px){
-  .page-layout { flex-direction: row; align-items: stretch; flex-wrap: nowrap; }
-  
-  /* Matches the right-side vertical start */
-  .left-col { 
-    flex: 0 0 360px; 
-    width: 360px; 
-    min-width: 0; 
-    border-right: 1px solid var(--border);
-    padding-top: 16px; 
+  .page-layout { 
+    flex-direction: row; 
+    gap: 32px; /* Adds a nice gap between sidebar and dashboard */
   }
   
-  /* Cleaned up the redundant padding-top */
+.left-col { 
+    flex: 0 0 320px; /* Sidebar stays a fixed professional width */
+    border-right: none; /* Removed border to make it feel more open */
+  }
+  
   .right-col { 
-    flex: 1; 
-    min-width: 0; 
-    padding: 16px 20px; 
+    flex: 1; /* Dashboard expands to fill all remaining wide space */
   }
 }
 
-.page-layout .content { 
-  max-width: none; 
-  margin: 0; 
-  padding: 0 16px; /* Change the first '16px' to '0' */
+  /* Remove internal padding/margin caps that were fighting you */
+.content, .page-layout .content {
+  padding: 0;
+  width: 100%;
+  max-width: none;
+  margin: 0;
 }
-
-.right-col .section-label{margin-top:0;}
-.right-col{padding-top:16px;padding-bottom:16px;}
-.right-col .dash-card{margin-top:0;}
-.left-col{display:flex;flex-direction:column;}
-.left-col .content{display:flex;flex-direction:column;flex:1;}
-.left-col .settings-card{flex:1;display:flex;flex-direction:column;}
-.left-col .settings-card .setting-row:last-child{flex:1;}
-.full-width{width:90%;padding:8px 8px 8px;border-top:1px solid var(--border);margin-top:4px;}
-@media(min-width:800px){.full-width{padding:16px 20px 20px;}}
-
-
+.full-width {
+  width: 100%;
+  margin-top: 40px;
+  padding: 24px 0;
+  border-top: 1px solid var(--border);
+}
 
 
 /* ── DASHBOARD ── */
