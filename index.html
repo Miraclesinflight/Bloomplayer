@@ -169,8 +169,15 @@ html, body, .screen { overflow-x: hidden !important; width: 100% !important; }
 }
 
 .why-icon {
-    font-size: 28px;
-    margin-bottom: 12px;
+    margin-bottom: 16px;
+    color: #CC9544; /* Accents the SVGs beautifully */
+}
+
+.why-icon svg {
+    width: 32px;
+    height: 32px;
+    stroke: currentColor;
+    display: block;
 }
 
 .why-card h3 {
@@ -327,22 +334,42 @@ html, body, .screen { overflow-x: hidden !important; width: 100% !important; }
               <h2>How it works</h2>
               <div class="why-grid">
                   <div class="why-card">
-                      <div class="why-icon">🚫</div>
+                      <div class="why-icon">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                              <polygon points="13 19 22 12 13 5 13 19"></polygon>
+                              <polygon points="2 19 11 12 2 5 2 19"></polygon>
+                              <line x1="22" y1="2" x2="2" y2="22"></line>
+                          </svg>
+                      </div>
                       <h3>No Scrubber Bar</h3>
                       <p>Videos play straight through. The timeline, rewind, and fast-forward buttons are completely hidden.</p>
                   </div>
                   <div class="why-card">
-                      <div class="why-icon">🔒</div>
+                      <div class="why-icon">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                          </svg>
+                      </div>
                       <h3>Parent PIN Lock</h3>
                       <p>Once a video starts, the screen is locked. It requires a 4-digit Parent PIN to close or exit.</p>
                   </div>
                   <div class="why-card">
-                      <div class="why-icon">🔗</div>
+                      <div class="why-icon">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                              <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+                              <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+                          </svg>
+                      </div>
                       <h3>Add Your Own</h3>
                       <p>Paste any YouTube link to instantly add it to your child's private, distraction-free library.</p>
                   </div>
                   <div class="why-card">
-                      <div class="why-icon">🪷</div>
+                      <div class="why-icon">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                          </svg>
+                      </div>
                       <h3>A Safe Space</h3>
                       <p>A clean, focused environment designed specifically to prevent stim-looping and encourage healthy watching.</p>
                   </div>
