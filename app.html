@@ -1976,7 +1976,7 @@ var allCurriculumVideos=[],curriculumLoaded=false;
 var CONTACT_EMAIL='hello@bloomplayer.com';
 var FALLBACK = {
   toddler: [
-    { id: 'XqZsoesa55w', title: 'Baby Shark', channel: 'Pinkfong', tag: 'Animals' },
+    { id: '_6HzoUcx3eo', title: 'Baby Shark', channel: 'Super Simple Songs', tag: 'Animals' },
     { id: 'yCjJyiqpAuU', title: 'Animal Sounds', channel: 'Sesame Street', tag: 'Animals' },
     { id: 'tBhkzYAqhMI', title: 'Wild Animals for Kids', channel: 'Nat Geo Kids', tag: 'Nature' },
     { id: 'pRpeEdMmmQ0', title: 'The Alphabet A to Z', channel: 'Dave and Ava', tag: 'Letters' }
@@ -1984,7 +1984,7 @@ var FALLBACK = {
   prek: [
     { id: 'tkFPyue5X3Q', title: 'How Does A Seed Become A Plant?', channel: 'SciShow Kids', tag: 'Science' },
     { id: 'pRpeEdMmmQ0', title: 'The Alphabet A to Z', channel: 'Dave and Ava', tag: 'Letters' },
-    { id: 'XqZsoesa55w', title: 'Baby Shark', channel: 'Pinkfong', tag: 'Animals' },
+    { id: '_6HzoUcx3eo', title: 'Baby Shark', channel: 'Super Simple Songs', tag: 'Animals' },
     { id: 'tBhkzYAqhMI', title: 'Wild Animals for Kids', channel: 'Nat Geo Kids', tag: 'Nature' }
   ],
   primary: [
@@ -2012,6 +2012,7 @@ var FALLBACK = {
     { id: 'PSRJfaAYkW4', title: 'How Your Immune System Works', channel: 'TED-Ed', tag: 'Biology' }
   ]
 };
+
 var allVideos=[];
 
 function parseCSV(t){var l=t.trim().split('\n');if(l.length<2)return[];var h=l[0].split(',').map(function(x){return x.trim().toLowerCase().replace(/"/g,'');});var r=[];for(var i=1;i<l.length;i++){var c=splitCSV(l[i]);if(c.length<3)continue;var o={};h.forEach(function(k,j){o[k]=(c[j]||'').trim().replace(/^"|"$/g,'');});if(o.id)r.push(o);}return r;}
