@@ -1094,6 +1094,45 @@ html, body, #home, .screen {
 var setupBuffer = '';
 var setupNewPin = '';
 var setupStep = 1;
+/* ── UTILITIES ── */
+var AGE_OPTIONS = [
+  { value: 'teenplus', label: 'Teen+ (16+)', rank: 5 },
+  { value: 'teen', label: 'Teen (12-16)', rank: 4 },
+  { value: 'junior', label: 'Junior (8-12)', rank: 3 },
+  { value: 'primary', label: 'Primary (5-8)', rank: 2 },
+  { value: 'prek', label: 'Pre-K (3-5)', rank: 1 },
+  { value: 'toddler', label: 'Toddler (2-3)', rank: 0 }
+];
+
+function applyAgeFilter(defaultAge) {
+  var sel = document.getElementById('age-select');
+  if (!sel) return;
+  
+  var minRank = 0;
+  var match = AGE_OPTIONS.find(function(o) { return o.value === defaultAge; });
+  if (match) minRank = match.rank;
+  
+  var currentValue = sel.value;
+  sel.innerHTML = ''; // Clear out the hardcoded HTML options
+  
+  // Rebuild only the allowed options
+  AGE_OPTIONS.forEach(function(opt) {
+    if (opt.rank >= minRank) {
+      var el = document.createElement('option');
+      el.value = opt.value;
+      el.textContent = opt.label;
+      sel.appendChild(el);
+    }
+  });
+  
+  // Keep their current selection if it's still allowed, otherwise snap to the default limit
+  var currentMatch = AGE_OPTIONS.find(function(o) { return o.value === currentValue; });
+  if (currentMatch && currentMatch.rank >= minRank) {
+    sel.value = currentValue;
+  } else if (defaultAge) {
+    sel.value = defaultAge;
+  }
+}
 
 function startSetupFlow() {
   document.getElementById('welcome-modal').style.display = 'none';
@@ -1670,15 +1709,19 @@ auth.onAuthStateChanged(function(user){
 
 
 /* ── LOAD USER PROFILE ── */
+/* ── LOAD USER PROFILE ── */
 function loadUserProfile(user){
   db.collection('users').doc(user.uid).get().then(function(doc){
     if(doc.exists&&doc.data().defaultAge){
       var defaultAge=doc.data().defaultAge;
       localStorage.setItem('et_default_age',defaultAge);
-      var sel=document.getElementById('age-select');
-      if(sel){sel.value=defaultAge;renderVideos();}
+      
+      // Update the dropdown options before rendering videos
+      applyAgeFilter(defaultAge);
+      renderVideos();
     }
   }).catch(function(){});
+  
   var isBeta=userTier==='beta'||userTier==='gamma';
   if(isBeta){loadPersonalVideosFromFirestore(user);}
   else{showNoVideosState();}
@@ -2463,7 +2506,15 @@ function trackTabSwitch(tab){if(tab==='educational'&&etSession.tabUsed==='leisur
 function trackCurriculumSelected(grade,subject){etSession.gradeSelected=grade;etSession.subjectSelected=subject;gtag('event','et_curriculum_selected',{device_id:getDeviceId(),grade:grade,subject:subject});}
 
 /* ── BOOT ── */
-document.addEventListener('DOMContentLoaded',function(){trackSessionStart();});
+document.addEventListener('DOMContentLoaded',function(){
+  trackSessionStart();
+  // Filter the dropdown immediately from local storage if available
+  var storedAge = localStorage.getItem('et_default_age');
+  if(storedAge) {
+    applyAgeFilter(storedAge);
+  }
+});
+
 auth.getRedirectResult().then(function(result){
   if(result&&result.user){document.getElementById('welcome-modal').style.display='none';}
   var intent=localStorage.getItem('et_redirect_intent');
