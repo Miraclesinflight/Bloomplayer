@@ -2304,12 +2304,15 @@ function startPlaybackSession() {
     document.getElementById('ready-overlay').style.display = 'none';
     document.getElementById('player-shield').style.display = 'block';
 
-    // Start video with sound
+    // Start video with sound AND tell iframe to broadcast events
     try {
         var ifr = document.getElementById('yt-player');
         ifr.contentWindow.postMessage(JSON.stringify({event: 'command', func: 'playVideo'}), '*');
+        // THE FIX: Tell YouTube to broadcast state changes (like when it ends)
+        ifr.contentWindow.postMessage(JSON.stringify({event: 'listening'}), '*'); 
     } catch(e) {}
 }
+
 
 function loadVideoById(videoId) {
     pendingId = videoId; 
@@ -2361,7 +2364,7 @@ function updatePlayerStatus() {
 }
 
 
-function setupVideoEndListener() {
+/*function setupVideoEndListener() {
     // This waits for the iframe to send a message that the video is done
     window.onmessage = function(event) {
         if (event.origin !== 'https://www.youtube.com') return;
@@ -2374,7 +2377,7 @@ function setupVideoEndListener() {
         } catch (e) {}
     };
 }
-
+*/
 function playNextInList() {
     if (currentIndex < currentPlaylist.length - 1) {
         // There is another video!
@@ -2606,16 +2609,26 @@ function lockControls(){
   var toast=document.getElementById('lock-toast');toast.classList.remove('hidden');toast.textContent='Locked';
   setTimeout(function(){toast.classList.add('hidden');},1500);
 }
-window.addEventListener('message',function(e){
-  if(e.origin!=='https://www.youtube.com')return;
-  try{
-    var data=JSON.parse(e.data);
-    if(data.event==='infoDelivery'&&data.info&&data.info.duration){
-      if(!currentVideoDuration)currentVideoDuration=data.info.duration;
+window.addEventListener('message', function(e) {
+  if(e.origin !== 'https://www.youtube.com') return;
+  try {
+    var data = JSON.parse(e.data);
+    
+    if (data.event === 'infoDelivery' && data.info) {
+      // 1. Existing logic: grab duration
+      if (data.info.duration && !currentVideoDuration) {
+        currentVideoDuration = data.info.duration;
+      }
+      
+      // 2. THE FIX: Detect when the video actually ends (playerState 0)
+      if (data.info.playerState === 0) {
+        playNextInList();
+      }
     }
-  }catch(ex){}
+  } catch(ex) {}
 });
-function requestClose(){pinAction='close';showPin('Parent PIN required','Enter your PIN to close this video');}
+
+  function requestClose(){pinAction='close';showPin('Parent PIN required','Enter your PIN to close this video');}
 function show(id){document.querySelectorAll('.screen').forEach(function(s){s.style.display='none';});document.getElementById(id).style.display='flex';}
 
 
