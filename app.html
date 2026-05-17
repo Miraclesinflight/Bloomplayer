@@ -2321,8 +2321,21 @@ function loadVideoById(videoId) {
         <iframe id="yt-player" 
             src="https://www.youtube.com/embed/${videoId}?autoplay=1&controls=0&modestbranding=1&rel=0&iv_load_policy=3&disablekb=1&enablejsapi=1" 
             allow="autoplay; encrypted-media" 
+            onload="onPlayerIframeLoad()" 
             allowfullscreen>
         </iframe>`;
+}
+function onPlayerIframeLoad() {
+    // Only fire this if we are actively in a playlist session
+    if (isSessionStarted) {
+        try {
+            var ifr = document.getElementById('yt-player');
+            // Re-establish the listener connection on the NEW iframe
+            ifr.contentWindow.postMessage(JSON.stringify({event: 'listening'}), '*');
+            // Force play in case the browser's autoplay policies blocked it
+            ifr.contentWindow.postMessage(JSON.stringify({event: 'command', func: 'playVideo'}), '*');
+        } catch(e) {}
+    }
 }
 
 function requestPlayerExit() {
