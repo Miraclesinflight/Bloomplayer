@@ -1645,7 +1645,6 @@ auth.onAuthStateChanged(function(user){
   if(user){
     currentUser = user;
     
-    // Lock the background curtain while structural checks are performed
     var curtain = document.getElementById('bloom-auth-curtain');
     if (curtain) {
       curtain.style.transition = 'none'; 
@@ -1659,7 +1658,6 @@ auth.onAuthStateChanged(function(user){
     
     isRoutingToSetup = true; 
     
-    // Fetch the primary profile record
     db.collection('users').doc(user.uid).get().then(function(doc){
       if(!doc.exists){
         if (!sessionStorage.getItem('bloom_setup_active')) {
@@ -1680,44 +1678,32 @@ auth.onAuthStateChanged(function(user){
         
         updateBetaUI();
         
-        // ── CRITICAL RE-ORDERING FIX ──
-        // Instead of running finalizeAppLoad immediately, wait for the subcollection promise to settle
-        db.collection('users').doc(user.uid).collection('history').get()
-        .then(function(snapshot) {
-          globalWatchedVideos = {}; // Reset old caches
-          snapshot.forEach(function(historyDoc) {
-            if (historyDoc.data().watchedCompleted === true) {
-              globalWatchedVideos[historyDoc.id] = true;
-            }
-          });
-          console.log("Session watch history cache map successfully established.");
-          
-          // Re-trigger layout generations now that tracking states are in memory
-          renderVideos();
-          renderEducationalVideos();
-          
-          var isBeta = userTier === 'beta' || userTier === 'gamma';
-          if(isBeta){
-            loadPersonalVideosFromFirestore(user);
-          } else {
-            showNoVideosState();
-          }
+        // ── FIX: LOAD WATCH HISTORY DIRECTLY FROM THE MAIN DOC ARRAY ──
+        globalWatchedVideos = {};
+        if (data.watchedHistory && Array.isArray(data.watchedHistory)) {
+            data.watchedHistory.forEach(function(vidId) {
+                globalWatchedVideos[vidId] = true;
+            });
+        }
+        console.log("Session watch history cache established from user profile.");
+        
+        // Re-trigger layouts
+        renderVideos();
+        renderEducationalVideos();
+        
+        var isBeta = userTier === 'beta' || userTier === 'gamma';
+        if(isBeta){
+          loadPersonalVideosFromFirestore(user);
+        } else {
+          showNoVideosState();
+        }
 
-          // Finally authorize application entry visibility rules safely
-          if(!data.onboarded){
-            startSetupFlow();
-          } else {
-            isRoutingToSetup = false; 
-            finalizeAppLoad();
-          }
-        }).catch(function(err) {
-          console.error("Watch history connection drop on login:", err);
-          // Fallback gracefully so parent isn't white-screened if subcollection fails
-          renderVideos();
-          renderEducationalVideos();
-          isRoutingToSetup = false;
+        if(!data.onboarded){
+          startSetupFlow();
+        } else {
+          isRoutingToSetup = false; 
           finalizeAppLoad();
-        });
+        }
       }
     }).catch(function(e){
       console.error("Profile account fetch failed:", e);
@@ -1727,7 +1713,7 @@ auth.onAuthStateChanged(function(user){
     
   } else {
     currentUser = null;
-    globalWatchedVideos = {}; // Clear tracking cache memory array completely on logout
+    globalWatchedVideos = {}; 
     updateAuthUI(null);
     isRoutingToSetup = false;
     finalizeAppLoad(); 
@@ -1736,47 +1722,18 @@ auth.onAuthStateChanged(function(user){
 
 
 
+
 /* ── LOAD USER PROFILE ── */
 function loadUserProfile(user){
   db.collection('users').doc(user.uid).get().then(function(doc){
-    if(doc.exists&&doc.data().defaultAge){
-      var defaultAge=doc.data().defaultAge;
-      localStorage.setItem('et_default_age',defaultAge);
+    if(doc.exists && doc.data().defaultAge){
+      var defaultAge = doc.data().defaultAge;
+      localStorage.setItem('et_default_age', defaultAge);
       
       // Update the dropdown options before rendering videos
       applyAgeFilter(defaultAge);
     }
   }).catch(function(){});
-  
-  // ── FIX: PULL WATCH HISTORY FIRST, THEN BUILD GRIDS ──
-  db.collection('users').doc(user.uid).collection('history').get()
-  .then(function(snapshot) {
-    globalWatchedVideos = {}; // Reset cache on login state change
-    
-    snapshot.forEach(function(doc) {
-      if (doc.data().watchedCompleted === true) {
-        globalWatchedVideos[doc.id] = true;
-      }
-    });
-    
-    console.log("Watch history successfully synchronized from Firestore across sessions.");
-    
-    // NOW it is safe to load and render layouts with history loaded
-    renderVideos();
-    renderEducationalVideos();
-    
-    var isBeta = userTier === 'beta' || userTier === 'gamma';
-    if(isBeta){
-      loadPersonalVideosFromFirestore(user);
-    } else {
-      showNoVideosState();
-    }
-  }).catch(function(e) {
-    console.error("Error syncing watch history subcollection:", e);
-    // Fallback safely to show items even if collection fetch fails
-    renderVideos();
-    renderEducationalVideos();
-  });
 }
 /* ── FIRESTORE VIDEO STORAGE ── */
 function loadPersonalVideosFromFirestore(user){
@@ -2620,7 +2577,6 @@ document.addEventListener('DOMContentLoaded',function(){
     applyAgeFilter(storedAge);
   }
 });
-
 auth.getRedirectResult().then(function(result){
   if(result&&result.user){document.getElementById('welcome-modal').style.display='none';}
   var intent=localStorage.getItem('et_redirect_intent');
@@ -2632,7 +2588,6 @@ auth.getRedirectResult().then(function(result){
   isProcessingRedirect = false;  
   loadAppConfig();
   
-  // ── FIX: FETCH THE CONTENT ASYNC, BUT DON'T RENDER CARDS BLINDLY ──
   fetch(CSV_URL).then(function(r){ return r.text(); }).then(function(csv){
     var rows = parseCSV(csv);
     allVideos = rows.filter(function(r){
@@ -2641,14 +2596,13 @@ auth.getRedirectResult().then(function(result){
     });
     leisureLoaded = true;
     
-    // Safety check: If Firebase auth resolved faster than the network CSV fetch, 
-    // we force the render here so the badges don't miss the bus.
-    if (currentUser && Object.keys(globalWatchedVideos).length > 0) {
-      renderVideos();
-    }
+    // ── FIX: ALWAYS RENDER ONCE LOADED ──
+    renderVideos();
+    
   }).catch(function(err){
     console.error("Leisure content fetch failed:", err);
     leisureLoaded = true;
+    renderVideos();
   });
 
   switchTab('educational');
@@ -2677,7 +2631,6 @@ window.addEventListener('resize', function() {
         renderPersonalCategory(true); 
     }
 });
-
   
   function switchMainView(view) {
   if (view === 'discover') {
@@ -2743,29 +2696,28 @@ function verifyVideoCompletion() {
   var totalDuration = Math.floor(currentVideoDuration);
   var uniqueCount = uniqueSecondsWatched.size;
 
-  // For a 5 second video, let's lower the threshold rules or give it a flat 3-second pass line
+  // Safe testing threshold fallback parameter
   var dynamicThreshold = totalDuration <= 10 ? 3 : totalDuration * 0.90;
 
   if (uniqueCount >= dynamicThreshold) {
     console.log("Legitimate full-length completion verified for: " + activeTrackedVideoId);
     
-    // Update local state instantly
+    // Update local state instantly so the badge appears
     globalWatchedVideos[activeTrackedVideoId] = true;
     
-    db.collection('users').doc(currentUser.uid).collection('history').doc(activeTrackedVideoId).set({
-      videoId: activeTrackedVideoId,
-      watchedCompleted: true,
-      lastCompletedAt: new Date().toISOString()
+    // ── FIX: SAVE AS AN ARRAY DIRECTLY ON THE MAIN USER DOC ──
+    db.collection('users').doc(currentUser.uid).set({
+      watchedHistory: firebase.firestore.FieldValue.arrayUnion(activeTrackedVideoId)
     }, { merge: true })
     .then(function() {
-      console.log("Firestore completion mark sync complete.");
+      console.log("Firestore watch confirmation array synced successfully.");
       // Force refreshing the templates so badges appear instantly when closing the player
       renderVideos();
       renderEducationalVideos();
       if (typeof renderPersonalCategory === 'function') renderPersonalCategory();
     })
     .catch(function(err) {
-      console.error("Error logging completion mark:", err);
+      console.error("Database completion sync failure:", err);
     });
   }
 }
