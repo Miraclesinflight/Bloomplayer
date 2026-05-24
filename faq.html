@@ -1,16 +1,16 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
-  <meta name="color-scheme" content="light">
+<meta name="color-scheme" content="light">
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
 <title>FAQ – BloomPlayer</title>
 <meta name="description" content="Answers to common questions about BloomPlayer."/>
 <link rel="apple-touch-icon" href="icon.png"/>
 <link rel="icon" type="image/png" href="icon.png"/>
-<link rel="stylesheet" href="theme.css"/>
+<link rel="stylesheet" href="theme-v2.css?v=2.2"/>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,400;1,400&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-4LPVCYGQP9"></script>
 <script>
   window.dataLayer=window.dataLayer||[];
@@ -19,29 +19,29 @@
   gtag('config','G-4LPVCYGQP9');
 </script>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-
-*{margin:0;padding:0;box-sizing:border-box;}
-body{background:var(--bg);color:var(--text);font-family:‘Inter’,-apple-system,sans-serif;line-height:1.7;}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+body{background:var(--bg, #F7F6F2);color:var(--text, #1A1A1A);font-family:'Nunito',-apple-system,sans-serif;line-height:1.7;min-height:100vh;}
 
 /* ── NAV ── */
-nav{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;width:100%;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--bg);z-index:10;}
+nav{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;width:100%;border-bottom:1px solid var(--border, #E2E8E2);position:sticky;top:0;background:var(--bg, #F7F6F2);z-index:10;}
 .nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text);}
-.nav-name{font-size:17px;font-weight:700;}
-.nav-link{font-size:13px;color:var(--red);font-weight:600;text-decoration:none;background:var(--red-light);padding:7px 14px;border-radius:20px;}
+.nav-name{font-size:20px;font-weight:700;letter-spacing:-0.3px;}
+.nav-link{font-size:14px;color:#CC9544;font-weight:700;text-decoration:none;background:#FDF8F0;border:1px solid #E5D5BC;padding:8px 16px;border-radius:20px;transition: transform 0.1s;}
+.nav-link:active{transform: scale(0.96);}
 
-/* ── CONTENT WRAPPER — responsive padding ── */
-.page{width:100%;padding:0 14px;}
-@media(min-width:640px){.page{padding:0 20px;}}
-@media(min-width:1024px){.page{padding:0 28px;}}
+/* ── CONTENT WRAPPER ── */
+.page{width:100%;padding:0 20px;}
+@media(min-width:640px){.page{padding:0 32px;}}
+@media(min-width:1024px){.page{padding:0 48px;}}
 
 /* ── HERO ── */
-.hero{padding:28px 0 20px;max-width:860px;}
-.hero-eyebrow{display:inline-flex;align-items:center;gap:6px;background:var(--red-light);color:var(--red);font-size:12px;font-weight:700;padding:5px 12px;border-radius:20px;margin-bottom:16px;text-transform:uppercase;letter-spacing:0.5px;}
-.hero h1{font-size:clamp(26px,5vw,42px);font-weight:800;letter-spacing:-1px;line-height:1.15;margin-bottom:10px;}
-.hero p{font-size:15px;color:var(--text-2);line-height:1.7;}
+.hero{padding:40px 0 32px;max-width:860px;}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:6px;background:#E5D5BC;color:#4A3E2B;font-size:12px;font-weight:800;padding:6px 14px;border-radius:20px;margin-bottom:20px;text-transform:uppercase;letter-spacing:0.8px;}
+.hero h1{font-size:clamp(28px,5vw,46px);font-weight:800;letter-spacing:-1px;line-height:1.15;margin-bottom:12px;}
+.hero p{font-size:17px;color:var(--text-2, #4A554A);line-height:1.7;}
+.hero p a{color:#CC9544;font-weight:700;text-decoration:none;}
 
-/* ── FAQ GRID — 1 col mobile, 2 col tablet+ ── */
+/* ── FAQ GRID ── */
 .faq-grid{
 display:grid;
 grid-template-columns:1fr;
@@ -49,22 +49,23 @@ gap:24px;
 padding:8px 0 60px;
 max-width:1200px;
 }
+@media(min-width:900px){.faq-grid{grid-template-columns:repeat(2,1fr); gap: 40px;}}
 
-.faq-group-title{font-size:11px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:10px;padding-left:2px;}
+.faq-group-title{font-size:13px;font-weight:800;color:var(--text-3, #94A3B8);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:12px;padding-left:4px;}
 
-.faq-item{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:8px;overflow:hidden;}
-.faq-q{width:100%;text-align:left;background:none;border:none;padding:16px 18px;font-size:14px;font-weight:600;color:var(--text);font-family:inherit;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:12px;line-height:1.4;}
-.faq-q:active{opacity:0.8;}
-.faq-arrow{font-size:16px;color:var(--text-3);flex-shrink:0;transition:transform 0.2s;}
+.faq-item{background:var(--card, #FFFFFF);border:1px solid var(--border, #E2E8E2);border-radius:16px;margin-bottom:10px;overflow:hidden;box-shadow: 0 4px 15px rgba(0,0,0,0.03);}
+.faq-q{width:100%;text-align:left;background:none;border:none;padding:18px 20px;font-size:16px;font-weight:700;color:var(--text);font-family:inherit;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:12px;line-height:1.4;}
+.faq-q:active{background: var(--bg, #F7F6F2);}
+.faq-arrow{font-size:18px;color:#CC9544;flex-shrink:0;transition:transform 0.2s;font-weight:800;}
 .faq-item.open .faq-arrow{transform:rotate(180deg);}
-.faq-a{display:none;padding:0 18px 16px;font-size:13px;color:var(--text-2);line-height:1.75;}
+.faq-a{display:none;padding:0 20px 20px;font-size:15px;color:var(--text-2, #4A554A);line-height:1.75;}
 .faq-item.open .faq-a{display:block;}
-.faq-a a{color:var(--red);text-decoration:none;font-weight:500;}
+.faq-a a{color:#CC9544;text-decoration:none;font-weight:700;}
 .faq-a a:hover{text-decoration:underline;}
-.faq-a strong{color:var(--text);font-weight:600;}
+.faq-a strong{color:var(--text);font-weight:700;}
 
-footer{border-top:1px solid var(--border);padding:20px 16px;text-align:center;font-size:12px;color:var(--text-3);}
-footer a{color:var(--red);text-decoration:none;}
+footer{border-top:1px solid var(--border, #E2E8E2);padding:30px 20px;text-align:center;font-size:14px;color:var(--text-3, #94A3B8);font-weight:600;}
+footer a{color:#CC9544;text-decoration:none;margin: 0 6px;}
 </style>
 
 </head>
@@ -72,7 +73,7 @@ footer a{color:var(--red);text-decoration:none;}
 
 <nav>
   <a class="nav-brand" href="app.html">
-    <img src="icon.png" style="width:32px;height:32px;border-radius:8px;flex-shrink:0;"/>
+    <img src="icon.png" style="width:40px;height:40px;border-radius:10px;flex-shrink:0;"/>
     <span class="nav-name">BloomPlayer</span>
   </a>
   <a class="nav-link" href="app.html">Open app</a>
@@ -82,12 +83,11 @@ footer a{color:var(--red);text-decoration:none;}
   <div class="hero">
     <div class="hero-eyebrow">FAQ</div>
     <h1>Questions we get asked.</h1>
-    <p>If something isn't answered here, reach us at <a href="mailto:hello@bloomplayer.com" style="color:var(--red);font-weight:500;">hello@bloomplayer.com</a>.</p>
+    <p>If something isn't answered here, reach us at <a href="mailto:hello@bloomplayer.com">hello@bloomplayer.com</a>.</p>
   </div>
 
   <div class="faq-grid">
 
-<!-- Column / group 1 -->
 <div>
   <div class="faq-group-title">The basics</div>
   <div class="faq-item">
@@ -96,71 +96,69 @@ footer a{color:var(--red);text-decoration:none;}
   </div>
   <div class="faq-item">
     <button class="faq-q" onclick="toggle(this)">Why does this exist? <span class="faq-arrow">&#8595;</span></button>
-    <div class="faq-a">It was built by a mom of a teenager on the autism spectrum. The rewind button became a loop he couldn't escape — the same second of video, repeated for hours. That behaviour is called stimming, and for some children it's reinforced by the very design of YouTube's player. BloomPlayer removes the controls entirely, before the habit can form. You can read the full story on our <a href="about.html">about page</a>.</div>
+    <div class="faq-a">It was built by a mom of a teenager on the autism spectrum. The rewind button became a loop he couldn't escape — the same second of video, repeated for hours. That behavior is called stimming, and for some children it's reinforced by the very design of YouTube's player. BloomPlayer removes the controls entirely, before the habit can form. You can read the full story on our <a href="index.html">our story page</a>.</div>
   </div>
   <div class="faq-item">
     <button class="faq-q" onclick="toggle(this)">Is it really free? <span class="faq-arrow">&#8595;</span></button>
-    <div class="faq-a">Right now, yes — completely free to use. No ads, no paywalls, no hidden fees. If you want to help keep it free for others, there's a voluntary <a href="https://ko-fi.com/BloomPlayer" target="_blank">Ko-fi link</a> — no pressure at all.</div>
+    <div class="faq-a">Yes — completely free to use. No ads, no paywalls, no hidden fees. If you want to help keep it free for others, there's a voluntary <a href="https://ko-fi.com/BloomPlayer" target="_blank">Ko-fi link</a> to support development.</div>
   </div>
   <div class="faq-item">
     <button class="faq-q" onclick="toggle(this)">Do I need to download anything? <span class="faq-arrow">&#8595;</span></button>
-    <div class="faq-a">No download needed. BloomPlayer runs in any browser. On iPhone you can tap <strong>Share → Add to Home Screen</strong> to install it like an app. On Android, Chrome will prompt you to install it automatically.</div>
+    <div class="faq-a">No download needed. BloomPlayer runs right in your browser. For the best experience, you can install it like an app: On iPhone, tap <strong>Share → Add to Home Screen</strong>. On Android, Chrome will prompt you to add it automatically.</div>
   </div>
 
-  <div class="faq-group-title" style="margin-top:24px;">Sign-in & account</div>
+  <div class="faq-group-title" style="margin-top:32px;">Sign-in & account</div>
   <div class="faq-item">
     <button class="faq-q" onclick="toggle(this)">Do I need to sign in? <span class="faq-arrow">&#8595;</span></button>
-   <div class="faq-a">Yes. BloomPlayer requires a free account to use — you can sign in with any email address or your Google account. Sign-in takes one tap and you'll stay signed in permanently. This saves your PIN so it never resets. A Google account is only needed if you want to save your own personal video list.</div>
-
+    <div class="faq-a">Yes. BloomPlayer requires a free account to use. You can sign in with your Google account or via an email link. This creates a secure profile to hold your Parent PIN and your customized video library.</div>
   </div>
   <div class="faq-item">
     <button class="faq-q" onclick="toggle(this)">What does signing in actually do? <span class="faq-arrow">&#8595;</span></button>
-    <div class="faq-a">It creates a Google Sheet in your Google Drive called "BloomPlayer" where your personal video list is stored. It also saves your PIN to your account so it never resets. Your name and email are stored in our database only to identify your account — nothing else.</div>
+    <div class="faq-a">It creates your secure Parent profile. This ensures your customized video library, watch history, and Parent PIN are safely stored in the cloud and instantly available whether you log in on your phone, tablet, or laptop. We only store your email to identify your account—nothing else.</div>
   </div>
   <div class="faq-item">
     <button class="faq-q" onclick="toggle(this)">Sign-in isn't working on my iPhone. <span class="faq-arrow">&#8595;</span></button>
-    <div class="faq-a">Make sure pop-ups are allowed for BloomPlayer in your Safari settings. Go to <strong>Settings → Safari → Block Pop-ups</strong> and turn it off, or add BloomPlayer as an exception. If the problem persists, try using Chrome on iPhone instead.</div>
+    <div class="faq-a">Make sure pop-ups are allowed for BloomPlayer in your Safari settings. Go to <strong>Settings → Safari → Block Pop-ups</strong> and turn it off, or simply choose the "Continue with Email" option for a smooth sign-in link instead of a popup.</div>
   </div>
 </div>
 
-<!-- Column / group 2 -->
 <div>
   <div class="faq-group-title">The parent PIN</div>
   <div class="faq-item">
-    <button class="faq-q" onclick="toggle(this)">What is the default PIN? <span class="faq-arrow">&#8595;</span></button>
-    <div class="faq-a">The default PIN is <strong>1234</strong>. You should change it before giving the device to your child. Long press the BloomPlayer logo on the home screen to open Settings, where you can set a new PIN.</div>
+    <button class="faq-q" onclick="toggle(this)">How do I set my Parent PIN? <span class="faq-arrow">&#8595;</span></button>
+    <div class="faq-a">You choose your own 4-digit PIN the very first time you open the app during setup. This PIN is used to exit videos and access the Parent Portal. If you ever need to change it, simply long-press the BloomPlayer logo on the home screen or tap the Parent Portal icon.</div>
   </div>
   <div class="faq-item">
-    <button class="faq-q" onclick="toggle(this)">My PIN keeps resetting. Why? <span class="faq-arrow">&#8595;</span></button>
-    <div class="faq-a">If you're not signed in, the PIN is stored in your browser's local storage. On iPhone, Safari can clear this after a period of inactivity. The fix is to <strong>sign in with Google</strong> — your PIN is then saved to your account and will never reset.</div>
+    <button class="faq-q" onclick="toggle(this)">Will my PIN reset if I close the app? <span class="faq-arrow">&#8595;</span></button>
+    <div class="faq-a">No. Because you created an account, your PIN is securely tied to your profile in the cloud. It will never reset as long as you use the same login.</div>
   </div>
   <div class="faq-item">
     <button class="faq-q" onclick="toggle(this)">I forgot my PIN. What do I do? <span class="faq-arrow">&#8595;</span></button>
-    <div class="faq-a">On the PIN entry screen, tap <strong>Forgot PIN?</strong> You'll be asked to verify your Google account, and your PIN will be reset to 1234. You can then set a new one in Settings.</div>
+    <div class="faq-a">On the PIN entry pad, tap <strong>Send reset link</strong> at the bottom. We'll send a secure link to your email address. Once you click it, you'll be guided back into the app to choose a brand new PIN.</div>
   </div>
   <div class="faq-item">
     <button class="faq-q" onclick="toggle(this)">Can my child get past the PIN? <span class="faq-arrow">&#8595;</span></button>
-    <div class="faq-a">BloomPlayer is designed for young children who don't know what a PIN is. Older children may figure out workarounds — they could close the browser tab, for example. It's not a security product, it's a habit prevention tool.</div>
+    <div class="faq-a">BloomPlayer is designed for young children who don't know what a PIN is. However, to stop older children from simply closing the app or swiping away, we highly recommend using <strong>Guided Access (iOS)</strong> or <strong>App Pinning (Android)</strong> to lock them onto the screen.</div>
   </div>
 
-  <div class="faq-group-title" style="margin-top:24px;">Watching videos</div>
+  <div class="faq-group-title" style="margin-top:32px;">Watching videos</div>
   <div class="faq-item">
     <button class="faq-q" onclick="toggle(this)">How do I play a video? <span class="faq-arrow">&#8595;</span></button>
-    <div class="faq-a">Either tap a video from the suggested list, or paste a YouTube link into the box. The video loads in a player. Tap play, then tap <strong>Lock the controls</strong>. An invisible overlay covers the player — your child can't interact with any controls.</div>
+    <div class="faq-a">Either tap a video from the suggested Discover list, or paste a YouTube link into the box. A loading screen will appear. When you tap <strong>Tap to start video</strong>, the controls vanish and an invisible shield drops over the player.</div>
   </div>
   <div class="faq-item">
     <button class="faq-q" onclick="toggle(this)">Can I add my own videos? <span class="faq-arrow">&#8595;</span></button>
-    <div class="faq-a">Yes. Sign in with Google and you'll see a personal video list section. Tap <strong>+ Add</strong> to paste a YouTube link. Your list is saved to a Google Sheet in your own Google Drive.</div>
+    <div class="faq-a">Yes. Once signed in, switch to the <strong>My Library</strong> tab. Tap <strong>+ Add</strong> and paste any YouTube link to permanently save it to your child's secure library.</div>
   </div>
   <div class="faq-item">
     <button class="faq-q" onclick="toggle(this)">A suggested video isn't working. What do I do? <span class="faq-arrow">&#8595;</span></button>
-    <div class="faq-a">Tap the <strong>Suggest a fix</strong> button on that video. You can submit a replacement link and we'll update the list. You can also reach us at <a href="mailto:hello@bloomplayer.com">hello@bloomplayer.com</a>.</div>
+    <div class="faq-a">Tap the <strong>Suggest a fix</strong> button on that video card. You can submit a replacement link and we'll update the master list for everyone.</div>
   </div>
 
-  <div class="faq-group-title" style="margin-top:24px;">Privacy & safety</div>
+  <div class="faq-group-title" style="margin-top:32px;">Privacy & safety</div>
    <div class="faq-item">
     <button class="faq-q" onclick="toggle(this)">How do I delete my account and data? <span class="faq-arrow">&#8595;</span></button>
-    <div class="faq-a">Go to <strong>Parent Mode → Danger Zone → Delete account</strong>. This permanently deletes your account, saved PIN, and all associated data from our servers within 24 hours. Your Google Sheet stays in your own Drive — you can delete it yourself from there. To request manual deletion instead, email <a href="mailto:hello@bloomplayer.com">hello@bloomplayer.com</a>.</div>
+    <div class="faq-a">Open the Parent Dashboard (by tapping the gear/initial icon or long-pressing the logo). There is an option to delete your account. This permanently wipes your login, saved PIN, and your entire video library from our servers instantly.</div>
   </div>
 
   <div class="faq-item">
@@ -169,18 +167,14 @@ footer a{color:var(--red);text-decoration:none;}
   </div>
   <div class="faq-item">
     <button class="faq-q" onclick="toggle(this)">Is BloomPlayer affiliated with YouTube or Google? <span class="faq-arrow">&#8595;</span></button>
-    <div class="faq-a">BloomPlayer is an independent project built by a parent. While we use the standard YouTube embed player, we have no formal relationship with Google or YouTube. We are also actively working on supporting other video-streaming websites to provide a consistent, distraction-free experience across the entire web — because we believe this kind of focused viewing isn’t just useful for kids, but for anyone who wants to watch without distraction.</div>
+    <div class="faq-a">BloomPlayer is an independent project built by a parent. While we use the standard YouTube embed player securely, we have no formal relationship with Google or YouTube.</div>
   </div>
 </div>
-  </div><!-- /.faq-grid -->
-</div><!-- /.page -->
-
-<footer>
-  <a href="app.html">Open BloomPlayer</a> &nbsp;·&nbsp;
-  <a href="index.html">Our story</a> &nbsp;·&nbsp;
-  <a href="contact.html">Contact</a> &nbsp;·&nbsp;
-  <a href="privacy.html">Privacy</a> &nbsp;·&nbsp;
-  <a href="mailto:hello@bloomplayer.com">hello@bloomplayer.com</a>
+  </div></div><footer>
+  <a href="app.html">Open BloomPlayer</a>
+  <a href="index.html">Our story</a>
+  <a href="contact.html">Contact</a>
+  <a href="privacy.html">Privacy</a>
 </footer>
 
 <script>
