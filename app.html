@@ -1280,7 +1280,8 @@ var leisureLoaded = false; // Twin of curriculumLoaded
 var activeTrackedVideoId = null;
 var uniqueSecondsWatched = new Set();
 var currentVideoDuration = null;  
-
+// ── ADD THIS VARIABLE TO TRACK COMPLETED IDS GLOBALLY ──
+var globalWatchedVideos = {};
 /* ── APP CONFIG ── */
 var appConfig={signinEnabled:false,inviteCodeEnabled:false,betaFeaturesEnabled:false,betaLimit:99,betaUsageCount:0};
 
@@ -1716,24 +1717,35 @@ auth.onAuthStateChanged(function(user){
 
 
 /* ── LOAD USER PROFILE ── */
-/* ── LOAD USER PROFILE ── */
 function loadUserProfile(user){
   db.collection('users').doc(user.uid).get().then(function(doc){
     if(doc.exists&&doc.data().defaultAge){
       var defaultAge=doc.data().defaultAge;
       localStorage.setItem('et_default_age',defaultAge);
-      
-      // Update the dropdown options before rendering videos
       applyAgeFilter(defaultAge);
-      renderVideos();
     }
   }).catch(function(){});
   
-  var isBeta=userTier==='beta'||userTier==='gamma';
-  if(isBeta){loadPersonalVideosFromFirestore(user);}
-  else{showNoVideosState();}
+  // ── FETCH WATCH HISTORY BEFORE RENDERING GRIDS ──
+  db.collection('users').doc(user.uid).collection('history').get()
+  .then(function(snapshot) {
+    globalWatchedVideos = {}; // clear out old logins
+    snapshot.forEach(function(doc) {
+      if (doc.data().watchedCompleted) {
+        globalWatchedVideos[doc.id] = true;
+      }
+    });
+    
+    // Now that history is loaded in memory, render the tabs safely
+    renderVideos();
+    var isBeta=userTier==='beta'||userTier==='gamma';
+    if(isBeta){loadPersonalVideosFromFirestore(user);}
+    else{showNoVideosState();}
+  }).catch(function(e) {
+    console.error("Error loading watch history:", e);
+    renderVideos();
+  });
 }
-
 /* ── FIRESTORE VIDEO STORAGE ── */
 function loadPersonalVideosFromFirestore(user){
   db.collection('users').doc(user.uid).get()
@@ -1842,12 +1854,16 @@ function renderPersonalCategory(resetPage) {
   var videosToShow = videos.slice(startIndex, startIndex + itemsPerPage);
 
   var html = '';
-  videosToShow.forEach(function(v){
-    // Pass 'null' for the list so the smart directPlay function handles the lookup by 'My Library'
+     videosToShow.forEach(function(v){
+    // Clean text-only indicator matching your tag design
+    var watchedBadge = globalWatchedVideos[v.id] ? '<span class="video-tag" style="background: #DDE5DD; color: #4A554A; margin-top: 4px; display: inline-block;">✓ Watched</span>' : '';
+
     html += '<div class="video-item" style="position:relative;" onclick="directPlay(\'' + escAttr(v.id) + '\', null, \'My Library\')">'
       + '<button class="btn-delete-vid" onclick="event.stopPropagation(); requestDeleteVideo(\'' + escAttr(v.id) + '\', \'' + escAttr(cat) + '\')">&times;</button>'
       + '<div class="video-thumb"><img src="https://img.youtube.com/vi/' + escAttr(v.id) + '/mqdefault.jpg" alt="" loading="lazy"/></div>'
-      + '<div class="video-info"><div class="video-title">' + escHtml(v.title || v.id) + '</div></div></div>';
+      + '<div class="video-info"><div class="video-title">' + escHtml(v.title || v.id) + '</div>' 
+      + watchedBadge // Injected cleanly here
+      + '</div></div>';
   });
   
   // Handle empty state
@@ -2143,13 +2159,13 @@ function renderEducationalVideos(){
   if(!f.length){
     html = '<div class="empty-state">No videos yet for this selection.</div>';
   } else {
-    f.forEach(function(v){
-      // Clean the ID
+           f.forEach(function(v){
       var id = (v.id || v.youtube_id || '').trim().replace(/[^a-zA-Z0-9_-]/g,'');
-      
       trackCurriculumSelected(grade, subject);
 
-      // UPDATED: We pass 'null' so directPlay can auto-detect the list context
+      // Clean text-only indicator matching your tag design
+      var watchedBadge = globalWatchedVideos[id] ? '<span class="video-tag" style="background: #DDE5DD; color: #4A554A; margin-left: 6px;">✓ Watched</span>' : '';
+
       html += '<div class="video-item" onclick="directPlay(\'' + escAttr(id) + '\', null, \'Educational\')">'
         + '<div class="video-thumb">'
         +   '<img src="https://img.youtube.com/vi/' + escAttr(id) + '/mqdefault.jpg" alt="" loading="lazy"/>'
@@ -2158,6 +2174,7 @@ function renderEducationalVideos(){
         +   '<div class="video-title">' + escHtml(v.title || v.chapter || '') + '</div>'
         +   '<div class="video-sub">' + escHtml(v.channel || '') + '</div>'
         +   '<div class="video-tag">' + escHtml(v.unit || v.chapter || '') + '</div>'
+        +   watchedBadge // Injected cleanly here
         + '</div>'
         + '</div>';
     });
@@ -2197,9 +2214,10 @@ function renderVideos(){
   if(!filtered.length){
     html = '<div class="empty-state">No videos yet.</div>';
   } else {
-    filtered.forEach(function(v){
-      // MATCHING EDUCATIONAL: Pass null for the list, 
-      // let directPlay handle the category logic.
+          filtered.forEach(function(v){
+      // Clean text-only indicator matching your tag design
+      var watchedBadge = globalWatchedVideos[v.id] ? '<span class="video-tag" style="background: #DDE5DD; color: #4A554A; margin-left: 6px;">✓ Watched</span>' : '';
+
       html += '<div class="video-item" onclick="directPlay(\'' + escAttr(v.id) + '\', null, \'Leisure\')">'
         + '<div class="video-thumb">'
         +   '<img src="https://img.youtube.com/vi/' + v.id + '/mqdefault.jpg" alt="" loading="lazy"/>'
@@ -2208,6 +2226,7 @@ function renderVideos(){
         +   '<div class="video-title">' + escHtml(v.title) + '</div>'
         +   '<div class="video-sub">' + escHtml(v.channel || '') + '</div>'
         +   '<div class="video-tag">' + escHtml(v.tag || '') + '</div>'
+        +   watchedBadge // Injected cleanly here
         +   '<button class="report-btn" onclick="event.stopPropagation();openReportModal(\'' + escAttr(v.id) + '\',\'' + escAttr(v.title) + '\')">Suggest a fix</button>'
         + '</div>'
         + '</div>';
@@ -2662,20 +2681,21 @@ window.addEventListener('message', function(e) {
   } catch(ex) {}
 });
 
-// ── NEW HELPER FUNCTION TO VERIFY AND SAVE STATUS ──
 function verifyVideoCompletion() {
   if (!currentUser || !activeTrackedVideoId || !currentVideoDuration) return;
 
   var totalDuration = Math.floor(currentVideoDuration);
   var uniqueCount = uniqueSecondsWatched.size;
 
-  // Set threshold parameter (92% - 95% gives leeway for generic credit screens/loading spikes)
-  var dynamicThreshold = totalDuration * 0.95;
+  // For a 5 second video, let's lower the threshold rules or give it a flat 3-second pass line
+  var dynamicThreshold = totalDuration <= 10 ? 3 : totalDuration * 0.90;
 
   if (uniqueCount >= dynamicThreshold) {
     console.log("Legitimate full-length completion verified for: " + activeTrackedVideoId);
     
-    // Write directly to your existing users document structure
+    // Update local state instantly
+    globalWatchedVideos[activeTrackedVideoId] = true;
+    
     db.collection('users').doc(currentUser.uid).collection('history').doc(activeTrackedVideoId).set({
       videoId: activeTrackedVideoId,
       watchedCompleted: true,
@@ -2683,14 +2703,17 @@ function verifyVideoCompletion() {
     }, { merge: true })
     .then(function() {
       console.log("Firestore completion mark sync complete.");
+      // Force refreshing the templates so badges appear instantly when closing the player
+      renderVideos();
+      renderEducationalVideos();
+      if (typeof renderPersonalCategory === 'function') renderPersonalCategory();
     })
     .catch(function(err) {
       console.error("Error logging completion mark:", err);
     });
-  } else {
-    console.log("Video ended early or user scrubbed forward. Real seconds watched: " + uniqueCount + "/" + totalDuration);
   }
 }
+  
   function requestClose(){pinAction='close';showPin('Parent PIN required','Enter your PIN to close this video');}
 function show(id){document.querySelectorAll('.screen').forEach(function(s){s.style.display='none';});document.getElementById(id).style.display='flex';}
 
