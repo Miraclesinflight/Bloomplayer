@@ -2215,8 +2215,8 @@ function renderVideos(){
         +   '<div class="video-title">' + escHtml(v.title) + '</div>'
         +   '<div class="video-sub">' + escHtml(v.channel || '') + '</div>'
         +   '<div class="video-tag">' + escHtml(v.tag || '') + '</div>'
-        +   watchedBadge // Injected cleanly here
-        +   '<button class="report-btn" onclick="event.stopPropagation();openReportModal(\'' + escAttr(v.id) + '\',\'' + escAttr(v.title) + '\')">Suggest a fix</button>'
+        +   watchedBadge
+    /*    +   '<button class="report-btn" onclick="event.stopPropagation();openReportModal(\'' + escAttr(v.id) + '\',\'' + escAttr(v.title) + '\')">Suggest a fix</button>'*/
         + '</div>'
         + '</div>';
     });
