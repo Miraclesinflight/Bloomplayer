@@ -1601,7 +1601,6 @@ function signOut() {
 }
 
 /* ── AUTH UI ── */
-/* ── AUTH UI ── */
 function updateAuthUI(user) {
   var profilePic = document.getElementById('user-profile-pic');
   
@@ -2630,13 +2629,30 @@ auth.getRedirectResult().then(function(result){
     startSetupFlow();
   }
 }).catch(function(e){console.error('boot redirect error:',e);}).finally(function(){
-   isProcessingRedirect = false;  
+  isProcessingRedirect = false;  
   loadAppConfig();
-  loadVideos();
+  
+  // ── FIX: FETCH THE CONTENT ASYNC, BUT DON'T RENDER CARDS BLINDLY ──
+  fetch(CSV_URL).then(function(r){ return r.text(); }).then(function(csv){
+    var rows = parseCSV(csv);
+    allVideos = rows.filter(function(r){
+      var s = (r.status || '').toLowerCase();
+      return s === '' || s === 'approved';
+    });
+    leisureLoaded = true;
+    
+    // Safety check: If Firebase auth resolved faster than the network CSV fetch, 
+    // we force the render here so the badges don't miss the bus.
+    if (currentUser && Object.keys(globalWatchedVideos).length > 0) {
+      renderVideos();
+    }
+  }).catch(function(err){
+    console.error("Leisure content fetch failed:", err);
+    leisureLoaded = true;
+  });
+
   switchTab('educational');
 });
-
-  
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', function() {
@@ -2644,7 +2660,6 @@ if ('serviceWorker' in navigator) {
       reg.onupdatefound = function() {
         var installingWorker = reg.installing;
         installingWorker.onstatechange = function() {
-          // If a new service worker is installed and takes over, force a reload
           if (installingWorker.state === 'installed' && navigator.serviceWorker.controller) {
             console.log('New version available! Refreshing...');
             window.location.reload(true);
@@ -2656,12 +2671,14 @@ if ('serviceWorker' in navigator) {
     });
   });
 }
+
 window.addEventListener('resize', function() {
     if (document.getElementById('personal-card').style.display !== 'none') {
-        // We pass 'true' to jump back to page 1 on rotate to prevent odd slicing overlaps
         renderPersonalCategory(true); 
     }
 });
+
+  
   function switchMainView(view) {
   if (view === 'discover') {
     document.getElementById('view-discover').style.display = 'block';
