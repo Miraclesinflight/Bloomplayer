@@ -1716,34 +1716,47 @@ auth.onAuthStateChanged(function(user){
 });
 
 
+
 /* ── LOAD USER PROFILE ── */
 function loadUserProfile(user){
   db.collection('users').doc(user.uid).get().then(function(doc){
     if(doc.exists&&doc.data().defaultAge){
       var defaultAge=doc.data().defaultAge;
       localStorage.setItem('et_default_age',defaultAge);
+      
+      // Update the dropdown options before rendering videos
       applyAgeFilter(defaultAge);
     }
   }).catch(function(){});
   
-  // ── FETCH WATCH HISTORY BEFORE RENDERING GRIDS ──
+  // ── FIX: PULL WATCH HISTORY FIRST, THEN BUILD GRIDS ──
   db.collection('users').doc(user.uid).collection('history').get()
   .then(function(snapshot) {
-    globalWatchedVideos = {}; // clear out old logins
+    globalWatchedVideos = {}; // Reset cache on login state change
+    
     snapshot.forEach(function(doc) {
-      if (doc.data().watchedCompleted) {
+      if (doc.data().watchedCompleted === true) {
         globalWatchedVideos[doc.id] = true;
       }
     });
     
-    // Now that history is loaded in memory, render the tabs safely
+    console.log("Watch history successfully synchronized from Firestore across sessions.");
+    
+    // NOW it is safe to load and render layouts with history loaded
     renderVideos();
-    var isBeta=userTier==='beta'||userTier==='gamma';
-    if(isBeta){loadPersonalVideosFromFirestore(user);}
-    else{showNoVideosState();}
+    renderEducationalVideos();
+    
+    var isBeta = userTier === 'beta' || userTier === 'gamma';
+    if(isBeta){
+      loadPersonalVideosFromFirestore(user);
+    } else {
+      showNoVideosState();
+    }
   }).catch(function(e) {
-    console.error("Error loading watch history:", e);
+    console.error("Error syncing watch history subcollection:", e);
+    // Fallback safely to show items even if collection fetch fails
     renderVideos();
+    renderEducationalVideos();
   });
 }
 /* ── FIRESTORE VIDEO STORAGE ── */
@@ -2391,15 +2404,21 @@ function closeVideo() {
   document.getElementById('ready-overlay').style.display = 'none';
   document.getElementById('player-shield').style.display = 'none';
 
-  // 4. Return to Library
+  // 4. Return to Library View
   document.getElementById('home').style.display = 'flex';
   
+  // ── FORCE INSTANT COMPONENT REFRESH HERE ──
+  renderVideos();
+  renderEducationalVideos();
+  if (typeof renderPersonalCategory === 'function') {
+      renderPersonalCategory(false);
+  }
+
   // 5. Reset internal tracking
   currentPlaylist = [];
   currentIndex = 0;
   pinAction = null;
 }
-
 
 function updatePlayerStatus() {
     const statusEl = document.getElementById('player-status');
