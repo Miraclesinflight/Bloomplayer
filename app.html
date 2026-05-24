@@ -1641,74 +1641,94 @@ function updateAuthUI(user) {
 
 
 /* ── AUTH STATE CHANGE ── */
-/* ── AUTH STATE CHANGE ── */
 auth.onAuthStateChanged(function(user){
   authReady = true;
   if(user){
-    currentUser=user;
-        // --- INSTANT CURTAIN DROP ---
+    currentUser = user;
+    
+    // Lock the background curtain while structural checks are performed
     var curtain = document.getElementById('bloom-auth-curtain');
     if (curtain) {
       curtain.style.transition = 'none'; 
       curtain.style.opacity = '1';
       curtain.style.display = 'block';
     }
-    // ----------------------------
 
-    document.getElementById('welcome-modal').style.display='none';
+    document.getElementById('welcome-modal').style.display = 'none';
     updateAuthUI(user);
     showInstallPopupIfNeeded();
-    /*startInactivityWatch();*/
     
-    // Lock the curtain down while the database thinks!
     isRoutingToSetup = true; 
     
+    // Fetch the primary profile record
     db.collection('users').doc(user.uid).get().then(function(doc){
       if(!doc.exists){
-        
         if (!sessionStorage.getItem('bloom_setup_active')) {
           auth.signOut().then(function() { window.location.reload(); });
           return; 
         }
-
-        saveUserTier(user,'beta',function(){
+        saveUserTier(user, 'beta', function(){
           loadUserProfile(user);
-          // Teleporting! Curtain stays down.
           startSetupFlow();
         });
-        
       } else {
-        var data=doc.data();
-        userTier=data.tier||'general';
-        localStorage.setItem('et_tier',userTier);
+        var data = doc.data();
+        userTier = data.tier || 'general';
+        localStorage.setItem('et_tier', userTier);
         
-        if(data.pin){ parentPin=data.pin; localStorage.setItem('et_pin',data.pin); }
-        if(data.betaInvited){ localStorage.setItem('et_beta_invited','true'); }
+        if(data.pin){ parentPin = data.pin; localStorage.setItem('et_pin', data.pin); }
+        if(data.betaInvited){ localStorage.setItem('et_beta_invited', 'true'); }
         
         updateBetaUI();
-        loadUserProfile(user);
         
-        if(!data.onboarded){
-          if (!sessionStorage.getItem('bloom_setup_active')) {
-            auth.signOut().then(function() { window.location.reload(); });
-            return; 
+        // ── CRITICAL RE-ORDERING FIX ──
+        // Instead of running finalizeAppLoad immediately, wait for the subcollection promise to settle
+        db.collection('users').doc(user.uid).collection('history').get()
+        .then(function(snapshot) {
+          globalWatchedVideos = {}; // Reset old caches
+          snapshot.forEach(function(historyDoc) {
+            if (historyDoc.data().watchedCompleted === true) {
+              globalWatchedVideos[historyDoc.id] = true;
+            }
+          });
+          console.log("Session watch history cache map successfully established.");
+          
+          // Re-trigger layout generations now that tracking states are in memory
+          renderVideos();
+          renderEducationalVideos();
+          
+          var isBeta = userTier === 'beta' || userTier === 'gamma';
+          if(isBeta){
+            loadPersonalVideosFromFirestore(user);
+          } else {
+            showNoVideosState();
           }
-          // Teleporting! Curtain stays down.
-          startSetupFlow();
-        } else {
-          // Fully onboarded. Unlock the curtain and drop it safely.
-          isRoutingToSetup = false; 
+
+          // Finally authorize application entry visibility rules safely
+          if(!data.onboarded){
+            startSetupFlow();
+          } else {
+            isRoutingToSetup = false; 
+            finalizeAppLoad();
+          }
+        }).catch(function(err) {
+          console.error("Watch history connection drop on login:", err);
+          // Fallback gracefully so parent isn't white-screened if subcollection fails
+          renderVideos();
+          renderEducationalVideos();
+          isRoutingToSetup = false;
           finalizeAppLoad();
-        }
+        });
       }
-    }).catch(function(){
-      loadUserProfile(user);
+    }).catch(function(e){
+      console.error("Profile account fetch failed:", e);
       isRoutingToSetup = false;
       finalizeAppLoad(); 
     });
     
   } else {
-    currentUser=null;
+    currentUser = null;
+    globalWatchedVideos = {}; // Clear tracking cache memory array completely on logout
     updateAuthUI(null);
     isRoutingToSetup = false;
     finalizeAppLoad(); 
