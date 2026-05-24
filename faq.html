@@ -11,24 +11,24 @@
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet"/>
 <style>
   :root { --bg: #F7F6F2; --text: #1A1A1A; --text-2: #4A554A; --text-3: #94A3B8; --card: #FFFFFF; --border: #E2E8E2; --red: #E11D48; }
-  body { background: var(--bg); color: var(--text); font-family: 'Nunito', sans-serif; padding-bottom: 60px; line-height: 1.7; }
+  body { background: var(--bg); color: var(--text); font-family: 'Nunito', sans-serif; line-height: 1.7; padding-bottom: 60px; }
   .page { max-width: 700px; margin: 0 auto; padding: 20px; }
   
   /* Nav */
-  nav { display: flex; align-items: center; justify-content: space-between; padding: 20px; border-bottom: 1px solid var(--border); }
+  nav { display: flex; align-items: center; justify-content: space-between; padding: 20px; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
   .nav-brand { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--text); }
   .nav-brand img { width: 40px; height: 40px; border-radius: 10px; }
-  .nav-name { font-size: 20px; font-weight: 800; }
+  .nav-name { font-size: 20px; font-weight: 800; letter-spacing: -0.3px; }
   .nav-link { font-size: 14px; font-weight: 700; color: #CC9544; background: #FDF8F0; padding: 8px 16px; border-radius: 20px; text-decoration: none; border: 1px solid #E5D5BC; }
 
   /* Hero */
-  .hero { padding: 40px 0; }
-  h1 { font-size: 40px; font-weight: 800; margin-bottom: 10px; }
+  .hero { padding: 20px 0 40px; }
+  h1 { font-size: 36px; font-weight: 800; margin-bottom: 10px; }
   .hero p { color: var(--text-2); font-size: 16px; }
 
   /* FAQ Styles */
   .faq-section { margin-bottom: 40px; }
-  .group-title { font-size: 12px; font-weight: 800; color: var(--text-3); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; }
+  .group-title { font-size: 12px; font-weight: 800; color: var(--text-3); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; padding-left: 4px; }
   
   .faq-item { background: var(--card); border: 1px solid var(--border); border-radius: 16px; margin-bottom: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.03); }
   .faq-q { width: 100%; text-align: left; background: none; border: none; padding: 20px; font-size: 16px; font-weight: 700; color: var(--text); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
@@ -36,9 +36,11 @@
   .faq-item.open .faq-a { display: block; }
   .faq-arrow { font-size: 16px; color: #CC9544; transition: transform 0.2s; }
   .faq-item.open .faq-arrow { transform: rotate(180deg); }
+  .faq-a a { color: #CC9544; font-weight: 700; }
 
-  footer { text-align: center; margin-top: 40px; font-size: 14px; color: var(--text-3); }
-  footer a { color: #CC9544; text-decoration: none; margin: 0 8px; }
+  /* Footer */
+  footer { text-align: center; margin-top: 60px; font-size: 13px; color: var(--text-3); }
+  footer a { color: var(--text-3); text-decoration: none; margin: 0 8px; }
 </style>
 </head>
 <body>
@@ -57,59 +59,41 @@
     <p>Everything you need to know about BloomPlayer.</p>
   </div>
 
-  <div class="faq-section">
-    <div class="group-title">The basics</div>
-    <div class="faq-item">
-      <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">What is BloomPlayer? <span class="faq-arrow">▼</span></button>
-      <div class="faq-a">BloomPlayer is a web app for children to watch YouTube videos without any player controls — no rewind, no skip, no progress bar. A parent sets it up, locks it with a PIN, and hands it to the child. The video simply plays forward.</div>
+  <div class="faq-grid">
+    
+    <div class="faq-section">
+      <div class="group-title">The basics</div>
+      <div class="faq-item"><button class="faq-q" onclick="this.parentElement.classList.toggle('open')">What is BloomPlayer? <span class="faq-arrow">▼</span></button><div class="faq-a">BloomPlayer is a web app for children to watch YouTube videos without any player controls — no rewind, no skip, no progress bar. A parent sets it up, locks it with a PIN, and hands it to the child. The video plays forward.</div></div>
+      <div class="faq-item"><button class="faq-q" onclick="this.parentElement.classList.toggle('open')">Why does this exist? <span class="faq-arrow">▼</span></button><div class="faq-a">Built by a mom to help prevent "stimming" behavior in children with autism, where the rewind button reinforces repetitive loops. BloomPlayer removes the controls entirely.</div></div>
+      <div class="faq-item"><button class="faq-q" onclick="this.parentElement.classList.toggle('open')">Is it really free? <span class="faq-arrow">▼</span></button><div class="faq-a">Yes — completely free. No ads or paywalls. Voluntary support is available via <a href="https://ko-fi.com/BloomPlayer" target="_blank">Ko-fi</a>.</div></div>
+      <div class="faq-item"><button class="faq-q" onclick="this.parentElement.classList.toggle('open')">Do I need to download anything? <span class="faq-arrow">▼</span></button><div class="faq-a">No, BloomPlayer runs in your browser. On iPhone: Share → Add to Home Screen. On Android, Chrome will prompt you to install.</div></div>
     </div>
-    <div class="faq-item">
-      <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">Why does this exist? <span class="faq-arrow">▼</span></button>
-      <div class="faq-a">It was built by a mom of a teenager on the autism spectrum. The rewind button became a loop he couldn't escape—the same second of video, repeated for hours. BloomPlayer removes the controls entirely to prevent this habit from forming.</div>
-    </div>
-    <div class="faq-item">
-      <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">Is it really free? <span class="faq-arrow">▼</span></button>
-      <div class="faq-a">Yes — completely free. No ads, no paywalls, no hidden fees. If you'd like to support the project, you can find a voluntary <a href="https://ko-fi.com/BloomPlayer" target="_blank">Ko-fi link</a> in the app.</div>
-    </div>
-  </div>
 
-  <div class="faq-section">
-    <div class="group-title">Sign-in & Account</div>
-    <div class="faq-item">
-      <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">Do I need to sign in? <span class="faq-arrow">▼</span></button>
-      <div class="faq-a">Yes. Signing in creates a secure cloud profile to hold your personalized library and Parent PIN. It ensures your settings are saved safely and follow you across devices.</div>
+    <div class="faq-section">
+      <div class="group-title">Sign-in & Account</div>
+      <div class="faq-item"><button class="faq-q" onclick="this.parentElement.classList.toggle('open')">Do I need to sign in? <span class="faq-arrow">▼</span></button><div class="faq-a">Yes. Signing in creates a secure profile to hold your customized library and Parent PIN.</div></div>
+      <div class="faq-item"><button class="faq-q" onclick="this.parentElement.classList.toggle('open')">What does signing in do? <span class="faq-arrow">▼</span></button><div class="faq-a">It securely stores your library and PIN in the cloud so they follow you across devices. We only store your email to identify your account.</div></div>
     </div>
-    <div class="faq-item">
-      <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">What happens to my data? <span class="faq-arrow">▼</span></button>
-      <div class="faq-a">We only store your email to identify your account, your saved video library, your child's age group selection, and your PIN. Your child never creates an account, and we never sell your data to anyone.</div>
-    </div>
-  </div>
 
-  <div class="faq-section">
-    <div class="group-title">Parent PIN & Security</div>
-    <div class="faq-item">
-      <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">How do I set my PIN? <span class="faq-arrow">▼</span></button>
-      <div class="faq-a">You create your 4-digit PIN during the initial app setup. To change it, long-press the BloomPlayer logo on the home screen to open the Settings menu.</div>
+    <div class="faq-section">
+      <div class="group-title">Parent PIN & Security</div>
+      <div class="faq-item"><button class="faq-q" onclick="this.parentElement.classList.toggle('open')">How do I set my PIN? <span class="faq-arrow">▼</span></button><div class="faq-a">You create your 4-digit PIN during setup. To change it, long-press the BloomPlayer logo to enter Settings.</div></div>
+      <div class="faq-item"><button class="faq-q" onclick="this.parentElement.classList.toggle('open')">I forgot my PIN. What do I do? <span class="faq-arrow">▼</span></button><div class="faq-a">Tap "Send reset link" on the PIN screen. We'll email you a secure link to reset it.</div></div>
+      <div class="faq-item"><button class="faq-q" onclick="this.parentElement.classList.toggle('open')">Can my child bypass the PIN? <span class="faq-arrow">▼</span></button><div class="faq-a">For older children, we highly recommend using <strong>Guided Access (iOS)</strong> or <strong>App Pinning (Android)</strong> to lock them into the app.</div></div>
     </div>
-    <div class="faq-item">
-      <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">I forgot my PIN. What do I do? <span class="faq-arrow">▼</span></button>
-      <div class="faq-a">On the PIN entry pad, tap <strong>Send reset link</strong>. We'll send a secure link to your email address that allows you to reset your PIN.</div>
-    </div>
-    <div class="faq-item">
-      <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">Can my child bypass the PIN? <span class="faq-arrow">▼</span></button>
-      <div class="faq-a">BloomPlayer is a habit-prevention tool, not a high-security lock. We highly recommend using <strong>Guided Access (iOS)</strong> or <strong>App Pinning (Android)</strong> to physically lock your child into the app.</div>
-    </div>
-  </div>
 
-  <div class="faq-section">
-    <div class="group-title">Videos & Watching</div>
-    <div class="faq-item">
-      <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">Can I add my own videos? <span class="faq-arrow">▼</span></button>
-      <div class="faq-a">Yes! Use the "My Library" tab to paste any YouTube link. It will save to your secure list, and your child will only ever see the videos you have manually approved.</div>
+    <div class="faq-section">
+      <div class="group-title">Watching & Reporting</div>
+      <div class="faq-item"><button class="faq-q" onclick="this.parentElement.classList.toggle('open')">How do I play a video? <span class="faq-arrow">▼</span></button><div class="faq-a">Select a video or paste a link. Tap "Start video" to engage the full-screen shield.</div></div>
+      <div class="faq-item"><button class="faq-q" onclick="this.parentElement.classList.toggle('open')">Can I add my own videos? <span class="faq-arrow">▼</span></button><div class="faq-a">Yes. Use the "My Library" tab to add your own YouTube links.</div></div>
+      <div class="faq-item"><button class="faq-q" onclick="this.parentElement.classList.toggle('open')">A video isn't working. What do I do? <span class="faq-arrow">▼</span></button><div class="faq-a">Please email us at hello@bloomplayer.com with the video link. We personally review these to keep the library safe.</div></div>
     </div>
-    <div class="faq-item">
-      <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">How do I report a bad video? <span class="faq-arrow">▼</span></button>
-      <div class="faq-a">If you find a video that isn't working or isn't appropriate, please email us at <a href="mailto:hello@bloomplayer.com">hello@bloomplayer.com</a>. We personally review these reports to keep the library safe for everyone.</div>
+
+    <div class="faq-section">
+      <div class="group-title">Privacy & Safety</div>
+      <div class="faq-item"><button class="faq-q" onclick="this.parentElement.classList.toggle('open')">How do I delete my account? <span class="faq-arrow">▼</span></button><div class="faq-a">Open the Parent Dashboard (via the settings gear or logo long-press). Select "Delete account" to permanently wipe all data from our servers.</div></div>
+      <div class="faq-item"><button class="faq-q" onclick="this.parentElement.classList.toggle('open')">Does my child's data get collected? <span class="faq-arrow">▼</span></button><div class="faq-a">No. Children never interact with sign-in or forms. BloomPlayer is configured entirely by the parent.</div></div>
+      <div class="faq-item"><button class="faq-q" onclick="this.parentElement.classList.toggle('open')">Is BloomPlayer affiliated with Google? <span class="faq-arrow">▼</span></button><div class="faq-a">No, BloomPlayer is an independent project. We use standard YouTube embeds but have no formal relationship with YouTube or Google.</div></div>
     </div>
   </div>
 
