@@ -1274,6 +1274,13 @@ var isSessionStarted = false;
 var allVideos = []; // Initialize to empty array
 var leisureLoaded = false; // Twin of curriculumLoaded
 
+
+
+// ──  TRACKING VARIABLES  ──
+var activeTrackedVideoId = null;
+var uniqueSecondsWatched = new Set();
+var currentVideoDuration = null;  
+
 /* ── APP CONFIG ── */
 var appConfig={signinEnabled:false,inviteCodeEnabled:false,betaFeaturesEnabled:false,betaLimit:99,betaUsageCount:0};
 
@@ -2316,6 +2323,12 @@ function startPlaybackSession() {
 
 function loadVideoById(videoId) {
     pendingId = videoId; 
+    
+    // ── RESET WATCH HISTORY FOR THE NEW VIDEO ──
+    activeTrackedVideoId = videoId;
+    uniqueSecondsWatched.clear();
+    currentVideoDuration = null;
+
     const container = document.getElementById('player-container');
     container.innerHTML = `
         <iframe id="yt-player" 
@@ -2628,19 +2641,56 @@ window.addEventListener('message', function(e) {
     var data = JSON.parse(e.data);
     
     if (data.event === 'infoDelivery' && data.info) {
-      // 1. Existing logic: grab duration
+      
+      // 1. Capture Total Duration if available
       if (data.info.duration && !currentVideoDuration) {
         currentVideoDuration = data.info.duration;
       }
       
-      // 2. THE FIX: Detect when the video actually ends (playerState 0)
+      // 2. Continuous Second Tracking while video is actively playing
+      if (data.info.currentTime !== undefined) {
+        var currentSec = Math.floor(data.info.currentTime);
+        uniqueSecondsWatched.add(currentSec);
+      }
+      
+      // 3. Handle Natural Video Completion
       if (data.info.playerState === 0) {
+        verifyVideoCompletion();
         playNextInList();
       }
     }
   } catch(ex) {}
 });
 
+// ── NEW HELPER FUNCTION TO VERIFY AND SAVE STATUS ──
+function verifyVideoCompletion() {
+  if (!currentUser || !activeTrackedVideoId || !currentVideoDuration) return;
+
+  var totalDuration = Math.floor(currentVideoDuration);
+  var uniqueCount = uniqueSecondsWatched.size;
+
+  // Set threshold parameter (92% - 95% gives leeway for generic credit screens/loading spikes)
+  var dynamicThreshold = totalDuration * 0.95;
+
+  if (uniqueCount >= dynamicThreshold) {
+    console.log("Legitimate full-length completion verified for: " + activeTrackedVideoId);
+    
+    // Write directly to your existing users document structure
+    db.collection('users').doc(currentUser.uid).collection('history').doc(activeTrackedVideoId).set({
+      videoId: activeTrackedVideoId,
+      watchedCompleted: true,
+      lastCompletedAt: new Date().toISOString()
+    }, { merge: true })
+    .then(function() {
+      console.log("Firestore completion mark sync complete.");
+    })
+    .catch(function(err) {
+      console.error("Error logging completion mark:", err);
+    });
+  } else {
+    console.log("Video ended early or user scrubbed forward. Real seconds watched: " + uniqueCount + "/" + totalDuration);
+  }
+}
   function requestClose(){pinAction='close';showPin('Parent PIN required','Enter your PIN to close this video');}
 function show(id){document.querySelectorAll('.screen').forEach(function(s){s.style.display='none';});document.getElementById(id).style.display='flex';}
 
