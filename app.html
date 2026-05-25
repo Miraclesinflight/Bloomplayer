@@ -2309,18 +2309,32 @@ function directPlay(videoId, list = null, categoryName = "Video") {
         } 
         else if (categoryName === 'My Library') {
             var catEl = document.getElementById('category-select');
-            var cat = catEl ? catEl.value : 'General';
+            var cat = catEl ? catEl.value : 'My Videos';
             list = personalVideosData[cat] || [];
         }
     }
 
-    // 2. Set the Playlist State
-    currentPlaylist = (list && list.length > 0) ? list : [{id: videoId}];
+    // ── THE CRUCIAL LAYOUT FIX ──
+    // Standardize the list properties instantly so the background loops never guess the key names
+    var cleanList = [];
+    if (list && list.length > 0) {
+        cleanList = list.map(function(item) {
+            // Find the 11-char YouTube string, wherever it's hiding
+            var actualId = item.id || item.videoId || (typeof item === 'string' ? item : '');
+            return {
+                id: actualId,
+                videoId: actualId,
+                title: item.title || ''
+            };
+        });
+    }
+
+    // 2. Set the Playlist State safely using our verified clean list
+    currentPlaylist = cleanList.length > 0 ? cleanList : [{id: videoId, videoId: videoId}];
     
-    // Find where we are in the list
+    // Find where we are in the list safely matching strings
     currentIndex = currentPlaylist.findIndex(function(v) {
-        var id = v.id || v.videoId;
-        return id === videoId;
+        return v.id === videoId;
     });
     if (currentIndex === -1) currentIndex = 0;
 
@@ -2331,13 +2345,10 @@ function directPlay(videoId, list = null, categoryName = "Video") {
     document.getElementById('player-screen').style.display = 'flex';
     
     // 4. Handle the "Parent Blessing" (Overlay vs. Shield)
-    // If the session hasn't started, we show the button and HIDE the shield 
-    // so the parent's tap actually registers.
     if (isSessionStarted === false) {
         document.getElementById('ready-overlay').style.display = 'flex';
         document.getElementById('player-shield').style.display = 'none';
     } else {
-        // If already blessed, hide overlay and drop the shield to block the child.
         document.getElementById('ready-overlay').style.display = 'none';
         document.getElementById('player-shield').style.display = 'block';
     }
