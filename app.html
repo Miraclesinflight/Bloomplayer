@@ -2375,31 +2375,24 @@ function startPlaybackSession() {
 
 
 function loadVideoById(videoId) {
-    // Safety check: Extract the string ID if an entire object was passed
     var targetedId = (typeof videoId === 'object' && videoId !== null) 
         ? (videoId.id || videoId.videoId) 
         : videoId;
 
     pendingId = targetedId; 
-    
-    // Reset individual video watch history tracking
     activeTrackedVideoId = targetedId;
     uniqueSecondsWatched.clear();
     currentVideoDuration = null;
 
-    // Grab domain origin so the YouTube Iframe player API security trust handshake succeeds
     var currentOrigin = window.location.origin || (window.location.protocol + '//' + window.location.hostname);
 
-    // ── SEQUENTIAL MOBILE CONTINUOUS PLAY ENGINE ──
-    // Build a comma-separated list of all remaining video IDs left in this folder group
+    // Build upcoming queue string for native autoplay allowance
     var upcomingIds = [];
     for (var i = currentIndex + 1; i < currentPlaylist.length; i++) {
         var v = currentPlaylist[i];
         var uId = v.id || v.videoId;
         if (uId) upcomingIds.push(uId);
     }
-    
-    // Create the playlist parameter string if there are more videos left to play
     var playlistParam = upcomingIds.length > 0 ? '&playlist=' + upcomingIds.join(',') : '';
 
     const container = document.getElementById('player-container');
@@ -2493,14 +2486,14 @@ function playNextInList() {
         var nextVideo = currentPlaylist[currentIndex];
         var nextId = nextVideo.id || nextVideo.videoId; 
         
-        // Reset tracking vars instantly for the upcoming track
+        // Synchronize tracking variables for the upcoming track
         activeTrackedVideoId = nextId;
         uniqueSecondsWatched.clear();
         currentVideoDuration = null;
         
-        console.log("Internal app state synced to next video item index: " + currentIndex);
+        console.log("App position state aligned to native player index: " + currentIndex);
     } else {
-        // Queue concluded completely
+        // Entire library category concluded perfectly
         requestPlayerExit();
     }
 }
@@ -2755,13 +2748,12 @@ window.addEventListener('message', function(e) {
         uniqueSecondsWatched.add(currentSec);
       }
       
-      // 3. Catch when a new playlist video hits the 'PLAYING' state
+      // 3. Catch track changes within the continuous stream
       if (data.info.playerState === 1) {
-        // Automatically sync tracking mechanics if the background player advanced on its own
         if (data.info.videoData && data.info.videoData.video_id) {
            var activeId = data.info.videoData.video_id;
            if (activeId !== activeTrackedVideoId) {
-              // Find the local array match to advance internal app indicators smoothly
+              // Locate the corresponding item in our structured list
               var matchedIdx = currentPlaylist.findIndex(function(v) {
                   return (v.id === activeId || v.videoId === activeId);
               });
