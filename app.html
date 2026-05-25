@@ -2247,11 +2247,22 @@ function submitReport(){
 }
 
 /* ── VIDEO PLAYER ── */
-function extractId(url){
-  url=(url||'').split('?si=')[0].split('&si=')[0];
-  var p=[/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/,/^([a-zA-Z0-9_-]{11})$/];
-  for(var i=0;i<p.length;i++){var m=url.match(p[i]);if(m)return m[1];}
-  return null;
+function extractId(url) {
+  if (!url) return null;
+  
+  // This regex looks for the ID (11 chars) following known YouTube URL patterns.
+  // It handles: youtube.com/watch?v=, m.youtube.com/watch?v=, youtu.be/, embed/, and shorts/
+  var regExp = /(?:youtube\.com\/watch\?v=|m\.youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/|youtube\.com\/shorts\/)([a-zA-Z0-9_-]{11})/;
+  var match = url.match(regExp);
+  
+  // If a standard URL pattern matched, return the ID
+  if (match && match[1]) {
+    return match[1];
+  }
+  
+  // Fallback: If the user pasted the ID itself directly
+  var rawIdMatch = url.match(/^([a-zA-Z0-9_-]{11})$/);
+  return rawIdMatch ? rawIdMatch[1] : null;
 }
 function handleWatch(){var id=extractId(document.getElementById('url-input').value.trim());if(!id){document.getElementById('url-error').textContent='Please paste a valid YouTube link.';return;}prepareVideo(id);}
 
