@@ -2265,8 +2265,30 @@ function extractId(url) {
   var rawIdMatch = url.match(/^([a-zA-Z0-9_-]{11})$/);
   return rawIdMatch ? rawIdMatch[1] : null;
 }
-function handleWatch(){var id=extractId(document.getElementById('url-input').value.trim());if(!id){document.getElementById('url-error').textContent='Please paste a valid YouTube link.';return;}prepareVideo(id);}
-
+function handleWatch() {
+    // 1. Get the URL input element
+    var input = document.getElementById('url-input');
+    var error = document.getElementById('url-error');
+    
+    // 2. Extract the ID using your existing (now correct) extractId function
+    var id = extractId(input.value.trim());
+    
+    // 3. Validation check
+    if (!id) {
+        error.textContent = 'Please paste a valid YouTube link.';
+        return;
+    }
+    
+    // 4. Clear any previous error
+    error.textContent = '';
+    
+    // 5. Play the video using your existing directPlay function
+    // We pass 'null' for the list (since it's just one video) and 'Discover' as the category
+    directPlay(id, null, 'Discover');
+    
+    // Optional: Clear the input so it's ready for the next time
+    input.value = '';
+}
 function directPlay(videoId, list = null, categoryName = "Video") {
     // 1. Identify the list context (The "Pull" Logic)
     if (!list) {
