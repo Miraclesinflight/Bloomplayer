@@ -10,10 +10,26 @@
 <link rel="stylesheet" href="theme-v2.css"/>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet"/>
 <style>
-  :root { --bg: #F7F6F2; --text: #1A1A1A; --text-2: #4A554A; --text-3: #94A3B8; --card: #FFFFFF; --border: #E2E8E2; --red: #E11D48; }
-  body { background: var(--bg); color: var(--text); font-family: 'Nunito', sans-serif; line-height: 1.7; padding-bottom: 60px; }
-  .page { max-width: 700px; margin: 0 auto; padding: 20px; }
-  
+/* Update your page container */
+.page {
+    width: 100%;             /* Ensures it takes full width of the screen */
+    max-width: 700px;        /* Keeps it readable on large screens */
+    margin: 0 auto;          /* Centers it */
+    padding: 20px;           /* Provides breathing room */
+    box-sizing: border-box;  /* CRITICAL: Includes padding in width calculation */
+}
+
+/* Ensure the body doesn't cause overflow */
+body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Nunito', sans-serif;
+    line-height: 1.7;
+    margin: 0;               /* Reset default margins */
+    padding-bottom: 60px;
+    width: 100%;             /* Ensures body respects viewport */
+    overflow-x: hidden;      /* Prevents horizontal scrollbars */
+}
   /* Nav */
   nav { display: flex; align-items: center; justify-content: space-between; padding: 20px; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
   .nav-brand { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--text); }
@@ -37,7 +53,24 @@
   .faq-arrow { font-size: 16px; color: #CC9544; transition: transform 0.2s; }
   .faq-item.open .faq-arrow { transform: rotate(180deg); }
   .faq-a a { color: #CC9544; font-weight: 700; }
+/* Ensure the FAQ page wrapper is responsive */
+.faq-container {
+    width: 100% !important;
+    max-width: 800px; /* Limits width on desktop so lines aren't too long */
+    margin: 0 auto;   /* Centers the content */
+    padding: 20px;
+    box-sizing: border-box;
+}
 
+/* Ensure cards inside the FAQ are also responsive */
+.faq-card {
+    width: 100% !important;
+    margin-bottom: 12px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 17px;
+}
   /* Footer */
   footer { text-align: center; margin-top: 60px; font-size: 13px; color: var(--text-3); }
   footer a { color: var(--text-3); text-decoration: none; margin: 0 8px; }
