@@ -2250,22 +2250,18 @@ function submitReport(){
 function extractId(url) {
   if (!url) return null;
 
-  // This regex handles:
-  // 1. youtube.com/watch?v= (desktop)
-  // 2. m.youtube.com/watch?v= (mobile)
-  // 3. youtu.be/ (shortened)
-  // 4. youtube.com/shorts/ (shorts)
-  // 5. ...and ignores any extra parameters (like &feature=)
-  var regExp = /(?:youtube\.com|m\.youtube\.com|youtu\.be)\/(?:watch\?v=|embed\/|shorts\/)?([a-zA-Z0-9_-]{11})/;
+  // The 'i' flag at the end makes this case-insensitive.
+  // This captures the 11-char ID regardless of what junk follows (playlists, features, etc.)
+  var regExp = /(?:youtube\.com|m\.youtube\.com|youtu\.be)\/(?:watch\?v=|embed\/|shorts\/|live\/)?([a-zA-Z0-9_-]{11})/i;
   
   var match = url.match(regExp);
 
-  // Return the ID if found
+  // If the regex matched, return the first capturing group (the ID)
   if (match && match[1]) {
     return match[1];
   }
 
-  // Fallback: Check if the user just pasted the 11-char ID directly
+  // Fallback: If the user just pasted the raw 11-char ID
   var rawIdMatch = url.match(/^([a-zA-Z0-9_-]{11})$/);
   return rawIdMatch ? rawIdMatch[1] : null;
 }
