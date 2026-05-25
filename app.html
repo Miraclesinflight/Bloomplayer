@@ -2474,12 +2474,31 @@ function updatePlayerStatus() {
 }
 */
 function playNextInList() {
-    // By commenting out or removing the logic inside here, 
-    // we stop the player from advancing to the next video automatically.
-    console.log("Auto-advance is disabled.");
-    
-    // If you want it to stop and wait for you to exit, just call requestPlayerExit()
-    // requestPlayerExit(); 
+    if (currentIndex < currentPlaylist.length - 1) {
+        currentIndex++;
+        updatePlayerStatus();
+        
+        var nextVideo = currentPlaylist[currentIndex];
+        var nextId = nextVideo.id || nextVideo.videoId; 
+        
+        // Update trackers for the new video
+        activeTrackedVideoId = nextId;
+        uniqueSecondsWatched.clear();
+        currentVideoDuration = null;
+        
+        // Instead of reloading the iframe, send a command to the existing one
+        var ifr = document.getElementById('yt-player');
+        if (ifr && ifr.contentWindow) {
+            ifr.contentWindow.postMessage(JSON.stringify({
+                event: 'command', 
+                func: 'loadVideoById', 
+                args: [nextId] // This loads the next video in the SAME iframe
+            }), '*');
+        }
+        console.log("Advancing to next video via API command.");
+    } else {
+        requestPlayerExit();
+    }
 }
 function showHome(){show('home');}
 function requestSettings(){pinAction='settings';showPin('Parent PIN required','Enter your PIN to open Settings');}
@@ -2714,29 +2733,28 @@ function lockControls(){
   setTimeout(function(){toast.classList.add('hidden');},1500);
 }
 window.addEventListener('message', function(e) {
-  if(e.origin !== 'https://www.youtube.com') return;
+  if (e.origin !== 'https://www.youtube.com') return;
   try {
     var data = JSON.parse(e.data);
-    
+
     if (data.event === 'infoDelivery' && data.info) {
       
-      // 1. Capture Total Duration if available
+      // 1. Capture Total Duration
       if (data.info.duration && !currentVideoDuration) {
         currentVideoDuration = data.info.duration;
       }
       
-      // 2. Continuous Second Tracking while video is actively playing
+      // 2. Continuous Second Tracking
       if (data.info.currentTime !== undefined) {
         var currentSec = Math.floor(data.info.currentTime);
         uniqueSecondsWatched.add(currentSec);
       }
       
-      // 3. Catch track changes within the continuous stream
+      // 3. Track Playlist index changes (for internal status updates)
       if (data.info.playerState === 1) {
         if (data.info.videoData && data.info.videoData.video_id) {
            var activeId = data.info.videoData.video_id;
            if (activeId !== activeTrackedVideoId) {
-              // Locate the corresponding item in our structured list
               var matchedIdx = currentPlaylist.findIndex(function(v) {
                   return (v.id === activeId || v.videoId === activeId);
               });
@@ -2751,13 +2769,20 @@ window.addEventListener('message', function(e) {
         }
       }
       
-      // 4. Handle Natural Video Completion
+      // 4. Handle Natural Completion with 2-second Shield
       if (data.info.playerState === 0) {
-        verifyVideoCompletion();
-        playNextInList();
+        // The "Shield": ensure the video played for at least 3 unique seconds
+        if (uniqueSecondsWatched.size > 2) { 
+            verifyVideoCompletion();
+            playNextInList();
+        } else {
+            console.log("Ignored fake 'Ended' signal during initialization.");
+        }
       }
     }
-  } catch(ex) {}
+  } catch(ex) {
+    // Silently handle non-JSON messages
+  }
 });
   
   function verifyVideoCompletion() {
