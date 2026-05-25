@@ -2373,32 +2373,27 @@ function startPlaybackSession() {
     } catch(e) {}
 }
 
-
 function loadVideoById(videoId) {
+    // Standardize the ID
     var targetedId = (typeof videoId === 'object' && videoId !== null) 
         ? (videoId.id || videoId.videoId) 
         : videoId;
 
     pendingId = targetedId; 
+    
+    // Reset trackers
     activeTrackedVideoId = targetedId;
     uniqueSecondsWatched.clear();
     currentVideoDuration = null;
 
     var currentOrigin = window.location.origin || (window.location.protocol + '//' + window.location.hostname);
 
-    // Build upcoming queue string for native autoplay allowance
-    var upcomingIds = [];
-    for (var i = currentIndex + 1; i < currentPlaylist.length; i++) {
-        var v = currentPlaylist[i];
-        var uId = v.id || v.videoId;
-        if (uId) upcomingIds.push(uId);
-    }
-    var playlistParam = upcomingIds.length > 0 ? '&playlist=' + upcomingIds.join(',') : '';
-
     const container = document.getElementById('player-container');
+    
+    // Clean loading: Only one video, no playlist parameters, no auto-advance
     container.innerHTML = `
         <iframe id="yt-player" 
-            src="https://www.youtube.com/embed/${targetedId}?autoplay=1&controls=0&modestbranding=1&rel=0&iv_load_policy=3&disablekb=1&enablejsapi=1&origin=${encodeURIComponent(currentOrigin)}${playlistParam}" 
+            src="https://www.youtube.com/embed/${targetedId}?autoplay=1&controls=0&modestbranding=1&rel=0&iv_load_policy=3&disablekb=1&enablejsapi=1&origin=${encodeURIComponent(currentOrigin)}" 
             allow="autoplay; encrypted-media" 
             onload="onPlayerIframeLoad()" 
             allowfullscreen>
@@ -2479,25 +2474,13 @@ function updatePlayerStatus() {
 }
 */
 function playNextInList() {
-    if (currentIndex < currentPlaylist.length - 1) {
-        currentIndex++;
-        updatePlayerStatus();
-        
-        var nextVideo = currentPlaylist[currentIndex];
-        var nextId = nextVideo.id || nextVideo.videoId; 
-        
-        // Synchronize tracking variables for the upcoming track
-        activeTrackedVideoId = nextId;
-        uniqueSecondsWatched.clear();
-        currentVideoDuration = null;
-        
-        console.log("App position state aligned to native player index: " + currentIndex);
-    } else {
-        // Entire library category concluded perfectly
-        requestPlayerExit();
-    }
+    // By commenting out or removing the logic inside here, 
+    // we stop the player from advancing to the next video automatically.
+    console.log("Auto-advance is disabled.");
+    
+    // If you want it to stop and wait for you to exit, just call requestPlayerExit()
+    // requestPlayerExit(); 
 }
-
 function showHome(){show('home');}
 function requestSettings(){pinAction='settings';showPin('Parent PIN required','Enter your PIN to open Settings');}
 function showPin(title,sub){pinBuffer='';updateDots();document.getElementById('pin-error').textContent='';document.getElementById('pin-title').textContent=title;document.getElementById('pin-subtitle').textContent=sub;document.getElementById('pin-overlay').style.display='flex';}
