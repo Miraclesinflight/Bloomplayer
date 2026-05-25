@@ -2364,32 +2364,54 @@ function startPlaybackSession() {
 
 
 function loadVideoById(videoId) {
-    pendingId = videoId; 
+    // Safety check: Extract the string ID if an entire object was passed
+    var targetedId = (typeof videoId === 'object' && videoId !== null) 
+        ? (videoId.id || videoId.videoId) 
+        : videoId;
+
+    pendingId = targetedId; 
     
-    // ── RESET WATCH HISTORY FOR THE NEW VIDEO ──
-    activeTrackedVideoId = videoId;
+    // Reset individual video watch history tracking
+    activeTrackedVideoId = targetedId;
     uniqueSecondsWatched.clear();
     currentVideoDuration = null;
+
+    // Grab domain origin so the YouTube Iframe player API security trust handshake succeeds
+    var currentOrigin = window.location.origin || (window.location.protocol + '//' + window.location.hostname);
+
+    // ── SEQUENTIAL MOBILE CONTINUOUS PLAY ENGINE ──
+    // Build a comma-separated list of all remaining video IDs left in this folder group
+    var upcomingIds = [];
+    for (var i = currentIndex + 1; i < currentPlaylist.length; i++) {
+        var v = currentPlaylist[i];
+        var uId = v.id || v.videoId;
+        if (uId) upcomingIds.push(uId);
+    }
+    
+    // Create the playlist parameter string if there are more videos left to play
+    var playlistParam = upcomingIds.length > 0 ? '&playlist=' + upcomingIds.join(',') : '';
 
     const container = document.getElementById('player-container');
     container.innerHTML = `
         <iframe id="yt-player" 
-            src="https://www.youtube.com/embed/${videoId}?autoplay=1&controls=0&modestbranding=1&rel=0&iv_load_policy=3&disablekb=1&enablejsapi=1" 
+            src="https://www.youtube.com/embed/${targetedId}?autoplay=1&controls=0&modestbranding=1&rel=0&iv_load_policy=3&disablekb=1&enablejsapi=1&origin=${encodeURIComponent(currentOrigin)}${playlistParam}" 
             allow="autoplay; encrypted-media" 
             onload="onPlayerIframeLoad()" 
             allowfullscreen>
         </iframe>`;
 }
 function onPlayerIframeLoad() {
-    // Only fire this if we are actively in a playlist session
+    // Only bind listeners and play if the parent has clicked start
     if (isSessionStarted) {
         try {
             var ifr = document.getElementById('yt-player');
-            // Re-establish the listener connection on the NEW iframe
+            // Re-connect the background message receiver tunnel
             ifr.contentWindow.postMessage(JSON.stringify({event: 'listening'}), '*');
-            // Force play in case the browser's autoplay policies blocked it
+            // Force a native playback kickstart command
             ifr.contentWindow.postMessage(JSON.stringify({event: 'command', func: 'playVideo'}), '*');
-        } catch(e) {}
+        } catch(e) {
+            console.error(" Handshake failed on next video frame:", e);
+        }
     }
 }
 
@@ -2454,16 +2476,19 @@ function updatePlayerStatus() {
 */
 function playNextInList() {
     if (currentIndex < currentPlaylist.length - 1) {
-        // There is another video!
         currentIndex++;
         updatePlayerStatus();
-        loadVideoById(currentPlaylist[currentIndex].id);
+        
+        var nextVideo = currentPlaylist[currentIndex];
+        // Ensure both custom parent folders and curated CSV asset keys map correctly
+        var nextId = nextVideo.id || nextVideo.videoId; 
+        
+        loadVideoById(nextId);
     } else {
-        // No more videos (Option B: Stop and return)
-        requestPlayerExit(); // This triggers the PIN to exit, or you can use closeVideo() to just go back
+        // Folder group finished perfectly, clear the video block and trigger parent lock
+        requestPlayerExit();
     }
 }
-
 
 function showHome(){show('home');}
 function requestSettings(){pinAction='settings';showPin('Parent PIN required','Enter your PIN to open Settings');}
