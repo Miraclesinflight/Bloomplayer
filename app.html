@@ -2454,16 +2454,23 @@ function updatePlayerStatus() {
 */
 function playNextInList() {
     if (currentIndex < currentPlaylist.length - 1) {
-        // There is another video!
         currentIndex++;
         updatePlayerStatus();
-        loadVideoById(currentPlaylist[currentIndex].id);
+        
+        var nextVideo = currentPlaylist[currentIndex];
+        var nextId = nextVideo.id || nextVideo.videoId; 
+        
+        // Reset tracking vars instantly for the upcoming track
+        activeTrackedVideoId = nextId;
+        uniqueSecondsWatched.clear();
+        currentVideoDuration = null;
+        
+        console.log("Internal app state synced to next video item index: " + currentIndex);
     } else {
-        // No more videos (Option B: Stop and return)
-        requestPlayerExit(); // This triggers the PIN to exit, or you can use closeVideo() to just go back
+        // Queue concluded completely
+        requestPlayerExit();
     }
 }
-
 
 function showHome(){show('home');}
 function requestSettings(){pinAction='settings';showPin('Parent PIN required','Enter your PIN to open Settings');}
@@ -2715,7 +2722,28 @@ window.addEventListener('message', function(e) {
         uniqueSecondsWatched.add(currentSec);
       }
       
-      // 3. Handle Natural Video Completion
+      // 3. Catch when a new playlist video hits the 'PLAYING' state
+      if (data.info.playerState === 1) {
+        // Automatically sync tracking mechanics if the background player advanced on its own
+        if (data.info.videoData && data.info.videoData.video_id) {
+           var activeId = data.info.videoData.video_id;
+           if (activeId !== activeTrackedVideoId) {
+              // Find the local array match to advance internal app indicators smoothly
+              var matchedIdx = currentPlaylist.findIndex(function(v) {
+                  return (v.id === activeId || v.videoId === activeId);
+              });
+              if (matchedIdx !== -1 && matchedIdx !== currentIndex) {
+                  currentIndex = matchedIdx;
+                  updatePlayerStatus();
+                  activeTrackedVideoId = activeId;
+                  uniqueSecondsWatched.clear();
+                  currentVideoDuration = null;
+              }
+           }
+        }
+      }
+      
+      // 4. Handle Natural Video Completion
       if (data.info.playerState === 0) {
         verifyVideoCompletion();
         playNextInList();
@@ -2723,8 +2751,8 @@ window.addEventListener('message', function(e) {
     }
   } catch(ex) {}
 });
-
-function verifyVideoCompletion() {
+  
+  function verifyVideoCompletion() {
   if (!currentUser || !activeTrackedVideoId || !currentVideoDuration) return;
 
   var totalDuration = Math.floor(currentVideoDuration);
