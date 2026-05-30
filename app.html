@@ -1288,6 +1288,9 @@ var appConfig={signinEnabled:false,inviteCodeEnabled:false,betaFeaturesEnabled:f
 
 /* ── EMAIL LINK SIGN-IN ── */
 if(auth.isSignInWithEmailLink(window.location.href)){
+  // FIX: Authorize this new session/tab immediately since they have verified ownership via magic link
+  sessionStorage.setItem('bloom_setup_active', 'true');
+  
   var emailForSignIn=localStorage.getItem('et_email_for_signin');
   if(!emailForSignIn){
     document.getElementById('email-confirm-modal').style.display='flex';
@@ -1306,20 +1309,33 @@ if(auth.isSignInWithEmailLink(window.location.href)){
   }
 }
 
+
 function confirmEmailAndSignIn(){
   var email=document.getElementById('email-confirm-input').value.trim();
   if(!email||!email.includes('@')){document.getElementById('email-confirm-error').textContent='Please enter a valid email.';return;}
   document.getElementById('email-confirm-modal').style.display='none';
+  
+  // FIX: Authorize registration/onboarding for cross-device confirmation entry points
+  sessionStorage.setItem('bloom_setup_active', 'true');
+  
   auth.signInWithEmailLink(email,window.location.href)
   .then(function(result){
     localStorage.setItem('et_email',result.user.email);
     localStorage.removeItem('et_email_for_signin');
     window.history.replaceState(null,'',window.location.pathname);
+    
+    // FIX: Process conditional action intents (like PIN resets) if completed on alternative browsers
+    var intent=localStorage.getItem('et_redirect_intent');
+    if(intent==='reset_pin'){
+      localStorage.removeItem('et_redirect_intent');
+      startSetupFlow();
+    }
   }).catch(function(e){
     document.getElementById('email-confirm-modal').style.display='flex';
     document.getElementById('email-confirm-error').textContent='Sign-in failed. Please request a new link.';
   });
 }
+
 
 /* ── LOAD APP CONFIG ── */
 function loadAppConfig(){
