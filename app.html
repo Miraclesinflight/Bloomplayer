@@ -1289,8 +1289,9 @@ var globalWatchedVideos = {};
 var appConfig={signinEnabled:false,inviteCodeEnabled:false,betaFeaturesEnabled:false,betaLimit:99,betaUsageCount:0};
 
 /* ── EMAIL LINK SIGN-IN ── */
+/* ── EMAIL LINK SIGN-IN ── */
 if(auth.isSignInWithEmailLink(window.location.href)){
-  // FIX: Authorize this new session/tab immediately since they have verified ownership via magic link
+  // FIX: Authorize this new session/tab immediately
   sessionStorage.setItem('bloom_setup_active', 'true');
   
   var emailForSignIn=localStorage.getItem('et_email_for_signin');
@@ -1310,6 +1311,31 @@ if(auth.isSignInWithEmailLink(window.location.href)){
     }).catch(function(e){console.error('Email link sign-in failed:',e);});
   }
 }
+
+function confirmEmailAndSignIn(){
+  var email=document.getElementById('email-confirm-input').value.trim();
+  if(!email||!email.includes('@')){document.getElementById('email-confirm-error').textContent='Please enter a valid email.';return;}
+  document.getElementById('email-confirm-modal').style.display='none';
+  
+  // FIX: Authorize registration/onboarding for cross-device confirmation
+  sessionStorage.setItem('bloom_setup_active', 'true');
+  
+  auth.signInWithEmailLink(email,window.location.href)
+  .then(function(result){
+    localStorage.setItem('et_email',result.user.email);
+    localStorage.removeItem('et_email_for_signin');
+    window.history.replaceState(null,'',window.location.pathname);
+    var intent=localStorage.getItem('et_redirect_intent');
+    if(intent==='reset_pin'){
+      localStorage.removeItem('et_redirect_intent');
+      startSetupFlow();
+    }
+  }).catch(function(e){
+    document.getElementById('email-confirm-modal').style.display='flex';
+    document.getElementById('email-confirm-error').textContent='Sign-in failed. Please request a new link.';
+  });
+}
+
 
 
 function confirmEmailAndSignIn(){
@@ -1687,13 +1713,19 @@ auth.onAuthStateChanged(function(user){
           loadUserProfile(user);
           startSetupFlow();
         });
-      } else {
+           } else {
         var data = doc.data();
         userTier = data.tier || 'general';
         localStorage.setItem('et_tier', userTier);
         
         if(data.pin){ parentPin = data.pin; localStorage.setItem('et_pin', data.pin); }
         if(data.betaInvited){ localStorage.setItem('et_beta_invited', 'true'); }
+        
+        // ADD THESE 3 LINES: Hydrate custom break configurations seamlessly
+        if(data.interVideoDelay !== undefined) { 
+          localStorage.setItem('et_video_delay', data.interVideoDelay); 
+        }
+
         
         // ── NEW: HYDRATE CUSTOM BREAK CONFIGURATIONS ──
         if(data.interVideoDelay !== undefined) { 
@@ -2861,12 +2893,12 @@ window.addEventListener('message', function(e) {
       
       // 4. Handle Natural Completion with 2-second Shield
             // 4. Handle Natural Completion with 2-second Shield
+           // Replace your existing data.info.playerState === 0 block with this:
       if (data.info.playerState === 0) {
-        // The "Shield": ensure the video played for at least 3 unique seconds
         if (uniqueSecondsWatched.size > 2) { 
             verifyVideoCompletion();
             
-            // NEW: Intercept natural completions to run the custom breakpoint interface
+            // NEW: Intercept natural completions for the countdown break
             var delaySetting = parseInt(localStorage.getItem('et_video_delay') || 0);
             var hasNextVideo = currentIndex < currentPlaylist.length - 1;
             
@@ -2884,6 +2916,30 @@ window.addEventListener('message', function(e) {
     // Silently handle non-JSON messages
   }
 });
+
+// ADD THIS ENTIRE NEW FUNCTION right below the window.addEventListener block:
+function startInterVideoCountdown(duration) {
+  if (countdownInterval) clearInterval(countdownInterval);
+  
+  var nextVideo = currentPlaylist[currentIndex + 1];
+  var nextTitle = nextVideo ? (nextVideo.title || "Next Video") : "Next Video";
+  
+  document.getElementById('countdown-title').textContent = nextTitle;
+  document.getElementById('countdown-clock').textContent = duration;
+  document.getElementById('countdown-overlay').style.display = 'flex';
+  
+  countdownInterval = setInterval(function() {
+    duration--;
+    document.getElementById('countdown-clock').textContent = duration;
+    
+    if (duration <= 0) {
+      clearInterval(countdownInterval);
+      document.getElementById('countdown-overlay').style.display = 'none';
+      playNextInList(); 
+    }
+  }, 1000);
+}
+
   
   function verifyVideoCompletion() {
   if (!currentUser || !activeTrackedVideoId || !currentVideoDuration) return;
@@ -2924,9 +2980,17 @@ function show(id){document.querySelectorAll('.screen').forEach(function(s){s.sty
   
 </script>
 <div id="player-screen">
-  
   <div id="player-container"></div>
   <div id="player-shield"></div>
+
+  <div id="countdown-overlay" style="display:none; position:absolute; inset:0; z-index:25; background:rgba(15,18,15,0.95); flex-direction:column; align-items:center; justify-content:center; font-family:'Nunito', sans-serif; color:white; padding:24px; text-align:center;">
+    <div style="font-size:14px; font-weight:800; text-transform:uppercase; letter-spacing:1.5px; color:#CC9544; margin-bottom:12px;">Up Next</div>
+    <div id="countdown-title" style="font-size:22px; font-weight:700; color:#E2E8E2; margin-bottom:32px; max-width:80%; line-height:1.4; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">Video Title</div>
+    <div style="width:100px; height:100px; border-radius:50%; border:3px solid rgba(204,149,68,0.2); display:flex; align-items:center; justify-content:center; position:relative;">
+      <div id="countdown-clock" style="font-size:38px; font-weight:800; color:#CC9544;">5</div>
+    </div>
+  </div>
+  
 
 <div id="ready-overlay" style="display:none; position:absolute; inset:0; z-index:20; background:rgba(0,0,0,0.8); flex-direction:column; align-items:center; justify-content:center;">
     <!-- NEW: INTER-VIDEO COUNTDOWN SCREEN OVERLAY -->
