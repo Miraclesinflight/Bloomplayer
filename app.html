@@ -1095,6 +1095,8 @@ html, body, #home, .screen {
 var setupBuffer = '';
 var setupNewPin = '';
 var setupStep = 1;
+  var countdownInterval = null; // Tracks running ticker thread handles
+
 /* ── UTILITIES ── */
 var AGE_OPTIONS = [
   { value: 'teenplus', label: 'Teen+ (16+)', rank: 5 },
@@ -1693,6 +1695,11 @@ auth.onAuthStateChanged(function(user){
         if(data.pin){ parentPin = data.pin; localStorage.setItem('et_pin', data.pin); }
         if(data.betaInvited){ localStorage.setItem('et_beta_invited', 'true'); }
         
+        // ── NEW: HYDRATE CUSTOM BREAK CONFIGURATIONS ──
+        if(data.interVideoDelay !== undefined) { 
+          localStorage.setItem('et_video_delay', data.interVideoDelay); 
+        }
+        
         updateBetaUI();
         
         // ── FIX: LOAD WATCH HISTORY DIRECTLY FROM THE MAIN DOC ARRAY ──
@@ -1736,8 +1743,6 @@ auth.onAuthStateChanged(function(user){
     finalizeAppLoad(); 
   }
 });
-
-
 
 
 /* ── LOAD USER PROFILE ── */
@@ -2013,6 +2018,56 @@ function saveUserTier(user,tier,callback){
   userTier=tier;localStorage.setItem('et_tier',tier);updateBetaUI();
   db.collection('users').doc(user.uid).set({name:user.displayName,email:user.email,tier:tier,createdAt:firebase.firestore.FieldValue.serverTimestamp()},{merge:true})
   .then(function(){if(callback)callback();}).catch(function(){if(callback)callback();});
+}
+function startInterVideoCountdown(duration) {
+  if (countdownInterval) clearInterval(countdownInterval);
+  
+  // Peek ahead to show what premium content frame is coming next
+  var nextVideo = currentPlaylist[currentIndex + 1];
+  var nextTitle = nextVideo ? (nextVideo.title || "Next Video") : "Next Video";
+  
+  document.getElementById('countdown-title').textContent = nextTitle;
+  document.getElementById('countdown-clock').textContent = duration;
+  document.getElementById('countdown-overlay').style.display = 'flex';
+  
+  countdownInterval = setInterval(function() {
+    duration--;
+    document.getElementById('countdown-clock').textContent = duration;
+    
+    if (duration <= 0) {
+      clearInterval(countdownInterval);
+      document.getElementById('countdown-overlay').style.display = 'none';
+      playNextInList(); // Advance to the next video asset naturally
+    }
+  }, 1000);
+}
+
+// Ensure the teardown function clears everything if the parent closes out early
+function closeVideo() {
+  isSessionStarted = false; 
+  console.log("Session Reset: Ready for next manual selection");
+
+  // NEW: Wipe existing structural intervals to prevent execution overlaps
+  if (countdownInterval) clearInterval(countdownInterval);
+  var cdOverlay = document.getElementById('countdown-overlay');
+  if (cdOverlay) cdOverlay.style.display = 'none';
+
+  var container = document.getElementById('player-container');
+  if(container) container.innerHTML = '';
+  
+  document.getElementById('player-screen').style.display = 'none';
+  document.getElementById('ready-overlay').style.display = 'none';
+  document.getElementById('player-shield').style.display = 'none';
+
+  renderVideos();
+  renderEducationalVideos();
+  if (typeof renderPersonalCategory === 'function') {
+      renderPersonalCategory(false);
+  }
+
+  currentPlaylist = [];
+  currentIndex = 0;
+  pinAction = null;
 }
 
 /* ── INACTIVITY ── 
@@ -2436,7 +2491,7 @@ function requestPlayerExit() {
   showPin('Parent Lock', 'Enter PIN to exit to library');
 }
 
-function closeVideo() {
+/*function closeVideo() {
   // 1. RESET FIRST: This ensures the state is 'false' before we go back to the library
   isSessionStarted = false; 
   console.log("Session Reset: Ready for next manual selection");
@@ -2445,7 +2500,7 @@ function closeVideo() {
   var container = document.getElementById('player-container');
   if(container) {
       container.innerHTML = '';
-  }
+  }*/
   
   // 3. Hide the player screen and the overlay (just in case)
   document.getElementById('player-screen').style.display = 'none';
@@ -2588,10 +2643,25 @@ function executeDeleteVideo() {
 function saveSettings(){
   var np=document.getElementById('new-pin').value.trim();
   if(!/^\d{4}$/.test(np)){showToast('Please enter exactly 4 digits.',true);return;}
-  parentPin=np;localStorage.setItem('et_pin',np);
-  if(currentUser){db.collection('users').doc(currentUser.uid).set({pin:np},{merge:true});}
-  showToast('PIN updated!');showHome();
+  
+  // NEW: Extract value bounds safely
+  var rawDelay = document.getElementById('new-delay').value;
+  var delayVal = Math.max(0, parseInt(rawDelay) || 0);
+  
+  parentPin=np;
+  localStorage.setItem('et_pin',np);
+  localStorage.setItem('et_video_delay', delayVal); // Save configuration local state
+  
+  if(currentUser){
+    db.collection('users').doc(currentUser.uid).set({
+      pin: np,
+      interVideoDelay: delayVal // Cloud sync settings changes
+    },{merge:true});
+  }
+  showToast('Settings updated!');
+  showHome();
 }
+
 
 function forgotPin(){
   if(!currentUser){showToast('Please sign in first.',true);return;}
@@ -2655,14 +2725,17 @@ function trackTabSwitch(tab){if(tab==='educational'&&etSession.tabUsed==='leisur
 function trackCurriculumSelected(grade,subject){etSession.gradeSelected=grade;etSession.subjectSelected=subject;gtag('event','et_curriculum_selected',{device_id:getDeviceId(),grade:grade,subject:subject});}
 
 /* ── BOOT ── */
-document.addEventListener('DOMContentLoaded',function(){
+document.addEventListener('DOMContentLoaded', function(){
   trackSessionStart();
-  // Filter the dropdown immediately from local storage if available
   var storedAge = localStorage.getItem('et_default_age');
-  if(storedAge) {
-    applyAgeFilter(storedAge);
-  }
+  if(storedAge) applyAgeFilter(storedAge);
+  
+  // NEW: Keep settings input interfaces completely aligned with device memory
+  var currentDelay = localStorage.getItem('et_video_delay') || '0';
+  var delayInput = document.getElementById('new-delay');
+  if(delayInput) delayInput.value = currentDelay;
 });
+
 auth.getRedirectResult().then(function(result){
   if(result&&result.user){document.getElementById('welcome-modal').style.display='none';}
   var intent=localStorage.getItem('et_redirect_intent');
@@ -2787,11 +2860,21 @@ window.addEventListener('message', function(e) {
       }
       
       // 4. Handle Natural Completion with 2-second Shield
+            // 4. Handle Natural Completion with 2-second Shield
       if (data.info.playerState === 0) {
         // The "Shield": ensure the video played for at least 3 unique seconds
         if (uniqueSecondsWatched.size > 2) { 
             verifyVideoCompletion();
-            playNextInList();
+            
+            // NEW: Intercept natural completions to run the custom breakpoint interface
+            var delaySetting = parseInt(localStorage.getItem('et_video_delay') || 0);
+            var hasNextVideo = currentIndex < currentPlaylist.length - 1;
+            
+            if (hasNextVideo && delaySetting > 0) {
+                startInterVideoCountdown(delaySetting);
+            } else {
+                playNextInList();
+            }
         } else {
             console.log("Ignored fake 'Ended' signal during initialization.");
         }
@@ -2846,7 +2929,17 @@ function show(id){document.querySelectorAll('.screen').forEach(function(s){s.sty
   <div id="player-shield"></div>
 
 <div id="ready-overlay" style="display:none; position:absolute; inset:0; z-index:20; background:rgba(0,0,0,0.8); flex-direction:column; align-items:center; justify-content:center;">
-    
+    <!-- NEW: INTER-VIDEO COUNTDOWN SCREEN OVERLAY -->
+<div id="countdown-overlay" style="display:none; position:absolute; inset:0; z-index:25; background:rgba(15,18,15,0.95); flex-direction:column; align-items:center; justify-content:center; font-family:'Nunito', sans-serif; color:white; padding:24px; text-align:center;">
+  <div style="font-size:14px; font-weight:800; text-transform:uppercase; letter-spacing:1.5px; color:#CC9544; margin-bottom:12px;">Up Next</div>
+  <div id="countdown-title" style="font-size:22px; font-weight:700; color:#E2E8E2; margin-bottom:32px; max-width:80%; line-height:1.4; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">Video Title</div>
+  
+  <!-- Circular ticking countdown ring asset frame -->
+  <div style="width:100px; height:100px; border-radius:50%; border:3px solid rgba(204,149,68,0.2); display:flex; align-items:center; justify-content:center; position:relative;">
+    <div id="countdown-clock" style="font-size:38px; font-weight:800; color:#CC9544;">5</div>
+  </div>
+</div>
+
     <button class="btn-start-video" onclick="startPlaybackSession()">
       Tap to start video
     </button>
