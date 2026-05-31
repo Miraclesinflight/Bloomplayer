@@ -46,9 +46,7 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',-apple-system,s
 .setup-logo{width:64px;height:64px;border-radius:18px;margin:0 auto 16px;}
 .setup-title{font-size:22px;font-weight:700;color:white;letter-spacing:-0.3px;margin-bottom:8px;}
 .setup-sub{font-size:14px;color:#94A3B8;line-height:1.6;max-width:320px;margin:0 auto;}
-/*.setup-done{margin-top:32px;width:100%;max-width:320px;padding:16px;border-radius:12px;background:var(--green);color:white;border:none;font-size:16px;font-weight:700;font-family:inherit;cursor:pointer;}*/
 
-/* ── PIN MODAL (setup) ── */
 /* ── PIN MODAL (setup) ── */
 #setup-pin-modal{
   display:none;position:fixed;inset:0;background:var(--bg);
@@ -75,12 +73,12 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',-apple-system,s
   width: 14px;
   height: 14px;
   border-radius: 50%;
-  background: var(--border); /* Uses Sage border color for empty dots */
+  background: var(--border);
   transition: all 0.12s ease;
 }
 
 .dot.filled {
-  background: var(--red) !important; /* Golden Ochre for filled dots */
+  background: var(--red) !important;
   transform: scale(1.1);
 }
 .pin-error{font-size:12.5px;color:#F87171;height:16px;}
@@ -88,9 +86,9 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',-apple-system,s
 .pin-btn {
   height: 72px;
   border-radius: var(--radius);
-  background: var(--card2); /* Matches your Sage theme */
+  background: var(--card2);
   border: 1px solid var(--border);
-  color: var(--text);       /* Changes to white in dark mode automatically */
+  color: var(--text);
   font-size: 22px;
   font-weight: 600;
   font-family: inherit;
@@ -99,7 +97,7 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',-apple-system,s
 }
 
 .pin-btn:active {
-  background: var(--red);   /* Flashes Golden Ochre when tapped */
+  background: var(--red);
   color: white;
   border-color: var(--red);
 }
@@ -169,17 +167,17 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',-apple-system,s
   justify-content: space-between;
   padding: 15px 16px;
   cursor: pointer;
-  border-top: 1px solid var(--border); /* Keeps it aligned with the list */
+  border-top: 1px solid var(--border);
 }
 
 .danger-row:active {
-  background: #FFF1F2; /* A very light red tint for the warning feel */
+  background: #FFF1F2;
 }
 
 .danger-name {
   font-size: 14px;
   font-weight: 600;
-  color: #BE123C; /* A deeper "Danger" red */
+  color: #BE123C;
 }
 
 .danger-desc {
@@ -229,7 +227,6 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',-apple-system,s
 @media(min-width:700px){
   .page-layout { flex-direction: row; align-items: stretch; flex-wrap: nowrap; }
   
-  /* Matches the right-side vertical start */
   .left-col { 
     flex: 0 0 360px; 
     width: 360px; 
@@ -238,7 +235,6 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',-apple-system,s
     padding-top: 16px; 
   }
   
-  /* Cleaned up the redundant padding-top */
   .right-col { 
     flex: 1; 
     min-width: 0; 
@@ -249,7 +245,7 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',-apple-system,s
 .page-layout .content { 
   max-width: none; 
   margin: 0; 
-  padding: 0 16px; /* Change the first '16px' to '0' */
+  padding: 0 16px; 
 }
 
 .right-col .section-label{margin-top:0;}
@@ -261,8 +257,6 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',-apple-system,s
 .left-col .settings-card .setting-row:last-child{flex:1;}
 .full-width{width:100%;padding:16px 16px 16px;border-top:1px solid var(--border);margin-top:4px;}
 @media(min-width:700px){.full-width{padding:16px 20px 20px;}}
-
-
 
 
 /* ── DASHBOARD ── */
@@ -289,7 +283,6 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',-apple-system,s
 <body>
 <div id="bloom-auth-curtain" style="position: fixed; inset: 0; background: var(--bg, #F7F6F2); z-index: 999999; transition: opacity 0.4s ease;"></div>
 
-<!-- ── SETUP SCREEN (first time only) ── -->
 <div id="setup-screen" style="background: var(--bg); color: var(--text); height: 100vh; display: none; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 24px; opacity: 1;">
   
   <img src="icon.png" class="setup-logo" alt="BloomPlayer" 
@@ -306,7 +299,6 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',-apple-system,s
 </div>
 
 
-<!-- ── SETUP PIN MODAL ── -->
 <div id="setup-pin-modal" style="background: var(--card); color: var(--text); border-radius: var(--radius-lg); padding: 20px;">
   
   <div class="pin-icon">
@@ -348,7 +340,6 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',-apple-system,s
 </div>
 
 
-<!-- ── SETUP COMPLETE ── -->
 <div id="setup-complete" style="display:none; position:fixed; inset:0; background:var(--bg); z-index:200; flex-direction:column; align-items:center; justify-content:center; padding:32px; text-align:center; gap:16px;">
   <div style="font-size:52px;">&#127881;</div>
   
@@ -366,7 +357,6 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',-apple-system,s
 </div>
 
 
-<!-- ── CHANGE PIN MODAL ── -->
 <div id="change-pin-modal">
   <div class="pin-icon"><svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg></div>
   <div class="modal-pin-step" id="change-pin-step">Step 1 of 2</div>
@@ -395,7 +385,6 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',-apple-system,s
   </div>
 </div>
 
-<!-- ── PROFILE MODAL ── -->
 <div class="modal-overlay" id="profile-modal">
   <div class="modal-sheet">
     <div class="modal-handle"></div>
@@ -424,7 +413,6 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',-apple-system,s
   </div>
 </div>
 
-<!-- ── PARENT CONTENT ── -->
 <div id="parent-content">
 
   <nav class="top-nav">
@@ -445,7 +433,6 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',-apple-system,s
 
   <div class="page-layout">
 
-    <!-- LEFT: Settings -->
     <div class="left-col">
       <div class="content">
 
@@ -482,6 +469,15 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',-apple-system,s
               </select>
             </div>
           </div>
+          <div class="setting-row" style="cursor:default; border-bottom: none;">
+            <div class="setting-left">
+              <div class="setting-name">Inter-Video Break</div>
+              <div class="setting-desc">Countdown between consecutive videos (seconds)</div>
+            </div>
+            <div class="setting-right">
+              <input type="number" id="inter-video-delay" value="0" min="0" max="300" onchange="saveVideoDelay()" style="padding:6px 10px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:var(--text);font-size:13px;font-family:inherit;outline:none;cursor:text;width:70px;text-align:center;"/>
+            </div>
+          </div>
         </div>
 
                 <div id="children-section" style="display:none;">
@@ -491,20 +487,14 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',-apple-system,s
         </div>
 
       </div>
-    </div><!-- end left-col -->
-
-    <!-- RIGHT: Dashboard -->
-    <div class="right-col">
+    </div><div class="right-col">
       <div class="section-label">Watch Dashboard</div>
       <div class="dash-card" id="dashboard-card">
         <div class="dash-loading" id="dash-loading">Loading...</div>
       </div>
     </div>
 
-  </div><!-- end page-layout -->
-
-  <!-- FULL WIDTH: Account + Back -->
-  <div class="full-width">
+  </div><div class="full-width">
     <div class="section-label">Account</div>
     <div class="settings-card">
       <div class="account-row">
@@ -645,7 +635,6 @@ auth.onAuthStateChanged(function(user){
     loadParentMode(user);
   }
   
-  // NEW: HIDE THE CURTAIN ONCE FIREBASE IS READY
   var curtain = document.getElementById('bloom-auth-curtain');
   if (curtain) {
     curtain.style.transition = 'opacity 0.4s ease';
@@ -660,6 +649,12 @@ function loadParentMode(user){
     if(doc.exists){
       var data=doc.data();
       if(data.pin){parentPin=data.pin;localStorage.setItem('et_pin',data.pin);}
+      
+      // Load custom delay from server on launch
+      if(data.interVideoDelay !== undefined) {
+        localStorage.setItem('et_video_delay', data.interVideoDelay);
+      }
+      
       userTier=data.tier||'general';
       localStorage.setItem('et_tier',userTier);
       renderParentMode();
@@ -675,15 +670,43 @@ function renderParentMode(){
   else{av.textContent=user.displayName?user.displayName.substring(0,2).toUpperCase():'U';}
   document.getElementById('parent-name').textContent=user.displayName||'Parent';
   document.getElementById('parent-email').textContent=user.email||'';
- var defaultAge=localStorage.getItem('et_default_age')||'primary';
-document.getElementById('default-age-select').value=defaultAge;
+  
+  var defaultAge=localStorage.getItem('et_default_age')||'primary';
+  document.getElementById('default-age-select').value=defaultAge;
+  
+  // Set the visual input for the timer delay
+  var defaultDelay = localStorage.getItem('et_video_delay') || '0';
+  var delayInput = document.getElementById('inter-video-delay');
+  if(delayInput) delayInput.value = defaultDelay;
+  
   var isGamma=userTier==='gamma';
   document.getElementById('children-section').style.display=isGamma?'block':'none';
   if(isGamma)loadProfiles();
   loadDashboard();
   initExportDates();
+}
 
+/* ── SETTINGS UPDATES ── */
+function saveDefaultAge(){
+  var val=document.getElementById('default-age-select').value;
+  localStorage.setItem('et_default_age',val);
+  if(currentUser){
+    db.collection('users').doc(currentUser.uid).set({defaultAge:val},{merge:true}).catch(function(){});
+  }
+}
 
+function saveVideoDelay(){
+  var delayInput = document.getElementById('inter-video-delay');
+  if(!delayInput) return;
+  var val = Math.max(0, parseInt(delayInput.value) || 0);
+  delayInput.value = val; // visually sanitize
+  localStorage.setItem('et_video_delay', val);
+  
+  if(currentUser){
+    db.collection('users').doc(currentUser.uid).set({interVideoDelay: val}, {merge: true})
+    .then(function() { showToast('Timer settings saved.'); })
+    .catch(function(){});
+  }
 }
 
 /* ── SETUP PIN ── */
@@ -874,13 +897,1223 @@ function deleteProfile(){
   });
 }
 
-/* ── AGE SELECTOR ── */
+/* ── CHANGE PIN ── */
+function showChangePinModal(){
+  changePinBuffer='';changePinNewPin='';changePinStep=1;
+  updateChangePinDots();
+  document.getElementById('change-pin-step').textContent='Step 1 of 2';
+  document.getElementById('change-pin-title').textContent='Enter new PIN';
+  document.getElementById('change-pin-sub').textContent='Choose a 4-digit PIN';
+  document.getElementById('change-pin-error').textContent='';
+  document.getElementById('change-pin-modal').style.display='flex';
+}
+
+function closeChangePinModal(){
+  document.getElementById('change-pin-modal').style.display='none';
+  changePinBuffer='';changePinNewPin='';changePinStep=1;
+}
+
+function changePinPress(d){
+  if(changePinBuffer.length>=4)return;
+  changePinBuffer+=d;
+  updateChangePinDots();
+  if(changePinBuffer.length===4)setTimeout(processChangePinStep,120);
+}
+
+function changePinClear(){
+  changePinBuffer=changePinBuffer.slice(0,-1);
+  updateChangePinDots();
+}
+
+function updateChangePinDots(){
+  for(var i=0;i<4;i++){
+    document.getElementById('cd'+i).className='dot'+(i<changePinBuffer.length?' filled':'');
+  }
+}
+
+function processChangePinStep(){
+  if(changePinStep===1){
+    changePinNewPin=changePinBuffer;
+    changePinBuffer='';changePinStep=2;
+    updateChangePinDots();
+    document.getElementById('change-pin-step').textContent='Step 2 of 2';
+    document.getElementById('change-pin-title').textContent='Confirm new PIN';
+    document.getElementById('change-pin-sub').textContent='Enter the same PIN again';
+    document.getElementById('change-pin-error').textContent='';
+  } else {
+    if(changePinBuffer===changePinNewPin){
+      parentPin=changePinNewPin;
+      localStorage.setItem('et_pin',parentPin);
+      if(currentUser){
+        db.collection('users').doc(currentUser.uid).set({pin:parentPin},{merge:true}).catch(function(){});
+      }
+      closeChangePinModal();
+      showToast('PIN updated successfully.');
+    } else {
+      document.getElementById('change-pin-error').textContent='PINs don\'t match — try again';
+      changePinBuffer='';changePinStep=1;changePinNewPin='';
+      updateChangePinDots();
+      document.getElementById('change-pin-step').textContent='Step 1 of 2';
+      document.getElementById('change-pin-title').textContent='Enter new PIN';
+      document.getElementById('change-pin-sub').textContent='Choose a 4-digit PIN';
+    }
+  }
+}
+  function initExportDates(){
+  var now=new Date();
+  var today=now.toISOString().substring(0,10);
+  var ago30=new Date(now.getTime()-30*24*60*60*1000).toISOString().substring(0,10);
+  var created=currentUser.metadata.creationTime
+    ?new Date(currentUser.metadata.creationTime).toISOString().substring(0,10)
+    :'2024-01-01';
+  var fromEl=document.getElementById('export-from');
+  var toEl=document.getElementById('export-to');
+  if(!fromEl||!toEl)return;
+  fromEl.value=ago30;
+  fromEl.min=created;
+  fromEl.max=today;
+  toEl.value=today;
+  toEl.min=created;
+  toEl.max=today;
+}
+
+function exportSessions(){
+  var btn=event.target;
+  var fromVal=document.getElementById('export-from').value;
+  var toVal=document.getElementById('export-to').value;
+  if(!fromVal||!toVal){showToast('Please select a date range.',true);return;}
+  var fromDate=new Date(fromVal);
+  var toDate=new Date(toVal);
+  toDate.setHours(23,59,59,999);
+  if(fromDate>toDate){showToast('Start date must be before end date.',true);return;}
+  btn.textContent='Exporting...';btn.disabled=true;
+  db.collection('users').doc(currentUser.uid).collection('sessions')
+  .orderBy('watchedAt','desc').get()
+  .then(function(snap){
+    var rows=[['Date','Video Title','Video ID','Watch Time (mins)','Completion %','Source']];
+    snap.forEach(function(doc){
+      var d=doc.data();
+      var t=d.watchedAt?d.watchedAt.toDate():null;
+      if(!t||t<fromDate||t>toDate)return;
+      var dateStr=t.toISOString().substring(0,10);
+      var title=(d.title||d.videoId||'').replace(/"/g,"'");
+      var mins=d.watchTime?Math.round(d.watchTime/60*10)/10:0;
+      var completion=d.completionRate!=null?d.completionRate+'%':'—';
+      var source=d.source||'—';
+      rows.push([dateStr,title,d.videoId||'',mins,completion,source]);
+    });
+    if(rows.length<=1){showToast('No sessions found for this date range.',true);btn.textContent='Export CSV';btn.disabled=false;return;}
+    var csv=rows.map(function(r){return r.map(function(c){return'"'+c+'"';}).join(',');}).join('\n');
+    var blob=new Blob([csv],{type:'text/csv'});
+    var url=URL.createObjectURL(blob);
+    var a=document.createElement('a');
+    a.href=url;a.download='bloomplayer-watchlog-'+fromVal+'-to-'+toVal+'.csv';
+    document.body.appendChild(a);a.click();document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    showToast('Exported '+(rows.length-1)+' sessions.');
+    btn.textContent='Export CSV';btn.disabled=false;
+  }).catch(function(e){
+    console.error('exportSessions:',e);
+    showToast('Export failed. Please try again.',true);
+    btn.textContent='Export CSV';btn.disabled=false;
+  });
+}
+
+
+/* ── SIGN OUT ── */
+function signOut() {
+  showConfirm(
+    'Sign out of BloomPlayer?',
+    'You\'ll need to sign in again next visit.',
+    'Sign out',
+    function() {
+      auth.signOut().then(function() {
+        // Fully clear the device's local memory so the next user starts fresh
+        localStorage.removeItem('et_tier');
+        localStorage.removeItem('et_email');
+        localStorage.removeItem('et_pin');
+        localStorage.removeItem('et_active_profile');
+        localStorage.removeItem('et_profile_age');
+        localStorage.removeItem('et_hide_age');
+        localStorage.removeItem('et_device_id');
+        
+        window.location.href = 'index.html';
+      });
+    }
+  );
+}
+
+
+/* ── DELETE ACCOUNT ── */
+function deleteAccount() {
+  showConfirm(
+    'Delete your account?',
+    'This permanently deletes your account, PIN, video list and all data. This cannot be undone.',
+    'Delete everything',
+    function() {
+      showConfirm(
+        'Are you absolutely sure?',
+        'All your videos, PIN, and account data will be permanently deleted.',
+        'Yes, delete my account',
+        function() {
+          // Always grab the freshest auth object
+          var user = auth.currentUser;
+          if (!user) return;
+
+          // 1. Delete Subcollections first
+          Promise.all([
+            db.collection('users').doc(user.uid).collection('profiles').get(),
+            db.collection('users').doc(user.uid).collection('videos').get()
+          ]).then(function(results) {
+            var batch = db.batch();
+            results.forEach(function(snap) {
+              snap.forEach(function(doc) { batch.delete(doc.ref); });
+            });
+            return batch.commit();
+            
+          }).then(function() {
+            return db.collection('users').doc(user.uid).delete();
+          }).then(function() {
+            return user.delete();
+          }).then(function() {
+            localStorage.removeItem('et_pin');
+            localStorage.removeItem('et_tier');
+            localStorage.removeItem('et_email');
+            localStorage.removeItem('et_active_profile');
+            localStorage.removeItem('et_profile_age');
+            localStorage.removeItem('et_hide_age');
+            localStorage.removeItem('et_device_id');
+            window.location.href = 'index.html';
+            
+          }).catch(function(e) {
+            console.error('deleteAccount error:', e);
+            if (e.code === 'auth/requires-recent-login') {
+              alert('Security Check: Firebase requires a fresh login to delete your account. We will sign you out now—please log back in and try again.');
+              auth.signOut().then(function() {
+                window.location.href = 'index.html';
+              });
+            } else {
+              alert('Could not delete account: ' + e.message);
+            }
+          });
+        }
+      );
+    }
+  );
+}
+
+
+/* ── BACK ── */
+function goBack(){
+  window.location.href='app.html';
+}
+
+/* ── DASHBOARD ── */
+var dashTab='month';
+var dashData={month:{watchTime:0,videos:[]},year:{watchTime:0,videos:[]},all:{watchTime:0,videos:[]}};
+function loadDashboard(){
+  db.collection('users').doc(currentUser.uid).get()
+  .then(function(doc){
+    var stats=(doc.exists&&doc.data().stats)?doc.data().stats:{};
+    var now=new Date();
+    var month=now.toISOString().substring(0,7);
+    var year=String(now.getFullYear());
+    dashData={
+      month:{
+        watchTime:(stats[month]&&stats[month].watchTime)||0,
+        videos:(stats[month]&&stats[month].videos)||[]
+      },
+      year:{
+        watchTime:(stats[year]&&stats[year].watchTime)||0,
+        videos:(stats[year]&&stats[year].videos)||[]
+      },
+      all:{
+        watchTime:(stats.all&&stats.all.watchTime)||0,
+        videos:(stats.all&&stats.all.videos)||[]
+      }
+    };
+    renderDashboard();
+  }).catch(function(e){
+    console.error('loadDashboard:',e);
+    document.getElementById('dash-loading').textContent='Could not load stats.';
+  });
+}
+
+function getMilestone(totalVideos){
+  if(totalVideos>=100)return{label:'Incredible progress',title:'You\'re doing amazing'};
+  if(totalVideos>=50)return{label:'Consistent and calm',title:'50+ videos watched'};
+  if(totalVideos>=10)return{label:'Building great habits',title:'Keep it going'};
+  return{label:'Just getting started',title:'Every session counts'};
+}
+
+function formatTime(seconds){
+  if(!seconds||seconds<60)return seconds+'s';
+  var h=Math.floor(seconds/3600);
+  var m=Math.floor((seconds%3600)/60);
+  if(h>0)return h+'h '+(m>0?m+'m':'');
+  return m+'m';
+}
+
+function renderDashboard(){
+  var card=document.getElementById('dashboard-card');
+  var milestone=getMilestone(dashData.all.videos.length);
+  var d=dashData[dashTab];
+  var isEmpty=dashData.all.watchTime===0&&dashData.all.videos.length===0;
+
+  var html='';
+
+  // Milestone header
+  html+='<div class="dash-milestone">'
+    +'<div class="dash-milestone-icon">'
+    +'<svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>'
+    +'</div>'
+    +'<div>'
+    +'<div class="dash-milestone-label">'+milestone.label+'</div>'
+    +'<div class="dash-milestone-title">'+milestone.title+'</div>'
+    +'</div>'
+    +'</div>';
+
+  // Tabs
+  html+='<div class="dash-tabs">'
+    +'<button class="dash-tab'+(dashTab==='month'?' active':'')+'" onclick="switchDashTab(\'month\')">This Month</button>'
+    +'<button class="dash-tab'+(dashTab==='year'?' active':'')+'" onclick="switchDashTab(\'year\')">This Year</button>'
+    +'<button class="dash-tab'+(dashTab==='all'?' active':'')+'" onclick="switchDashTab(\'all\')">All Time</button>'
+    +'</div>';
+
+  if(isEmpty){
+    html+='<div class="dash-empty">No sessions yet.<br/>Lock a video and watch time will appear here.</div>';
+  } else {
+    html+='<div class="dash-stats">'
+      +'<div class="dash-stat">'
+  +'<div class="dash-stat-value" id="dash-wt">'+formatTime(d.watchTime)+'</div>'
++'<div class="dash-stat-label">Watch Time</div>'
++'</div>'
++'<div class="dash-stat">'
++'<div class="dash-stat-value" id="dash-vc">'+d.videos.length+'</div>'
++'<div class="dash-stat-label">Unique Videos</div>'
+      +'</div>'
+      +'</div>';
+  }
+
+  card.innerHTML=html;
+}
+
+function switchDashTab(tab){
+  dashTab=tab;
+  renderDashboard();
+}
+
+</script>
+      <div id="custom-confirm-overlay" style="display: none; position: fixed; inset: 0; background: rgba(45, 41, 34, 0.85); z-index: 99998; backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px);"></div>
+
+<div id="custom-confirm-modal" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: var(--card, #FFFFFF); border-radius: 16px; width: 90%; max-width: 360px; padding: 24px; z-index: 99999; box-shadow: 0 10px 40px rgba(0,0,0,0.15);">
+  <h3 id="confirm-title" style="margin: 0 0 8px 0; font-size: 20px; font-weight: 700; color: var(--text, #1A1A1A);">Sign out?</h3>
+  <p id="confirm-desc" style="margin: 0 0 24px 0; font-size: 15px; color: var(--text-2, #666666); line-height: 1.5;">You'll need to sign in again.</p>
+  <div style="display: flex; gap: 12px; justify-content: flex-end;">
+    <button id="confirm-cancel" onclick="closeConfirm()" style="padding: 10px 20px; border-radius: 8px; background: transparent; border: 1px solid #D1D9D1; color: var(--text, #1A1A1A); font-size: 15px; font-weight: 600; cursor: pointer;">Cancel</button>
+    <button id="confirm-action" style="padding: 10px 20px; border-radius: 8px; background: #D35F5F; border: none; color: #FFFFFF; font-size: 15px; font-weight: 700; cursor: pointer;">Sign out</button>
+  </div>
+</div>
+
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="color-scheme" content="light">
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+<title>BloomPlayer — Parent Mode</title>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="default"/>
+<link rel="icon" type="image/png" href="icon.png"/>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;1,400&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+
+:root {
+  /* ── MAIN THEME: Misty Sage & Ink Black ── */
+  --bg: #C2CDC2;           
+  --card: #D6DDD6;         
+  --card2: #E2E8E2;        
+  --border: #A9B5A9;       
+  --text: #000000;         
+  --text-2: #1A1A1A;       
+  --text-3: #4B554B;       
+  --accent: #7A9A88;
+  --red: #CC9544;          
+  --red-dim: #F5EAE6;
+  --green: #7A9A88;        
+  --green-dim: #D1D9D1;
+  --green-text: #000000;
+  --radius: 14px;
+  --shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.08);
+}
+
+body{background:var(--bg);color:var(--text);font-family:'Nunito',-apple-system,sans-serif;min-height:100vh;padding-bottom:40px;}
+
+/* ── SETUP SCREEN ── */
+#setup-screen{
+  display:none;position:fixed;inset:0;background:#0F172A;
+  z-index:50;flex-direction:column;align-items:center;justify-content:center;
+  padding:32px 24px;text-align:center;
+}
+.setup-logo{width:64px;height:64px;border-radius:18px;margin:0 auto 16px;}
+.setup-title{font-size:22px;font-weight:700;color:white;letter-spacing:-0.3px;margin-bottom:8px;}
+.setup-sub{font-size:14px;color:#94A3B8;line-height:1.6;max-width:320px;margin:0 auto;}
+
+/* ── PIN MODAL (setup) ── */
+#setup-pin-modal{
+  display:none;position:fixed;inset:0;background:var(--bg);
+  z-index:200;flex-direction:column;align-items:center;justify-content:center;gap:18px;
+}
+.setup-pin-step{font-size:11px;color:var(--accent);font-weight:600;text-transform:uppercase;letter-spacing:0.6px;}
+.setup-pin-title{font-size:18px;font-weight:600;color:var(--text);text-align:center;}
+.setup-pin-sub{font-size:13px;color:var(--text-3);text-align:center;padding:0 32px;line-height:1.6;margin-top:-8px;}
+
+/* ── CHANGE PIN MODAL ── */
+#change-pin-modal{
+  display:none;position:fixed;inset:0;background:var(--bg);
+  z-index:200;flex-direction:column;align-items:center;justify-content:center;gap:18px;
+}
+.modal-pin-title{font-size:16px;font-weight:600;color:var(--text);text-align:center;}
+.modal-pin-sub{font-size:13px;color:var(--text-3);margin-top:-8px;text-align:center;}
+.modal-pin-step{font-size:11px;color:var(--accent);font-weight:600;text-transform:uppercase;letter-spacing:0.6px;}
+
+/* ── PIN SHARED ── */
+.pin-icon{width:52px;height:52px;background:var(--card2);border-radius:14px;display:flex;align-items:center;justify-content:center;margin-bottom:4px;}
+.pin-icon svg{width:22px;height:22px;fill:var(--red);}
+.pin-dots{display:flex;gap:12px;margin:4px 0;}
+.dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--border);
+  transition: all 0.12s ease;
+}
+
+.dot.filled {
+  background: var(--red) !important;
+  transform: scale(1.1);
+}
+.pin-error{font-size:12.5px;color:#F87171;height:16px;}
+.pin-grid{display:grid;grid-template-columns:repeat(3,72px);gap:10px;}
+.pin-btn {
+  height: 72px;
+  border-radius: var(--radius);
+  background: var(--card2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-size: 22px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.pin-btn:active {
+  background: var(--red);
+  color: white;
+  border-color: var(--red);
+}
+
+/* ── MAIN CONTENT ── */
+#parent-content{display:none;flex-direction:column;min-height:100vh;}
+
+/* ── TOP NAV ── */
+.top-nav{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--border);background:var(--card);position:sticky;top:0;z-index:10;box-shadow:0 1px 0 var(--border);}
+.nav-left{display:flex;align-items:center;gap:10px;}
+.nav-left img{width:40px;height:40px;border-radius:12px;}
+.nav-title{font-size:17px;font-weight:700;letter-spacing:-0.3px;color:var(--text);}
+.nav-sub{font-size:11px;color:var(--text-3);margin-top:1px;font-family:'Lora',serif;font-style:italic;}
+
+/* ── PARENT BADGE ── */
+.parent-badge{background:var(--green-dim);border-bottom:1px solid #A7F3D0;padding:10px 20px;display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600;color:var(--green-text);}
+
+/* ── CONTENT ── */
+.content{padding:16px;display:flex;flex-direction:column;gap:12px;max-width:560px;margin:0 auto;width:100%;}
+.section-label{font-size:11px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:0.8px;padding:4px 0 6px;min-height:28px;display:flex;align-items:center;}
+
+/* ── SETTINGS CARDS ── */
+.settings-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);}
+.setting-row{display:flex;align-items:center;justify-content:space-between;padding:15px 16px;border-bottom:1px solid var(--border);cursor:pointer;}
+.setting-row:last-child{border-bottom:none;}
+.setting-row:active{background:var(--card2);}
+.setting-left{flex:1;}
+.setting-name{font-size:14px;font-weight:600;color:var(--text);}
+.setting-desc{font-size:12px;color:var(--text-3);margin-top:2px;line-height:1.4;}
+.setting-right{display:flex;align-items:center;gap:8px;flex-shrink:0;margin-left:12px;}
+.chevron{color:var(--text-3);font-size:18px;}
+
+.btn-exit-parent {
+  padding: 8px 16px;
+  border-radius: 10px;
+  background: var(--red);
+  color: white;
+  border: none;
+  font-size: 13px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(204, 149, 68, 0.2);
+}
+
+.btn-exit-parent:active {
+  transform: scale(0.96);
+  opacity: 0.9;
+}
+
+/* ── PIN DOTS DISPLAY ── */
+.pin-display{display:flex;gap:6px;align-items:center;}
+.pin-display-dot{width:8px;height:8px;border-radius:50%;background:var(--border);}
+.pin-display-dot.filled{background:var(--text-3);}
+
+/* ── ACCOUNT ── */
+.account-row{display:flex;align-items:center;gap:12px;padding:15px 16px;border-bottom:1px solid var(--border);}
+.account-avatar{width:36px;height:36px;border-radius:50%;background:var(--green-dim);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--green-text);flex-shrink:0;overflow:hidden;}
+.account-avatar img{width:100%;height:100%;object-fit:cover;}
+.account-name{font-size:14px;font-weight:600;color:var(--text);}
+.account-email{font-size:12px;color:var(--text-3);margin-top:1px;}
+
+/* ── DANGER ── */
+.danger-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px 16px;
+  cursor: pointer;
+  border-top: 1px solid var(--border);
+}
+
+.danger-row:active {
+  background: #FFF1F2;
+}
+
+.danger-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #BE123C;
+}
+
+.danger-desc {
+  font-size: 12px;
+  color: var(--text-3);
+  margin-top: 2px;
+}
+
+.version{text-align:center;font-size:11px;color:var(--text-3);padding:8px 0;}
+
+/* ── PROFILES ── */
+.profile-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);margin-bottom:8px;}
+.profile-row{display:flex;align-items:center;gap:12px;padding:14px 16px;}
+.profile-avatar{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:white;flex-shrink:0;letter-spacing:-0.5px;}
+.profile-info{flex:1;min-width:0;}
+.profile-nickname{font-size:14px;font-weight:600;color:var(--text);}
+.profile-age{font-size:12px;color:var(--text-3);margin-top:2px;}
+.profile-active-badge{font-size:10px;font-weight:600;color:var(--green-text);background:var(--green-dim);padding:2px 8px;border-radius:20px;border:1px solid #A7F3D0;display:inline-block;margin-top:4px;}
+.profile-actions{display:flex;gap:8px;flex-shrink:0;}
+.btn-use{padding:7px 12px;border-radius:8px;background:var(--green);color:white;border:none;font-size:12px;font-weight:600;font-family:inherit;cursor:pointer;white-space:nowrap;}
+.btn-edit{padding:7px 12px;border-radius:8px;background:var(--card2);color:var(--text-2);border:1px solid var(--border);font-size:12px;font-weight:600;font-family:inherit;cursor:pointer;}
+.btn-add-profile{width:100%;padding:14px;border-radius:var(--radius);background:var(--card);color:var(--green);border:1.5px dashed var(--green);font-size:14px;font-weight:600;font-family:inherit;cursor:pointer;box-shadow:var(--shadow);}
+.btn-add-profile:active{background:var(--green-dim);}
+.no-profiles{text-align:center;padding:24px;color:var(--text-3);font-size:13px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);}
+
+/* ── MODALS ── */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:300;align-items:flex-end;justify-content:center;}
+.modal-sheet{background:var(--card);border-radius:20px 20px 0 0;padding:28px 20px 40px;width:100%;max-width:560px;}
+.modal-handle{width:36px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 20px;}
+.modal-title{font-size:18px;font-weight:700;color:var(--text);margin-bottom:4px;}
+.modal-sub{font-size:13px;color:var(--text-3);margin-bottom:24px;line-height:1.5;}
+.modal-label{font-size:11px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:0.7px;display:block;margin-bottom:6px;}
+.modal-input{width:100%;padding:13px 14px;border-radius:10px;border:1.5px solid var(--border);background:var(--bg);color:var(--text);font-size:15px;font-family:inherit;outline:none;margin-bottom:16px;}
+.modal-input:focus{border-color:var(--green);}
+.modal-select{width:100%;padding:13px 14px;border-radius:10px;border:1.5px solid var(--border);background:var(--bg);color:var(--text);font-size:15px;font-family:inherit;outline:none;margin-bottom:24px;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24'%3E%3Cpath fill='%2364748B' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;cursor:pointer;}
+.modal-select:focus{border-color:var(--green);}
+.modal-btns{display:flex;gap:10px;}
+.btn-modal-primary{flex:1;padding:14px;border-radius:10px;background:var(--green);color:white;border:none;font-size:15px;font-weight:600;font-family:inherit;cursor:pointer;}
+.btn-modal-cancel{padding:14px 20px;border-radius:10px;background:var(--card2);color:var(--text-2);border:1px solid var(--border);font-size:15px;font-family:inherit;cursor:pointer;}
+.btn-modal-delete{width:100%;padding:13px;border-radius:10px;background:var(--red-dim);color:var(--red);border:1px solid #FECACA;font-size:14px;font-weight:600;font-family:inherit;cursor:pointer;margin-top:12px;}
+.avatar-preview-wrap{display:flex;align-items:center;gap:12px;margin-bottom:16px;}
+.avatar-preview{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:700;color:white;flex-shrink:0;letter-spacing:-0.5px;}
+.avatar-preview-label{font-size:13px;color:var(--text-3);line-height:1.5;}
+
+  /* ── TWO COLUMN LAYOUT ── */
+.page-layout{display:flex;flex-direction:column;width:100%;}
+@media(min-width:700px){
+  .page-layout { flex-direction: row; align-items: stretch; flex-wrap: nowrap; }
+  
+  .left-col { 
+    flex: 0 0 360px; 
+    width: 360px; 
+    min-width: 0; 
+    border-right: 1px solid var(--border);
+    padding-top: 16px; 
+  }
+  
+  .right-col { 
+    flex: 1; 
+    min-width: 0; 
+    padding: 16px 20px; 
+  }
+}
+
+.page-layout .content { 
+  max-width: none; 
+  margin: 0; 
+  padding: 0 16px; 
+}
+
+.right-col .section-label{margin-top:0;}
+.right-col{padding-top:16px;padding-bottom:16px;}
+.right-col .dash-card{margin-top:0;}
+.left-col{display:flex;flex-direction:column;}
+.left-col .content{display:flex;flex-direction:column;flex:1;}
+.left-col .settings-card{flex:1;display:flex;flex-direction:column;}
+.left-col .settings-card .setting-row:last-child{flex:1;}
+.full-width{width:100%;padding:16px 16px 16px;border-top:1px solid var(--border);margin-top:4px;}
+@media(min-width:700px){.full-width{padding:16px 20px 20px;}}
+
+
+/* ── DASHBOARD ── */
+.dash-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;}
+.dash-milestone{padding:20px 20px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:14px;}
+.dash-milestone-icon{width:44px;height:44px;border-radius:12px;background:var(--green-dim);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.dash-milestone-icon svg{width:22px;height:22px;fill:var(--green);}
+.dash-milestone-label{font-size:11px;font-weight:700;color:var(--green-text);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:3px;}
+.dash-milestone-title{font-size:15px;font-weight:700;color:var(--text);line-height:1.3;}
+.dash-tabs{display:flex;border-bottom:1px solid var(--border);}
+.dash-tab{flex:1;padding:10px 6px;font-size:12px;font-weight:600;color:var(--text-3);background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;font-family:inherit;text-align:center;}
+.dash-tab.active{color:var(--green);border-bottom-color:var(--green);background:var(--green-dim);}
+.dash-stats{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);}
+.dash-stat{background:var(--card);padding:20px 16px;}
+.dash-stat-value{font-size:28px;font-weight:800;color:var(--text);letter-spacing:-1px;line-height:1;margin-bottom:4px;font-variant-numeric:tabular-nums;}
+.dash-stat-label{font-size:11px;font-weight:600;color:var(--text-3);text-transform:uppercase;letter-spacing:0.6px;}
+.dash-stat-sub{font-size:11px;color:var(--green-text);margin-top:4px;font-weight:600;}
+.dash-empty{padding:32px 20px;text-align:center;color:var(--text-3);font-size:13px;line-height:1.6;}
+.dash-loading{padding:32px 20px;text-align:center;color:var(--text-3);font-size:13px;}
+.dash-section-label{font-size:11px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:0.8px;padding:16px 20px 8px;border-bottom:1px solid var(--border);}
+
+</style>
+</head>
+<body>
+<div id="bloom-auth-curtain" style="position: fixed; inset: 0; background: var(--bg, #F7F6F2); z-index: 999999; transition: opacity 0.4s ease;"></div>
+
+<div id="setup-screen" style="background: var(--bg); color: var(--text); height: 100vh; display: none; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 24px; opacity: 1;">
+  
+  <img src="icon.png" class="setup-logo" alt="BloomPlayer" 
+       style="width: 80px; height: 80px; margin-bottom: 24px; filter: drop-shadow(var(--shadow));"
+       onerror="this.style.background='var(--red)';"/>
+  
+  <div class="setup-title" style="font-size: 26px; font-weight: 800; color: var(--text); margin-bottom: 12px;">
+    Welcome to BloomPlayer
+  </div>
+  
+  <div class="setup-sub" style="color: var(--text-2); max-width: 320px; line-height: 1.6; font-size: 15px;">
+    Let's secure your account before your child uses the app. This will only take a moment.
+  </div>
+</div>
+
+
+<div id="setup-pin-modal" style="background: var(--card); color: var(--text); border-radius: var(--radius-lg); padding: 20px;">
+  
+  <div class="pin-icon">
+    <svg viewBox="0 0 24 24" style="fill: var(--red); width: 40px;">
+      <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/>
+    </svg>
+  </div>
+
+  <div id="setup-pin-step" class="setup-pin-step" style="color: var(--accent);">Step 1 of 2</div>
+  <div id="setup-pin-title" class="setup-pin-title" style="font-weight: bold;">Choose your PIN</div>
+  <div id="setup-pin-sub" class="setup-pin-sub" style="color: var(--text-3);">You'll use this to access Parent Mode and exit videos.</div>
+
+  <div id="setup-pin-error" style="color: var(--red); font-size: 14px; text-align: center; height: 20px; margin-top: 10px; font-weight: 600;"></div>
+
+  <div class="pin-dots">
+    <div class="dot" id="sp0" style="border: 2px solid var(--border);"></div>
+    <div class="dot" id="sp1" style="border: 2px solid var(--border);"></div>
+    <div class="dot" id="sp2" style="border: 2px solid var(--border);"></div>
+    <div class="dot" id="sp3" style="border: 2px solid var(--border);"></div>
+  </div>
+
+  <div class="pin-grid">
+    <button class="pin-btn" onclick="setupPinPress('1')">1</button>
+    <button class="pin-btn" onclick="setupPinPress('2')">2</button>
+    <button class="pin-btn" onclick="setupPinPress('3')">3</button>
+    <button class="pin-btn" onclick="setupPinPress('4')">4</button>
+    <button class="pin-btn" onclick="setupPinPress('5')">5</button>
+    <button class="pin-btn" onclick="setupPinPress('6')">6</button>
+    <button class="pin-btn" onclick="setupPinPress('7')">7</button>
+    <button class="pin-btn" onclick="setupPinPress('8')">8</button>
+    <button class="pin-btn" onclick="setupPinPress('9')">9</button>
+    
+    <button class="pin-btn" onclick="setupPinClear()" style="font-size:18px; color: var(--red);">&#9003;</button>
+    
+    <button class="pin-btn" onclick="setupPinPress('0')">0</button>
+    
+    <button class="pin-btn" disabled style="font-size:11px; color: var(--text-3); cursor:not-allowed;">Cancel</button>
+  </div>
+</div>
+
+
+<div id="setup-complete" style="display:none; position:fixed; inset:0; background:var(--bg); z-index:200; flex-direction:column; align-items:center; justify-content:center; padding:32px; text-align:center; gap:16px;">
+  <div style="font-size:52px;">&#127881;</div>
+  
+  <div style="font-size:24px; font-weight:800; color:var(--text); letter-spacing:-0.3px;">
+    You're all set!
+  </div>
+  
+  <div style="font-size:15px; color:var(--text-2); line-height:1.7; max-width:300px; font-weight:500;">
+    Your PIN is saved. Long press the BloomPlayer logo anytime to return to Parent Mode.
+  </div>
+
+  <button onclick="window.location.href='index.html';" style="margin-top:16px; width:100%; max-width:320px; padding:16px; border-radius:var(--radius); background:var(--red); color:white; border:none; font-size:16px; font-weight:700; font-family:inherit; cursor:pointer; box-shadow: var(--shadow);">
+    Take me to the app
+  </button>
+</div>
+
+
+<div id="change-pin-modal">
+  <div class="pin-icon"><svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg></div>
+  <div class="modal-pin-step" id="change-pin-step">Step 1 of 2</div>
+  <div class="modal-pin-title" id="change-pin-title">Enter new PIN</div>
+  <div class="modal-pin-sub" id="change-pin-sub">Choose a 4-digit PIN</div>
+  <div class="pin-dots">
+    <div class="dot" id="cd0"></div>
+    <div class="dot" id="cd1"></div>
+    <div class="dot" id="cd2"></div>
+    <div class="dot" id="cd3"></div>
+  </div>
+  <div class="pin-error" id="change-pin-error"></div>
+  <div class="pin-grid">
+    <button class="pin-btn" onclick="changePinPress('1')">1</button>
+    <button class="pin-btn" onclick="changePinPress('2')">2</button>
+    <button class="pin-btn" onclick="changePinPress('3')">3</button>
+    <button class="pin-btn" onclick="changePinPress('4')">4</button>
+    <button class="pin-btn" onclick="changePinPress('5')">5</button>
+    <button class="pin-btn" onclick="changePinPress('6')">6</button>
+    <button class="pin-btn" onclick="changePinPress('7')">7</button>
+    <button class="pin-btn" onclick="changePinPress('8')">8</button>
+    <button class="pin-btn" onclick="changePinPress('9')">9</button>
+    <button class="pin-btn" onclick="changePinClear()" style="font-size:18px;color:#94A3B8;">&#9003;</button>
+    <button class="pin-btn" onclick="changePinPress('0')">0</button>
+    <button class="pin-btn" onclick="closeChangePinModal()" style="font-size:11px;color:#94A3B8;">Cancel</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="profile-modal">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="profile-modal-title">Add a child</div>
+    <div class="modal-sub">Use a nickname — we don't need their real name.</div>
+    <div class="avatar-preview-wrap">
+      <div class="avatar-preview" id="profile-avatar-preview">?</div>
+      <div class="avatar-preview-label">Avatar is auto-generated<br/>from the nickname you enter</div>
+    </div>
+    <label class="modal-label">Nickname</label>
+    <input class="modal-input" id="profile-nickname-input" type="text" placeholder="e.g. Sunshine, Tiger, Sky" maxlength="20" oninput="updateAvatarPreview()"/>
+    <label class="modal-label">Age group</label>
+    <select class="modal-select" id="profile-age-input">
+      <option value="teenplus">Teen+ (16+)</option>
+      <option value="teen">Teen (12-16)</option>
+      <option value="junior">Junior (8-12)</option>
+      <option value="primary" selected>Primary (5-8)</option>
+      <option value="prek">Pre-K (3-5)</option>
+      <option value="toddler">Toddler (2-3)</option>
+    </select>
+    <div class="modal-btns">
+      <button class="btn-modal-cancel" onclick="closeProfileModal()">Cancel</button>
+      <button class="btn-modal-primary" id="profile-save-btn" onclick="saveProfile()">Save</button>
+    </div>
+    <button class="btn-modal-delete" id="profile-delete-btn" style="display:none;" onclick="deleteProfile()">Delete this child</button>
+  </div>
+</div>
+
+<div id="parent-content">
+
+  <nav class="top-nav">
+  <div class="nav-left">
+    <img src="icon.png" alt="BloomPlayer" onerror="this.style.background='#10B981';"/>
+    <div>
+      <div class="nav-title">Parent Mode</div>
+      <div class="nav-sub">I hope they never know.</div>
+    </div>
+  </div>
+  <button class="btn-exit-parent" onclick="goBack()">Back to BloomPlayer</button>
+</nav>
+
+
+  <div class="parent-badge">
+    &#128274; You're in Parent Mode — your child can't see this
+  </div>
+
+  <div class="page-layout">
+
+    <div class="left-col">
+      <div class="content">
+
+        <div class="section-label">Parental Controls</div>
+        <div class="settings-card">
+          <div class="setting-row" onclick="showChangePinModal()">
+            <div class="setting-left">
+              <div class="setting-name">Parent PIN</div>
+              <div class="setting-desc">Required to open Parent Mode and exit videos</div>
+            </div>
+            <div class="setting-right">
+              <div class="pin-display">
+                <div class="pin-display-dot filled"></div>
+                <div class="pin-display-dot filled"></div>
+                <div class="pin-display-dot filled"></div>
+                <div class="pin-display-dot filled"></div>
+              </div>
+              <span class="chevron">&#8250;</span>
+            </div>
+          </div>
+          <div class="setting-row" style="cursor:default;">
+            <div class="setting-left">
+              <div class="setting-name">Default age group</div>
+              <div class="setting-desc">Sets which age group loads by default</div>
+            </div>
+            <div class="setting-right">
+              <select id="default-age-select" onchange="saveDefaultAge()" style="padding:6px 10px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:var(--text);font-size:13px;font-family:inherit;outline:none;cursor:pointer;">
+                <option value="teenplus">Teen+</option>
+                <option value="teen">Teen</option>
+                <option value="junior">Junior</option>
+                <option value="primary">Primary</option>
+                <option value="prek">Pre-K</option>
+                <option value="toddler">Toddler</option>
+              </select>
+            </div>
+          </div>
+          <div class="setting-row" style="cursor:default; border-bottom: none;">
+            <div class="setting-left">
+              <div class="setting-name">Inter-Video Break</div>
+              <div class="setting-desc">Countdown between consecutive videos (seconds)</div>
+            </div>
+            <div class="setting-right">
+              <input type="number" id="inter-video-delay" value="0" min="0" max="300" onchange="saveVideoDelay()" style="padding:6px 10px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:var(--text);font-size:13px;font-family:inherit;outline:none;cursor:text;width:70px;text-align:center;"/>
+            </div>
+          </div>
+        </div>
+
+                <div id="children-section" style="display:none;">
+          <div class="section-label">Children</div>
+          <div id="profiles-list"></div>
+          <button class="btn-add-profile" onclick="openAddProfileModal()">+ Add a child</button>
+        </div>
+
+      </div>
+    </div><div class="right-col">
+      <div class="section-label">Watch Dashboard</div>
+      <div class="dash-card" id="dashboard-card">
+        <div class="dash-loading" id="dash-loading">Loading...</div>
+      </div>
+    </div>
+
+  </div><div class="full-width">
+    <div class="section-label">Account</div>
+    <div class="settings-card">
+      <div class="account-row">
+        <div class="auth-avatar account-avatar" id="parent-avatar"></div>
+        <div>
+          <div class="account-name" id="parent-name"></div>
+          <div class="account-email" id="parent-email"></div>
+        </div>
+      </div>
+          <div class="setting-row" style="cursor:default;flex-direction:column;align-items:flex-start;gap:10px;">
+        <div>
+          <div class="setting-name">Export watch log</div>
+          <div class="setting-desc">Download a CSV of videos watched — useful for homeschool portfolios and progress tracking</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;width:100%;flex-wrap:wrap;">
+          <input type="date" id="export-from" style="padding:6px 10px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:var(--text);font-size:13px;font-family:inherit;outline:none;cursor:pointer;"/>
+          <span style="font-size:12px;color:var(--text-3);">to</span>
+          <input type="date" id="export-to" style="padding:6px 10px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:var(--text);font-size:13px;font-family:inherit;outline:none;cursor:pointer;"/>
+          <button onclick="exportSessions()" style="padding:7px 14px;border-radius:8px;background:var(--green-dim);color:var(--green-text);border:1px solid #A7F3D0;font-size:12px;font-weight:600;font-family:inherit;cursor:pointer;white-space:nowrap;">Export CSV</button>
+        </div>
+      </div>
+      <div class="setting-row" onclick="signOut()">
+        <div class="setting-left">
+          <div class="setting-name" style="color:var(--red);">Sign out</div>
+          <div class="setting-desc">You'll need to sign in again next visit</div>
+        </div>
+        <span class="chevron">&#8250;</span>
+      </div>
+    <div class="danger-row" onclick="deleteAccount()">
+  <div class="setting-left">
+    <div class="danger-name">Delete account</div>
+    <div class="danger-desc">Permanently deletes your account and all data</div>
+  </div>
+  <span class="chevron" style="color: #BE123C;">&#8250;</span>
+</div>
+
+<script>
+var isSetupMode=window.location.search.indexOf('setup=true')>-1;
+
+/* ── CONFIRMATION MODAL ── */
+function showConfirm(title, desc, buttonText, onConfirm) {
+  document.getElementById('custom-confirm-overlay').style.display = 'block';
+  document.getElementById('custom-confirm-modal').style.display = 'block';
+  
+  document.getElementById('confirm-title').textContent = title;
+  document.getElementById('confirm-desc').textContent = desc;
+  
+  var actionBtn = document.getElementById('confirm-action');
+  actionBtn.textContent = buttonText;
+  
+  // Smart Styling: Use muted red for destructive actions, Ochre for everything else
+  var textLower = buttonText.toLowerCase();
+  if(textLower.includes('sign out') || textLower.includes('delete')) {
+    actionBtn.style.background = '#D35F5F'; // Earthy Red
+  } else {
+    actionBtn.style.background = '#CC9544'; // Golden Ochre
+  }
+  
+  var newActionBtn = actionBtn.cloneNode(true);
+  actionBtn.parentNode.replaceChild(newActionBtn, actionBtn);
+  
+  newActionBtn.addEventListener('click', function() {
+    closeConfirm();
+    if (onConfirm) onConfirm();
+  });
+  
+  document.getElementById('custom-confirm-overlay').onclick = closeConfirm;
+}
+
+function closeConfirm() {
+  document.getElementById('custom-confirm-overlay').style.display = 'none';
+  document.getElementById('custom-confirm-modal').style.display = 'none';
+}
+
+
+function showToast(msg,isError){
+  var t=document.getElementById('app-toast');
+  if(!t){
+    t=document.createElement('div');
+    t.id='app-toast';
+    t.style.cssText='position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1E293B;color:#F8FAFC;font-size:13px;font-weight:600;padding:12px 20px;border-radius:20px;z-index:9999;white-space:nowrap;box-shadow:0 4px 16px rgba(0,0,0,0.4);border:1px solid #334155;transition:opacity 0.3s;';
+    document.body.appendChild(t);
+  }
+  t.textContent=msg;
+  t.style.borderColor=isError?'#EF4444':'#334155';
+  t.style.opacity='1';
+  clearTimeout(t._timer);
+  t._timer=setTimeout(function(){t.style.opacity='0';},2800);
+}
+
+var firebaseConfig={
+  apiKey:'AIzaSyDa_838Z_Kq-SQhi1LH1IibLkw5KkkVq6M',
+  authDomain:'bloomplayer-9cba5.firebaseapp.com',
+  projectId:'bloomplayer-9cba5',
+  storageBucket:'bloomplayer-9cba5.firebasestorage.app',
+  messagingSenderId:'424186955738',
+  appId:'1:424186955738:web:e2c3306fb52e33e83322e3',
+  measurementId:'G-4LPVCYGQP9'
+};
+firebase.initializeApp(firebaseConfig);
+var auth=firebase.auth();
+var db=firebase.firestore();
+
+var currentUser=null;
+var parentPin=localStorage.getItem('et_pin')||'1234';
+var userTier=localStorage.getItem('et_tier')||'general';
+var changePinBuffer='';
+var changePinNewPin='';
+var changePinStep=1;
+
+
+/* ── AUTH ── */
+auth.onAuthStateChanged(function(user){
+  if(!user||user.isAnonymous){
+    window.location.href='index.html';
+    return;
+  }
+  currentUser=user;
+  
+  if(isSetupMode){
+    const splash = document.getElementById('setup-screen');
+    const pinModal = document.getElementById('setup-pin-modal');
+
+    splash.style.display = 'flex';
+
+    setTimeout(function(){
+      splash.style.transition = 'opacity 0.5s ease';
+      splash.style.opacity = '0';
+      setTimeout(function(){
+        splash.style.display = 'none';
+        pinModal.style.display = 'flex';
+      }, 500);
+    }, 3000); 
+    
+  } else {
+    document.getElementById('parent-content').style.display='flex';
+    renderParentMode();
+    loadParentMode(user);
+  }
+  
+  var curtain = document.getElementById('bloom-auth-curtain');
+  if (curtain) {
+    curtain.style.transition = 'opacity 0.4s ease';
+    curtain.style.opacity = '0';
+    setTimeout(function() { curtain.style.display = 'none'; }, 400);
+  }
+});
+
+
+function loadParentMode(user){
+  db.collection('users').doc(user.uid).get().then(function(doc){
+    if(doc.exists){
+      var data=doc.data();
+      if(data.pin){parentPin=data.pin;localStorage.setItem('et_pin',data.pin);}
+      
+      // Load custom delay from server on launch
+      if(data.interVideoDelay !== undefined) {
+        localStorage.setItem('et_video_delay', data.interVideoDelay);
+      }
+      
+      userTier=data.tier||'general';
+      localStorage.setItem('et_tier',userTier);
+      renderParentMode();
+    }
+  }).catch(function(){});
+}
+
+/* ── RENDER PARENT MODE ── */
+function renderParentMode(){
+  var user=currentUser;
+  var av=document.getElementById('parent-avatar');
+  if(user.photoURL){av.innerHTML='<img src="'+user.photoURL+'" alt=""/>';}
+  else{av.textContent=user.displayName?user.displayName.substring(0,2).toUpperCase():'U';}
+  document.getElementById('parent-name').textContent=user.displayName||'Parent';
+  document.getElementById('parent-email').textContent=user.email||'';
+  
+  var defaultAge=localStorage.getItem('et_default_age')||'primary';
+  document.getElementById('default-age-select').value=defaultAge;
+  
+  // Set the visual input for the timer delay
+  var defaultDelay = localStorage.getItem('et_video_delay') || '0';
+  var delayInput = document.getElementById('inter-video-delay');
+  if(delayInput) delayInput.value = defaultDelay;
+  
+  var isGamma=userTier==='gamma';
+  document.getElementById('children-section').style.display=isGamma?'block':'none';
+  if(isGamma)loadProfiles();
+  loadDashboard();
+  initExportDates();
+}
+
+/* ── SETTINGS UPDATES ── */
 function saveDefaultAge(){
   var val=document.getElementById('default-age-select').value;
   localStorage.setItem('et_default_age',val);
   if(currentUser){
     db.collection('users').doc(currentUser.uid).set({defaultAge:val},{merge:true}).catch(function(){});
   }
+}
+
+function saveVideoDelay(){
+  var delayInput = document.getElementById('inter-video-delay');
+  if(!delayInput) return;
+  var val = Math.max(0, parseInt(delayInput.value) || 0);
+  delayInput.value = val; // visually sanitize
+  localStorage.setItem('et_video_delay', val);
+  
+  if(currentUser){
+    db.collection('users').doc(currentUser.uid).set({interVideoDelay: val}, {merge: true})
+    .then(function() { showToast('Timer settings saved.'); })
+    .catch(function(){});
+  }
+}
+
+/* ── SETUP PIN ── */
+var setupBuffer='';
+var setupNewPin='';
+var setupStep=1;
+
+function setupPinPress(d){
+  if(setupBuffer.length>=4)return;
+  setupBuffer+=d;
+  updateSetupDots();
+  if(setupBuffer.length===4)setTimeout(processSetupStep,120);
+}
+
+function setupPinClear(){
+  setupBuffer=setupBuffer.slice(0,-1);
+  updateSetupDots();
+}
+
+function updateSetupDots(){
+  for(var i=0;i<4;i++){
+    document.getElementById('sp'+i).className='dot'+(i<setupBuffer.length?' filled':'');
+  }
+}
+
+function processSetupStep(){
+  if(setupStep===1){
+    setupNewPin=setupBuffer;
+    setupBuffer='';
+    setupStep=2;
+    updateSetupDots();
+    document.getElementById('setup-pin-step').textContent='Step 2 of 2';
+    document.getElementById('setup-pin-title').textContent='Confirm your PIN';
+    document.getElementById('setup-pin-sub').textContent='Enter the same PIN again to confirm.';
+    document.getElementById('setup-pin-error').textContent='';
+  } else {
+    if(setupBuffer===setupNewPin){
+      parentPin=setupNewPin;
+      localStorage.setItem('et_pin',parentPin);
+      db.collection('users').doc(currentUser.uid).set({
+        pin:parentPin,
+        onboarded:true
+      },{merge:true}).then(function(){
+        document.getElementById('setup-pin-modal').style.display='none';
+        document.getElementById('setup-screen').style.display='none';
+        document.getElementById('setup-complete').style.display='flex';
+      }).catch(function(){
+        document.getElementById('setup-pin-modal').style.display='none';
+        document.getElementById('setup-screen').style.display='none';
+        document.getElementById('setup-complete').style.display='flex';
+      });
+    } else {
+      document.getElementById('setup-pin-error').textContent='PINs don\'t match — try again';
+      setupBuffer='';
+      setupStep=1;
+      setupNewPin='';
+      updateSetupDots();
+      document.getElementById('setup-pin-step').textContent='Step 1 of 2';
+      document.getElementById('setup-pin-title').textContent='Choose your PIN';
+      document.getElementById('setup-pin-sub').textContent='You\'ll use this to access Parent Mode and exit videos.';
+    }
+  }
+}
+
+/* ── PROFILES ── */
+var editingProfileId=null;
+var allProfiles=[];
+var PROFILE_COLORS=['#10B981','#3B82F6','#F59E0B','#8B5CF6','#EF4444','#06B6D4','#EC4899','#84CC16'];
+function getProfileColor(i){return PROFILE_COLORS[i%PROFILE_COLORS.length];}
+function getInitials(n){if(!n)return'?';return n.trim().substring(0,2).toUpperCase();}
+function escHtml(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function getAgeLabel(val){var map={teenplus:'Teen+ (16+)',teen:'Teen (12-16)',junior:'Junior (8-12)',primary:'Primary (5-8)',prek:'Pre-K (3-5)',toddler:'Toddler (2-3)'};return map[val]||val;}
+
+function loadProfiles(){
+  db.collection('users').doc(currentUser.uid).collection('profiles').orderBy('createdAt').get()
+  .then(function(snap){
+    allProfiles=[];
+    snap.forEach(function(doc){var d=doc.data();d.id=doc.id;allProfiles.push(d);});
+    renderProfiles();
+  }).catch(function(e){console.error('loadProfiles',e);});
+}
+
+function renderProfiles(){
+  var activeId=localStorage.getItem('et_active_profile');
+  if(!allProfiles.length){
+    document.getElementById('profiles-list').innerHTML='<div class="no-profiles">No children added yet.</div>';
+    return;
+  }
+  var html='';
+  allProfiles.forEach(function(p,i){
+    var color=p.color||getProfileColor(i);
+    var initials=p.initials||getInitials(p.nickname);
+    var isActive=p.id===activeId;
+    html+='<div class="profile-card"><div class="profile-row">'
+      +'<div class="profile-avatar" style="background:'+color+'">'+escHtml(initials)+'</div>'
+      +'<div class="profile-info">'
+      +'<div class="profile-nickname">'+escHtml(p.nickname)+'</div>'
+      +'<div class="profile-age">'+getAgeLabel(p.ageGroup)+'</div>'
+      +(isActive?'<span class="profile-active-badge">Default on this device</span>':'')
+      +'</div>'
+      +'<div class="profile-actions">'
+      +'<button class="btn-use" onclick="setActiveProfile(\''+p.id+'\')">Set default</button>'
+      +'<button class="btn-edit" onclick="openEditProfileModal(\''+p.id+'\')">Edit</button>'
+      +'</div></div></div>';
+  });
+  document.getElementById('profiles-list').innerHTML=html;
+}
+
+function setActiveProfile(profileId){
+  localStorage.setItem('et_active_profile',profileId);
+  var profile=allProfiles.find(function(p){return p.id===profileId;});
+  if(profile&&profile.ageGroup)localStorage.setItem('et_profile_age',profile.ageGroup);
+  renderProfiles();
+}
+
+function openAddProfileModal(){
+  editingProfileId=null;
+  document.getElementById('profile-modal-title').textContent='Add a child';
+  document.getElementById('profile-nickname-input').value='';
+  document.getElementById('profile-age-input').value='primary';
+  document.getElementById('profile-delete-btn').style.display='none';
+  document.getElementById('profile-save-btn').textContent='Save';
+  updateAvatarPreview();
+  document.getElementById('profile-modal').style.display='flex';
+}
+
+function openEditProfileModal(profileId){
+  var profile=allProfiles.find(function(p){return p.id===profileId;});
+  if(!profile)return;
+  editingProfileId=profileId;
+  document.getElementById('profile-modal-title').textContent='Edit child';
+  document.getElementById('profile-nickname-input').value=profile.nickname||'';
+  document.getElementById('profile-age-input').value=profile.ageGroup||'primary';
+  document.getElementById('profile-delete-btn').style.display='block';
+  document.getElementById('profile-save-btn').textContent='Save changes';
+  updateAvatarPreview();
+  document.getElementById('profile-modal').style.display='flex';
+}
+
+function closeProfileModal(){
+  document.getElementById('profile-modal').style.display='none';
+  editingProfileId=null;
+}
+
+function updateAvatarPreview(){
+  var nickname=document.getElementById('profile-nickname-input').value.trim();
+  var initials=getInitials(nickname);
+  var colorIndex=editingProfileId?allProfiles.findIndex(function(p){return p.id===editingProfileId;}):allProfiles.length;
+  var color=getProfileColor(colorIndex<0?0:colorIndex);
+  var preview=document.getElementById('profile-avatar-preview');
+  preview.textContent=initials||'?';
+  preview.style.background=color;
+}
+
+function saveProfile(){
+  var nickname=document.getElementById('profile-nickname-input').value.trim();
+  var ageGroup=document.getElementById('profile-age-input').value;
+  if(!nickname){showToast('Please enter a nickname.',true);return;}
+  var colorIndex=editingProfileId?allProfiles.findIndex(function(p){return p.id===editingProfileId;}):allProfiles.length;
+  var color=getProfileColor(colorIndex<0?0:colorIndex);
+  var initials=getInitials(nickname);
+  var data={nickname:nickname,initials:initials,color:color,ageGroup:ageGroup};
+  if(editingProfileId){
+    db.collection('users').doc(currentUser.uid).collection('profiles').doc(editingProfileId)
+    .update(data).then(function(){closeProfileModal();loadProfiles();})
+    .catch(function(e){showToast('Could not save. Please try again.',true);console.error(e);});
+  } else {
+    data.createdAt=firebase.firestore.FieldValue.serverTimestamp();
+    db.collection('users').doc(currentUser.uid).collection('profiles').add(data)
+    .then(function(){closeProfileModal();loadProfiles();})
+    .catch(function(e){showToast('Could not save. Please try again.',true);console.error(e);});
+  }
+}
+
+function deleteProfile(){
+  if(!editingProfileId)return;
+  var profile=allProfiles.find(function(p){return p.id===editingProfileId;});
+  var name=profile?profile.nickname:'this child';
+  showConfirm('Delete '+name+'?','This cannot be undone.','Delete',function(){
+    db.collection('users').doc(currentUser.uid).collection('profiles').doc(editingProfileId)
+    .delete().then(function(){
+      if(localStorage.getItem('et_active_profile')===editingProfileId){
+        localStorage.removeItem('et_active_profile');
+        localStorage.removeItem('et_profile_age');
+      }
+      closeProfileModal();loadProfiles();
+    }).catch(function(e){showToast('Could not delete. Please try again.',true);console.error(e);});
+  });
 }
 
 /* ── CHANGE PIN ── */
@@ -1007,7 +2240,6 @@ function exportSessions(){
 
 
 /* ── SIGN OUT ── */
-/* ── SIGN OUT ── */
 function signOut() {
   showConfirm(
     'Sign out of BloomPlayer?',
@@ -1023,9 +2255,6 @@ function signOut() {
         localStorage.removeItem('et_profile_age');
         localStorage.removeItem('et_hide_age');
         localStorage.removeItem('et_device_id');
-        
-        // Note: We intentionally leave 'bloom_tour_completed' so the device 
-        // doesn't force them to take the tour again just because they signed out.
         
         window.location.href = 'index.html';
       });
@@ -1062,15 +2291,10 @@ function deleteAccount() {
             return batch.commit();
             
           }).then(function() {
-            // 2. Delete the main User doc
             return db.collection('users').doc(user.uid).delete();
-            
           }).then(function() {
-            // 3. Delete the Auth user (this automatically signs you out of Firebase)
             return user.delete();
-            
           }).then(function() {
-            // 4. ONLY clear local storage if Firebase deletion actually worked
             localStorage.removeItem('et_pin');
             localStorage.removeItem('et_tier');
             localStorage.removeItem('et_email');
@@ -1082,13 +2306,8 @@ function deleteAccount() {
             
           }).catch(function(e) {
             console.error('deleteAccount error:', e);
-            
-            // 5. Bulletproof Error Handling
             if (e.code === 'auth/requires-recent-login') {
-              // Alert ensures they see it, overriding all modals
               alert('Security Check: Firebase requires a fresh login to delete your account. We will sign you out now—please log back in and try again.');
-              
-              // Force the sign-out to guarantee they do it
               auth.signOut().then(function() {
                 window.location.href = 'index.html';
               });
@@ -1107,7 +2326,8 @@ function deleteAccount() {
 function goBack(){
   window.location.href='app.html';
 }
-  /* ── DASHBOARD ── */
+
+/* ── DASHBOARD ── */
 var dashTab='month';
 var dashData={month:{watchTime:0,videos:[]},year:{watchTime:0,videos:[]},all:{watchTime:0,videos:[]}};
 function loadDashboard(){
@@ -1138,6 +2358,1224 @@ function loadDashboard(){
   });
 }
 
+function getMilestone(totalVideos){
+  if(totalVideos>=100)return{label:'Incredible progress',title:'You\'re doing amazing'};
+  if(totalVideos>=50)return{label:'Consistent and calm',title:'50+ videos watched'};
+  if(totalVideos>=10)return{label:'Building great habits',title:'Keep it going'};
+  return{label:'Just getting started',title:'Every session counts'};
+}
+
+function formatTime(seconds){
+  if(!seconds||seconds<60)return seconds+'s';
+  var h=Math.floor(seconds/3600);
+  var m=Math.floor((seconds%3600)/60);
+  if(h>0)return h+'h '+(m>0?m+'m':'');
+  return m+'m';
+}
+
+function renderDashboard(){
+  var card=document.getElementById('dashboard-card');
+  var milestone=getMilestone(dashData.all.videos.length);
+  var d=dashData[dashTab];
+  var isEmpty=dashData.all.watchTime===0&&dashData.all.videos.length===0;
+
+  var html='';
+
+  // Milestone header
+  html+='<div class="dash-milestone">'
+    +'<div class="dash-milestone-icon">'
+    +'<svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>'
+    +'</div>'
+    +'<div>'
+    +'<div class="dash-milestone-label">'+milestone.label+'</div>'
+    +'<div class="dash-milestone-title">'+milestone.title+'</div>'
+    +'</div>'
+    +'</div>';
+
+  // Tabs
+  html+='<div class="dash-tabs">'
+    +'<button class="dash-tab'+(dashTab==='month'?' active':'')+'" onclick="switchDashTab(\'month\')">This Month</button>'
+    +'<button class="dash-tab'+(dashTab==='year'?' active':'')+'" onclick="switchDashTab(\'year\')">This Year</button>'
+    +'<button class="dash-tab'+(dashTab==='all'?' active':'')+'" onclick="switchDashTab(\'all\')">All Time</button>'
+    +'</div>';
+
+  if(isEmpty){
+    html+='<div class="dash-empty">No sessions yet.<br/>Lock a video and watch time will appear here.</div>';
+  } else {
+    html+='<div class="dash-stats">'
+      +'<div class="dash-stat">'
+  +'<div class="dash-stat-value" id="dash-wt">'+formatTime(d.watchTime)+'</div>'
++'<div class="dash-stat-label">Watch Time</div>'
++'</div>'
++'<div class="dash-stat">'
++'<div class="dash-stat-value" id="dash-vc">'+d.videos.length+'</div>'
++'<div class="dash-stat-label">Unique Videos</div>'
+      +'</div>'
+      +'</div>';
+  }
+
+  card.innerHTML=html;
+}
+
+function switchDashTab(tab){
+  dashTab=tab;
+  renderDashboard();
+}
+
+</script>
+      <div id="custom-confirm-overlay" style="display: none; position: fixed; inset: 0; background: rgba(45, 41, 34, 0.85); z-index: 99998; backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px);"></div>
+
+<div id="custom-confirm-modal" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: var(--card, #FFFFFF); border-radius: 16px; width: 90%; max-width: 360px; padding: 24px; z-index: 99999; box-shadow: 0 10px 40px rgba(0,0,0,0.15);">
+  <h3 id="confirm-title" style="margin: 0 0 8px 0; font-size: 20px; font-weight: 700; color: var(--text, #1A1A1A);">Sign out?</h3>
+  <p id="confirm-desc" style="margin: 0 0 24px 0; font-size: 15px; color: var(--text-2, #666666); line-height: 1.5;">You'll need to sign in again.</p>
+  <div style="display: flex; gap: 12px; justify-content: flex-end;">
+    <button id="confirm-cancel" onclick="closeConfirm()" style="padding: 10px 20px; border-radius: 8px; background: transparent; border: 1px solid #D1D9D1; color: var(--text, #1A1A1A); font-size: 15px; font-weight: 600; cursor: pointer;">Cancel</button>
+    <button id="confirm-action" style="padding: 10px 20px; border-radius: 8px; background: #D35F5F; border: none; color: #FFFFFF; font-size: 15px; font-weight: 700; cursor: pointer;">Sign out</button>
+  </div>
+</div>
+
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="color-scheme" content="light">
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+<title>BloomPlayer — Parent Mode</title>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="default"/>
+<link rel="icon" type="image/png" href="icon.png"/>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;1,400&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+
+:root {
+  /* ── MAIN THEME: Misty Sage & Ink Black ── */
+  --bg: #C2CDC2;           
+  --card: #D6DDD6;         
+  --card2: #E2E8E2;        
+  --border: #A9B5A9;       
+  --text: #000000;         
+  --text-2: #1A1A1A;       
+  --text-3: #4B554B;       
+  --accent: #7A9A88;
+  --red: #CC9544;          
+  --red-dim: #F5EAE6;
+  --green: #7A9A88;        
+  --green-dim: #D1D9D1;
+  --green-text: #000000;
+  --radius: 14px;
+  --shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.08);
+}
+
+body{background:var(--bg);color:var(--text);font-family:'Nunito',-apple-system,sans-serif;min-height:100vh;padding-bottom:40px;}
+
+/* ── SETUP SCREEN ── */
+#setup-screen{
+  display:none;position:fixed;inset:0;background:#0F172A;
+  z-index:50;flex-direction:column;align-items:center;justify-content:center;
+  padding:32px 24px;text-align:center;
+}
+.setup-logo{width:64px;height:64px;border-radius:18px;margin:0 auto 16px;}
+.setup-title{font-size:22px;font-weight:700;color:white;letter-spacing:-0.3px;margin-bottom:8px;}
+.setup-sub{font-size:14px;color:#94A3B8;line-height:1.6;max-width:320px;margin:0 auto;}
+
+/* ── PIN MODAL (setup) ── */
+#setup-pin-modal{
+  display:none;position:fixed;inset:0;background:var(--bg);
+  z-index:200;flex-direction:column;align-items:center;justify-content:center;gap:18px;
+}
+.setup-pin-step{font-size:11px;color:var(--accent);font-weight:600;text-transform:uppercase;letter-spacing:0.6px;}
+.setup-pin-title{font-size:18px;font-weight:600;color:var(--text);text-align:center;}
+.setup-pin-sub{font-size:13px;color:var(--text-3);text-align:center;padding:0 32px;line-height:1.6;margin-top:-8px;}
+
+/* ── CHANGE PIN MODAL ── */
+#change-pin-modal{
+  display:none;position:fixed;inset:0;background:var(--bg);
+  z-index:200;flex-direction:column;align-items:center;justify-content:center;gap:18px;
+}
+.modal-pin-title{font-size:16px;font-weight:600;color:var(--text);text-align:center;}
+.modal-pin-sub{font-size:13px;color:var(--text-3);margin-top:-8px;text-align:center;}
+.modal-pin-step{font-size:11px;color:var(--accent);font-weight:600;text-transform:uppercase;letter-spacing:0.6px;}
+
+/* ── PIN SHARED ── */
+.pin-icon{width:52px;height:52px;background:var(--card2);border-radius:14px;display:flex;align-items:center;justify-content:center;margin-bottom:4px;}
+.pin-icon svg{width:22px;height:22px;fill:var(--red);}
+.pin-dots{display:flex;gap:12px;margin:4px 0;}
+.dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--border);
+  transition: all 0.12s ease;
+}
+
+.dot.filled {
+  background: var(--red) !important;
+  transform: scale(1.1);
+}
+.pin-error{font-size:12.5px;color:#F87171;height:16px;}
+.pin-grid{display:grid;grid-template-columns:repeat(3,72px);gap:10px;}
+.pin-btn {
+  height: 72px;
+  border-radius: var(--radius);
+  background: var(--card2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-size: 22px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.pin-btn:active {
+  background: var(--red);
+  color: white;
+  border-color: var(--red);
+}
+
+/* ── MAIN CONTENT ── */
+#parent-content{display:none;flex-direction:column;min-height:100vh;}
+
+/* ── TOP NAV ── */
+.top-nav{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--border);background:var(--card);position:sticky;top:0;z-index:10;box-shadow:0 1px 0 var(--border);}
+.nav-left{display:flex;align-items:center;gap:10px;}
+.nav-left img{width:40px;height:40px;border-radius:12px;}
+.nav-title{font-size:17px;font-weight:700;letter-spacing:-0.3px;color:var(--text);}
+.nav-sub{font-size:11px;color:var(--text-3);margin-top:1px;font-family:'Lora',serif;font-style:italic;}
+
+/* ── PARENT BADGE ── */
+.parent-badge{background:var(--green-dim);border-bottom:1px solid #A7F3D0;padding:10px 20px;display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600;color:var(--green-text);}
+
+/* ── CONTENT ── */
+.content{padding:16px;display:flex;flex-direction:column;gap:12px;max-width:560px;margin:0 auto;width:100%;}
+.section-label{font-size:11px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:0.8px;padding:4px 0 6px;min-height:28px;display:flex;align-items:center;}
+
+/* ── SETTINGS CARDS ── */
+.settings-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);}
+.setting-row{display:flex;align-items:center;justify-content:space-between;padding:15px 16px;border-bottom:1px solid var(--border);cursor:pointer;}
+.setting-row:last-child{border-bottom:none;}
+.setting-row:active{background:var(--card2);}
+.setting-left{flex:1;}
+.setting-name{font-size:14px;font-weight:600;color:var(--text);}
+.setting-desc{font-size:12px;color:var(--text-3);margin-top:2px;line-height:1.4;}
+.setting-right{display:flex;align-items:center;gap:8px;flex-shrink:0;margin-left:12px;}
+.chevron{color:var(--text-3);font-size:18px;}
+
+.btn-exit-parent {
+  padding: 8px 16px;
+  border-radius: 10px;
+  background: var(--red);
+  color: white;
+  border: none;
+  font-size: 13px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(204, 149, 68, 0.2);
+}
+
+.btn-exit-parent:active {
+  transform: scale(0.96);
+  opacity: 0.9;
+}
+
+/* ── PIN DOTS DISPLAY ── */
+.pin-display{display:flex;gap:6px;align-items:center;}
+.pin-display-dot{width:8px;height:8px;border-radius:50%;background:var(--border);}
+.pin-display-dot.filled{background:var(--text-3);}
+
+/* ── ACCOUNT ── */
+.account-row{display:flex;align-items:center;gap:12px;padding:15px 16px;border-bottom:1px solid var(--border);}
+.account-avatar{width:36px;height:36px;border-radius:50%;background:var(--green-dim);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--green-text);flex-shrink:0;overflow:hidden;}
+.account-avatar img{width:100%;height:100%;object-fit:cover;}
+.account-name{font-size:14px;font-weight:600;color:var(--text);}
+.account-email{font-size:12px;color:var(--text-3);margin-top:1px;}
+
+/* ── DANGER ── */
+.danger-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px 16px;
+  cursor: pointer;
+  border-top: 1px solid var(--border);
+}
+
+.danger-row:active {
+  background: #FFF1F2;
+}
+
+.danger-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #BE123C;
+}
+
+.danger-desc {
+  font-size: 12px;
+  color: var(--text-3);
+  margin-top: 2px;
+}
+
+.version{text-align:center;font-size:11px;color:var(--text-3);padding:8px 0;}
+
+/* ── PROFILES ── */
+.profile-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);margin-bottom:8px;}
+.profile-row{display:flex;align-items:center;gap:12px;padding:14px 16px;}
+.profile-avatar{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:white;flex-shrink:0;letter-spacing:-0.5px;}
+.profile-info{flex:1;min-width:0;}
+.profile-nickname{font-size:14px;font-weight:600;color:var(--text);}
+.profile-age{font-size:12px;color:var(--text-3);margin-top:2px;}
+.profile-active-badge{font-size:10px;font-weight:600;color:var(--green-text);background:var(--green-dim);padding:2px 8px;border-radius:20px;border:1px solid #A7F3D0;display:inline-block;margin-top:4px;}
+.profile-actions{display:flex;gap:8px;flex-shrink:0;}
+.btn-use{padding:7px 12px;border-radius:8px;background:var(--green);color:white;border:none;font-size:12px;font-weight:600;font-family:inherit;cursor:pointer;white-space:nowrap;}
+.btn-edit{padding:7px 12px;border-radius:8px;background:var(--card2);color:var(--text-2);border:1px solid var(--border);font-size:12px;font-weight:600;font-family:inherit;cursor:pointer;}
+.btn-add-profile{width:100%;padding:14px;border-radius:var(--radius);background:var(--card);color:var(--green);border:1.5px dashed var(--green);font-size:14px;font-weight:600;font-family:inherit;cursor:pointer;box-shadow:var(--shadow);}
+.btn-add-profile:active{background:var(--green-dim);}
+.no-profiles{text-align:center;padding:24px;color:var(--text-3);font-size:13px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);}
+
+/* ── MODALS ── */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:300;align-items:flex-end;justify-content:center;}
+.modal-sheet{background:var(--card);border-radius:20px 20px 0 0;padding:28px 20px 40px;width:100%;max-width:560px;}
+.modal-handle{width:36px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 20px;}
+.modal-title{font-size:18px;font-weight:700;color:var(--text);margin-bottom:4px;}
+.modal-sub{font-size:13px;color:var(--text-3);margin-bottom:24px;line-height:1.5;}
+.modal-label{font-size:11px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:0.7px;display:block;margin-bottom:6px;}
+.modal-input{width:100%;padding:13px 14px;border-radius:10px;border:1.5px solid var(--border);background:var(--bg);color:var(--text);font-size:15px;font-family:inherit;outline:none;margin-bottom:16px;}
+.modal-input:focus{border-color:var(--green);}
+.modal-select{width:100%;padding:13px 14px;border-radius:10px;border:1.5px solid var(--border);background:var(--bg);color:var(--text);font-size:15px;font-family:inherit;outline:none;margin-bottom:24px;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24'%3E%3Cpath fill='%2364748B' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;cursor:pointer;}
+.modal-select:focus{border-color:var(--green);}
+.modal-btns{display:flex;gap:10px;}
+.btn-modal-primary{flex:1;padding:14px;border-radius:10px;background:var(--green);color:white;border:none;font-size:15px;font-weight:600;font-family:inherit;cursor:pointer;}
+.btn-modal-cancel{padding:14px 20px;border-radius:10px;background:var(--card2);color:var(--text-2);border:1px solid var(--border);font-size:15px;font-family:inherit;cursor:pointer;}
+.btn-modal-delete{width:100%;padding:13px;border-radius:10px;background:var(--red-dim);color:var(--red);border:1px solid #FECACA;font-size:14px;font-weight:600;font-family:inherit;cursor:pointer;margin-top:12px;}
+.avatar-preview-wrap{display:flex;align-items:center;gap:12px;margin-bottom:16px;}
+.avatar-preview{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:700;color:white;flex-shrink:0;letter-spacing:-0.5px;}
+.avatar-preview-label{font-size:13px;color:var(--text-3);line-height:1.5;}
+
+  /* ── TWO COLUMN LAYOUT ── */
+.page-layout{display:flex;flex-direction:column;width:100%;}
+@media(min-width:700px){
+  .page-layout { flex-direction: row; align-items: stretch; flex-wrap: nowrap; }
+  
+  .left-col { 
+    flex: 0 0 360px; 
+    width: 360px; 
+    min-width: 0; 
+    border-right: 1px solid var(--border);
+    padding-top: 16px; 
+  }
+  
+  .right-col { 
+    flex: 1; 
+    min-width: 0; 
+    padding: 16px 20px; 
+  }
+}
+
+.page-layout .content { 
+  max-width: none; 
+  margin: 0; 
+  padding: 0 16px; 
+}
+
+.right-col .section-label{margin-top:0;}
+.right-col{padding-top:16px;padding-bottom:16px;}
+.right-col .dash-card{margin-top:0;}
+.left-col{display:flex;flex-direction:column;}
+.left-col .content{display:flex;flex-direction:column;flex:1;}
+.left-col .settings-card{flex:1;display:flex;flex-direction:column;}
+.left-col .settings-card .setting-row:last-child{flex:1;}
+.full-width{width:100%;padding:16px 16px 16px;border-top:1px solid var(--border);margin-top:4px;}
+@media(min-width:700px){.full-width{padding:16px 20px 20px;}}
+
+
+/* ── DASHBOARD ── */
+.dash-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;}
+.dash-milestone{padding:20px 20px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:14px;}
+.dash-milestone-icon{width:44px;height:44px;border-radius:12px;background:var(--green-dim);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.dash-milestone-icon svg{width:22px;height:22px;fill:var(--green);}
+.dash-milestone-label{font-size:11px;font-weight:700;color:var(--green-text);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:3px;}
+.dash-milestone-title{font-size:15px;font-weight:700;color:var(--text);line-height:1.3;}
+.dash-tabs{display:flex;border-bottom:1px solid var(--border);}
+.dash-tab{flex:1;padding:10px 6px;font-size:12px;font-weight:600;color:var(--text-3);background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;font-family:inherit;text-align:center;}
+.dash-tab.active{color:var(--green);border-bottom-color:var(--green);background:var(--green-dim);}
+.dash-stats{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);}
+.dash-stat{background:var(--card);padding:20px 16px;}
+.dash-stat-value{font-size:28px;font-weight:800;color:var(--text);letter-spacing:-1px;line-height:1;margin-bottom:4px;font-variant-numeric:tabular-nums;}
+.dash-stat-label{font-size:11px;font-weight:600;color:var(--text-3);text-transform:uppercase;letter-spacing:0.6px;}
+.dash-stat-sub{font-size:11px;color:var(--green-text);margin-top:4px;font-weight:600;}
+.dash-empty{padding:32px 20px;text-align:center;color:var(--text-3);font-size:13px;line-height:1.6;}
+.dash-loading{padding:32px 20px;text-align:center;color:var(--text-3);font-size:13px;}
+.dash-section-label{font-size:11px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:0.8px;padding:16px 20px 8px;border-bottom:1px solid var(--border);}
+
+</style>
+</head>
+<body>
+<div id="bloom-auth-curtain" style="position: fixed; inset: 0; background: var(--bg, #F7F6F2); z-index: 999999; transition: opacity 0.4s ease;"></div>
+
+<div id="setup-screen" style="background: var(--bg); color: var(--text); height: 100vh; display: none; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 24px; opacity: 1;">
+  
+  <img src="icon.png" class="setup-logo" alt="BloomPlayer" 
+       style="width: 80px; height: 80px; margin-bottom: 24px; filter: drop-shadow(var(--shadow));"
+       onerror="this.style.background='var(--red)';"/>
+  
+  <div class="setup-title" style="font-size: 26px; font-weight: 800; color: var(--text); margin-bottom: 12px;">
+    Welcome to BloomPlayer
+  </div>
+  
+  <div class="setup-sub" style="color: var(--text-2); max-width: 320px; line-height: 1.6; font-size: 15px;">
+    Let's secure your account before your child uses the app. This will only take a moment.
+  </div>
+</div>
+
+
+<div id="setup-pin-modal" style="background: var(--card); color: var(--text); border-radius: var(--radius-lg); padding: 20px;">
+  
+  <div class="pin-icon">
+    <svg viewBox="0 0 24 24" style="fill: var(--red); width: 40px;">
+      <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/>
+    </svg>
+  </div>
+
+  <div id="setup-pin-step" class="setup-pin-step" style="color: var(--accent);">Step 1 of 2</div>
+  <div id="setup-pin-title" class="setup-pin-title" style="font-weight: bold;">Choose your PIN</div>
+  <div id="setup-pin-sub" class="setup-pin-sub" style="color: var(--text-3);">You'll use this to access Parent Mode and exit videos.</div>
+
+  <div id="setup-pin-error" style="color: var(--red); font-size: 14px; text-align: center; height: 20px; margin-top: 10px; font-weight: 600;"></div>
+
+  <div class="pin-dots">
+    <div class="dot" id="sp0" style="border: 2px solid var(--border);"></div>
+    <div class="dot" id="sp1" style="border: 2px solid var(--border);"></div>
+    <div class="dot" id="sp2" style="border: 2px solid var(--border);"></div>
+    <div class="dot" id="sp3" style="border: 2px solid var(--border);"></div>
+  </div>
+
+  <div class="pin-grid">
+    <button class="pin-btn" onclick="setupPinPress('1')">1</button>
+    <button class="pin-btn" onclick="setupPinPress('2')">2</button>
+    <button class="pin-btn" onclick="setupPinPress('3')">3</button>
+    <button class="pin-btn" onclick="setupPinPress('4')">4</button>
+    <button class="pin-btn" onclick="setupPinPress('5')">5</button>
+    <button class="pin-btn" onclick="setupPinPress('6')">6</button>
+    <button class="pin-btn" onclick="setupPinPress('7')">7</button>
+    <button class="pin-btn" onclick="setupPinPress('8')">8</button>
+    <button class="pin-btn" onclick="setupPinPress('9')">9</button>
+    
+    <button class="pin-btn" onclick="setupPinClear()" style="font-size:18px; color: var(--red);">&#9003;</button>
+    
+    <button class="pin-btn" onclick="setupPinPress('0')">0</button>
+    
+    <button class="pin-btn" disabled style="font-size:11px; color: var(--text-3); cursor:not-allowed;">Cancel</button>
+  </div>
+</div>
+
+
+<div id="setup-complete" style="display:none; position:fixed; inset:0; background:var(--bg); z-index:200; flex-direction:column; align-items:center; justify-content:center; padding:32px; text-align:center; gap:16px;">
+  <div style="font-size:52px;">&#127881;</div>
+  
+  <div style="font-size:24px; font-weight:800; color:var(--text); letter-spacing:-0.3px;">
+    You're all set!
+  </div>
+  
+  <div style="font-size:15px; color:var(--text-2); line-height:1.7; max-width:300px; font-weight:500;">
+    Your PIN is saved. Long press the BloomPlayer logo anytime to return to Parent Mode.
+  </div>
+
+  <button onclick="window.location.href='index.html';" style="margin-top:16px; width:100%; max-width:320px; padding:16px; border-radius:var(--radius); background:var(--red); color:white; border:none; font-size:16px; font-weight:700; font-family:inherit; cursor:pointer; box-shadow: var(--shadow);">
+    Take me to the app
+  </button>
+</div>
+
+
+<div id="change-pin-modal">
+  <div class="pin-icon"><svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg></div>
+  <div class="modal-pin-step" id="change-pin-step">Step 1 of 2</div>
+  <div class="modal-pin-title" id="change-pin-title">Enter new PIN</div>
+  <div class="modal-pin-sub" id="change-pin-sub">Choose a 4-digit PIN</div>
+  <div class="pin-dots">
+    <div class="dot" id="cd0"></div>
+    <div class="dot" id="cd1"></div>
+    <div class="dot" id="cd2"></div>
+    <div class="dot" id="cd3"></div>
+  </div>
+  <div class="pin-error" id="change-pin-error"></div>
+  <div class="pin-grid">
+    <button class="pin-btn" onclick="changePinPress('1')">1</button>
+    <button class="pin-btn" onclick="changePinPress('2')">2</button>
+    <button class="pin-btn" onclick="changePinPress('3')">3</button>
+    <button class="pin-btn" onclick="changePinPress('4')">4</button>
+    <button class="pin-btn" onclick="changePinPress('5')">5</button>
+    <button class="pin-btn" onclick="changePinPress('6')">6</button>
+    <button class="pin-btn" onclick="changePinPress('7')">7</button>
+    <button class="pin-btn" onclick="changePinPress('8')">8</button>
+    <button class="pin-btn" onclick="changePinPress('9')">9</button>
+    <button class="pin-btn" onclick="changePinClear()" style="font-size:18px;color:#94A3B8;">&#9003;</button>
+    <button class="pin-btn" onclick="changePinPress('0')">0</button>
+    <button class="pin-btn" onclick="closeChangePinModal()" style="font-size:11px;color:#94A3B8;">Cancel</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="profile-modal">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="profile-modal-title">Add a child</div>
+    <div class="modal-sub">Use a nickname — we don't need their real name.</div>
+    <div class="avatar-preview-wrap">
+      <div class="avatar-preview" id="profile-avatar-preview">?</div>
+      <div class="avatar-preview-label">Avatar is auto-generated<br/>from the nickname you enter</div>
+    </div>
+    <label class="modal-label">Nickname</label>
+    <input class="modal-input" id="profile-nickname-input" type="text" placeholder="e.g. Sunshine, Tiger, Sky" maxlength="20" oninput="updateAvatarPreview()"/>
+    <label class="modal-label">Age group</label>
+    <select class="modal-select" id="profile-age-input">
+      <option value="teenplus">Teen+ (16+)</option>
+      <option value="teen">Teen (12-16)</option>
+      <option value="junior">Junior (8-12)</option>
+      <option value="primary" selected>Primary (5-8)</option>
+      <option value="prek">Pre-K (3-5)</option>
+      <option value="toddler">Toddler (2-3)</option>
+    </select>
+    <div class="modal-btns">
+      <button class="btn-modal-cancel" onclick="closeProfileModal()">Cancel</button>
+      <button class="btn-modal-primary" id="profile-save-btn" onclick="saveProfile()">Save</button>
+    </div>
+    <button class="btn-modal-delete" id="profile-delete-btn" style="display:none;" onclick="deleteProfile()">Delete this child</button>
+  </div>
+</div>
+
+<div id="parent-content">
+
+  <nav class="top-nav">
+  <div class="nav-left">
+    <img src="icon.png" alt="BloomPlayer" onerror="this.style.background='#10B981';"/>
+    <div>
+      <div class="nav-title">Parent Mode</div>
+      <div class="nav-sub">I hope they never know.</div>
+    </div>
+  </div>
+  <button class="btn-exit-parent" onclick="goBack()">Back to BloomPlayer</button>
+</nav>
+
+
+  <div class="parent-badge">
+    &#128274; You're in Parent Mode — your child can't see this
+  </div>
+
+  <div class="page-layout">
+
+    <div class="left-col">
+      <div class="content">
+
+        <div class="section-label">Parental Controls</div>
+        <div class="settings-card">
+          <div class="setting-row" onclick="showChangePinModal()">
+            <div class="setting-left">
+              <div class="setting-name">Parent PIN</div>
+              <div class="setting-desc">Required to open Parent Mode and exit videos</div>
+            </div>
+            <div class="setting-right">
+              <div class="pin-display">
+                <div class="pin-display-dot filled"></div>
+                <div class="pin-display-dot filled"></div>
+                <div class="pin-display-dot filled"></div>
+                <div class="pin-display-dot filled"></div>
+              </div>
+              <span class="chevron">&#8250;</span>
+            </div>
+          </div>
+          <div class="setting-row" style="cursor:default;">
+            <div class="setting-left">
+              <div class="setting-name">Default age group</div>
+              <div class="setting-desc">Sets which age group loads by default</div>
+            </div>
+            <div class="setting-right">
+              <select id="default-age-select" onchange="saveDefaultAge()" style="padding:6px 10px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:var(--text);font-size:13px;font-family:inherit;outline:none;cursor:pointer;">
+                <option value="teenplus">Teen+</option>
+                <option value="teen">Teen</option>
+                <option value="junior">Junior</option>
+                <option value="primary">Primary</option>
+                <option value="prek">Pre-K</option>
+                <option value="toddler">Toddler</option>
+              </select>
+            </div>
+          </div>
+          <div class="setting-row" style="cursor:default; border-bottom: none;">
+            <div class="setting-left">
+              <div class="setting-name">Inter-Video Break</div>
+              <div class="setting-desc">Countdown between consecutive videos (seconds)</div>
+            </div>
+            <div class="setting-right">
+              <input type="number" id="inter-video-delay" value="0" min="0" max="300" onchange="saveVideoDelay()" style="padding:6px 10px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:var(--text);font-size:13px;font-family:inherit;outline:none;cursor:text;width:70px;text-align:center;"/>
+            </div>
+          </div>
+        </div>
+
+                <div id="children-section" style="display:none;">
+          <div class="section-label">Children</div>
+          <div id="profiles-list"></div>
+          <button class="btn-add-profile" onclick="openAddProfileModal()">+ Add a child</button>
+        </div>
+
+      </div>
+    </div><div class="right-col">
+      <div class="section-label">Watch Dashboard</div>
+      <div class="dash-card" id="dashboard-card">
+        <div class="dash-loading" id="dash-loading">Loading...</div>
+      </div>
+    </div>
+
+  </div><div class="full-width">
+    <div class="section-label">Account</div>
+    <div class="settings-card">
+      <div class="account-row">
+        <div class="auth-avatar account-avatar" id="parent-avatar"></div>
+        <div>
+          <div class="account-name" id="parent-name"></div>
+          <div class="account-email" id="parent-email"></div>
+        </div>
+      </div>
+          <div class="setting-row" style="cursor:default;flex-direction:column;align-items:flex-start;gap:10px;">
+        <div>
+          <div class="setting-name">Export watch log</div>
+          <div class="setting-desc">Download a CSV of videos watched — useful for homeschool portfolios and progress tracking</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;width:100%;flex-wrap:wrap;">
+          <input type="date" id="export-from" style="padding:6px 10px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:var(--text);font-size:13px;font-family:inherit;outline:none;cursor:pointer;"/>
+          <span style="font-size:12px;color:var(--text-3);">to</span>
+          <input type="date" id="export-to" style="padding:6px 10px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:var(--text);font-size:13px;font-family:inherit;outline:none;cursor:pointer;"/>
+          <button onclick="exportSessions()" style="padding:7px 14px;border-radius:8px;background:var(--green-dim);color:var(--green-text);border:1px solid #A7F3D0;font-size:12px;font-weight:600;font-family:inherit;cursor:pointer;white-space:nowrap;">Export CSV</button>
+        </div>
+      </div>
+      <div class="setting-row" onclick="signOut()">
+        <div class="setting-left">
+          <div class="setting-name" style="color:var(--red);">Sign out</div>
+          <div class="setting-desc">You'll need to sign in again next visit</div>
+        </div>
+        <span class="chevron">&#8250;</span>
+      </div>
+    <div class="danger-row" onclick="deleteAccount()">
+  <div class="setting-left">
+    <div class="danger-name">Delete account</div>
+    <div class="danger-desc">Permanently deletes your account and all data</div>
+  </div>
+  <span class="chevron" style="color: #BE123C;">&#8250;</span>
+</div>
+
+<script>
+var isSetupMode=window.location.search.indexOf('setup=true')>-1;
+
+/* ── CONFIRMATION MODAL ── */
+function showConfirm(title, desc, buttonText, onConfirm) {
+  document.getElementById('custom-confirm-overlay').style.display = 'block';
+  document.getElementById('custom-confirm-modal').style.display = 'block';
+  
+  document.getElementById('confirm-title').textContent = title;
+  document.getElementById('confirm-desc').textContent = desc;
+  
+  var actionBtn = document.getElementById('confirm-action');
+  actionBtn.textContent = buttonText;
+  
+  // Smart Styling: Use muted red for destructive actions, Ochre for everything else
+  var textLower = buttonText.toLowerCase();
+  if(textLower.includes('sign out') || textLower.includes('delete')) {
+    actionBtn.style.background = '#D35F5F'; // Earthy Red
+  } else {
+    actionBtn.style.background = '#CC9544'; // Golden Ochre
+  }
+  
+  var newActionBtn = actionBtn.cloneNode(true);
+  actionBtn.parentNode.replaceChild(newActionBtn, actionBtn);
+  
+  newActionBtn.addEventListener('click', function() {
+    closeConfirm();
+    if (onConfirm) onConfirm();
+  });
+  
+  document.getElementById('custom-confirm-overlay').onclick = closeConfirm;
+}
+
+function closeConfirm() {
+  document.getElementById('custom-confirm-overlay').style.display = 'none';
+  document.getElementById('custom-confirm-modal').style.display = 'none';
+}
+
+
+function showToast(msg,isError){
+  var t=document.getElementById('app-toast');
+  if(!t){
+    t=document.createElement('div');
+    t.id='app-toast';
+    t.style.cssText='position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1E293B;color:#F8FAFC;font-size:13px;font-weight:600;padding:12px 20px;border-radius:20px;z-index:9999;white-space:nowrap;box-shadow:0 4px 16px rgba(0,0,0,0.4);border:1px solid #334155;transition:opacity 0.3s;';
+    document.body.appendChild(t);
+  }
+  t.textContent=msg;
+  t.style.borderColor=isError?'#EF4444':'#334155';
+  t.style.opacity='1';
+  clearTimeout(t._timer);
+  t._timer=setTimeout(function(){t.style.opacity='0';},2800);
+}
+
+var firebaseConfig={
+  apiKey:'AIzaSyDa_838Z_Kq-SQhi1LH1IibLkw5KkkVq6M',
+  authDomain:'bloomplayer-9cba5.firebaseapp.com',
+  projectId:'bloomplayer-9cba5',
+  storageBucket:'bloomplayer-9cba5.firebasestorage.app',
+  messagingSenderId:'424186955738',
+  appId:'1:424186955738:web:e2c3306fb52e33e83322e3',
+  measurementId:'G-4LPVCYGQP9'
+};
+firebase.initializeApp(firebaseConfig);
+var auth=firebase.auth();
+var db=firebase.firestore();
+
+var currentUser=null;
+var parentPin=localStorage.getItem('et_pin')||'1234';
+var userTier=localStorage.getItem('et_tier')||'general';
+var changePinBuffer='';
+var changePinNewPin='';
+var changePinStep=1;
+
+
+/* ── AUTH ── */
+auth.onAuthStateChanged(function(user){
+  if(!user||user.isAnonymous){
+    window.location.href='index.html';
+    return;
+  }
+  currentUser=user;
+  
+  if(isSetupMode){
+    const splash = document.getElementById('setup-screen');
+    const pinModal = document.getElementById('setup-pin-modal');
+
+    splash.style.display = 'flex';
+
+    setTimeout(function(){
+      splash.style.transition = 'opacity 0.5s ease';
+      splash.style.opacity = '0';
+      setTimeout(function(){
+        splash.style.display = 'none';
+        pinModal.style.display = 'flex';
+      }, 500);
+    }, 3000); 
+    
+  } else {
+    document.getElementById('parent-content').style.display='flex';
+    renderParentMode();
+    loadParentMode(user);
+  }
+  
+  var curtain = document.getElementById('bloom-auth-curtain');
+  if (curtain) {
+    curtain.style.transition = 'opacity 0.4s ease';
+    curtain.style.opacity = '0';
+    setTimeout(function() { curtain.style.display = 'none'; }, 400);
+  }
+});
+
+
+function loadParentMode(user){
+  db.collection('users').doc(user.uid).get().then(function(doc){
+    if(doc.exists){
+      var data=doc.data();
+      if(data.pin){parentPin=data.pin;localStorage.setItem('et_pin',data.pin);}
+      
+      // Load custom delay from server on launch
+      if(data.interVideoDelay !== undefined) {
+        localStorage.setItem('et_video_delay', data.interVideoDelay);
+      }
+      
+      userTier=data.tier||'general';
+      localStorage.setItem('et_tier',userTier);
+      renderParentMode();
+    }
+  }).catch(function(){});
+}
+
+/* ── RENDER PARENT MODE ── */
+function renderParentMode(){
+  var user=currentUser;
+  var av=document.getElementById('parent-avatar');
+  if(user.photoURL){av.innerHTML='<img src="'+user.photoURL+'" alt=""/>';}
+  else{av.textContent=user.displayName?user.displayName.substring(0,2).toUpperCase():'U';}
+  document.getElementById('parent-name').textContent=user.displayName||'Parent';
+  document.getElementById('parent-email').textContent=user.email||'';
+  
+  var defaultAge=localStorage.getItem('et_default_age')||'primary';
+  document.getElementById('default-age-select').value=defaultAge;
+  
+  // Set the visual input for the timer delay
+  var defaultDelay = localStorage.getItem('et_video_delay') || '0';
+  var delayInput = document.getElementById('inter-video-delay');
+  if(delayInput) delayInput.value = defaultDelay;
+  
+  var isGamma=userTier==='gamma';
+  document.getElementById('children-section').style.display=isGamma?'block':'none';
+  if(isGamma)loadProfiles();
+  loadDashboard();
+  initExportDates();
+}
+
+/* ── SETTINGS UPDATES ── */
+function saveDefaultAge(){
+  var val=document.getElementById('default-age-select').value;
+  localStorage.setItem('et_default_age',val);
+  if(currentUser){
+    db.collection('users').doc(currentUser.uid).set({defaultAge:val},{merge:true}).catch(function(){});
+  }
+}
+
+function saveVideoDelay(){
+  var delayInput = document.getElementById('inter-video-delay');
+  if(!delayInput) return;
+  var val = Math.max(0, parseInt(delayInput.value) || 0);
+  delayInput.value = val; // visually sanitize
+  localStorage.setItem('et_video_delay', val);
+  
+  if(currentUser){
+    db.collection('users').doc(currentUser.uid).set({interVideoDelay: val}, {merge: true})
+    .then(function() { showToast('Timer settings saved.'); })
+    .catch(function(){});
+  }
+}
+
+/* ── SETUP PIN ── */
+var setupBuffer='';
+var setupNewPin='';
+var setupStep=1;
+
+function setupPinPress(d){
+  if(setupBuffer.length>=4)return;
+  setupBuffer+=d;
+  updateSetupDots();
+  if(setupBuffer.length===4)setTimeout(processSetupStep,120);
+}
+
+function setupPinClear(){
+  setupBuffer=setupBuffer.slice(0,-1);
+  updateSetupDots();
+}
+
+function updateSetupDots(){
+  for(var i=0;i<4;i++){
+    document.getElementById('sp'+i).className='dot'+(i<setupBuffer.length?' filled':'');
+  }
+}
+
+function processSetupStep(){
+  if(setupStep===1){
+    setupNewPin=setupBuffer;
+    setupBuffer='';
+    setupStep=2;
+    updateSetupDots();
+    document.getElementById('setup-pin-step').textContent='Step 2 of 2';
+    document.getElementById('setup-pin-title').textContent='Confirm your PIN';
+    document.getElementById('setup-pin-sub').textContent='Enter the same PIN again to confirm.';
+    document.getElementById('setup-pin-error').textContent='';
+  } else {
+    if(setupBuffer===setupNewPin){
+      parentPin=setupNewPin;
+      localStorage.setItem('et_pin',parentPin);
+      db.collection('users').doc(currentUser.uid).set({
+        pin:parentPin,
+        onboarded:true
+      },{merge:true}).then(function(){
+        document.getElementById('setup-pin-modal').style.display='none';
+        document.getElementById('setup-screen').style.display='none';
+        document.getElementById('setup-complete').style.display='flex';
+      }).catch(function(){
+        document.getElementById('setup-pin-modal').style.display='none';
+        document.getElementById('setup-screen').style.display='none';
+        document.getElementById('setup-complete').style.display='flex';
+      });
+    } else {
+      document.getElementById('setup-pin-error').textContent='PINs don\'t match — try again';
+      setupBuffer='';
+      setupStep=1;
+      setupNewPin='';
+      updateSetupDots();
+      document.getElementById('setup-pin-step').textContent='Step 1 of 2';
+      document.getElementById('setup-pin-title').textContent='Choose your PIN';
+      document.getElementById('setup-pin-sub').textContent='You\'ll use this to access Parent Mode and exit videos.';
+    }
+  }
+}
+
+/* ── PROFILES ── */
+var editingProfileId=null;
+var allProfiles=[];
+var PROFILE_COLORS=['#10B981','#3B82F6','#F59E0B','#8B5CF6','#EF4444','#06B6D4','#EC4899','#84CC16'];
+function getProfileColor(i){return PROFILE_COLORS[i%PROFILE_COLORS.length];}
+function getInitials(n){if(!n)return'?';return n.trim().substring(0,2).toUpperCase();}
+function escHtml(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function getAgeLabel(val){var map={teenplus:'Teen+ (16+)',teen:'Teen (12-16)',junior:'Junior (8-12)',primary:'Primary (5-8)',prek:'Pre-K (3-5)',toddler:'Toddler (2-3)'};return map[val]||val;}
+
+function loadProfiles(){
+  db.collection('users').doc(currentUser.uid).collection('profiles').orderBy('createdAt').get()
+  .then(function(snap){
+    allProfiles=[];
+    snap.forEach(function(doc){var d=doc.data();d.id=doc.id;allProfiles.push(d);});
+    renderProfiles();
+  }).catch(function(e){console.error('loadProfiles',e);});
+}
+
+function renderProfiles(){
+  var activeId=localStorage.getItem('et_active_profile');
+  if(!allProfiles.length){
+    document.getElementById('profiles-list').innerHTML='<div class="no-profiles">No children added yet.</div>';
+    return;
+  }
+  var html='';
+  allProfiles.forEach(function(p,i){
+    var color=p.color||getProfileColor(i);
+    var initials=p.initials||getInitials(p.nickname);
+    var isActive=p.id===activeId;
+    html+='<div class="profile-card"><div class="profile-row">'
+      +'<div class="profile-avatar" style="background:'+color+'">'+escHtml(initials)+'</div>'
+      +'<div class="profile-info">'
+      +'<div class="profile-nickname">'+escHtml(p.nickname)+'</div>'
+      +'<div class="profile-age">'+getAgeLabel(p.ageGroup)+'</div>'
+      +(isActive?'<span class="profile-active-badge">Default on this device</span>':'')
+      +'</div>'
+      +'<div class="profile-actions">'
+      +'<button class="btn-use" onclick="setActiveProfile(\''+p.id+'\')">Set default</button>'
+      +'<button class="btn-edit" onclick="openEditProfileModal(\''+p.id+'\')">Edit</button>'
+      +'</div></div></div>';
+  });
+  document.getElementById('profiles-list').innerHTML=html;
+}
+
+function setActiveProfile(profileId){
+  localStorage.setItem('et_active_profile',profileId);
+  var profile=allProfiles.find(function(p){return p.id===profileId;});
+  if(profile&&profile.ageGroup)localStorage.setItem('et_profile_age',profile.ageGroup);
+  renderProfiles();
+}
+
+function openAddProfileModal(){
+  editingProfileId=null;
+  document.getElementById('profile-modal-title').textContent='Add a child';
+  document.getElementById('profile-nickname-input').value='';
+  document.getElementById('profile-age-input').value='primary';
+  document.getElementById('profile-delete-btn').style.display='none';
+  document.getElementById('profile-save-btn').textContent='Save';
+  updateAvatarPreview();
+  document.getElementById('profile-modal').style.display='flex';
+}
+
+function openEditProfileModal(profileId){
+  var profile=allProfiles.find(function(p){return p.id===profileId;});
+  if(!profile)return;
+  editingProfileId=profileId;
+  document.getElementById('profile-modal-title').textContent='Edit child';
+  document.getElementById('profile-nickname-input').value=profile.nickname||'';
+  document.getElementById('profile-age-input').value=profile.ageGroup||'primary';
+  document.getElementById('profile-delete-btn').style.display='block';
+  document.getElementById('profile-save-btn').textContent='Save changes';
+  updateAvatarPreview();
+  document.getElementById('profile-modal').style.display='flex';
+}
+
+function closeProfileModal(){
+  document.getElementById('profile-modal').style.display='none';
+  editingProfileId=null;
+}
+
+function updateAvatarPreview(){
+  var nickname=document.getElementById('profile-nickname-input').value.trim();
+  var initials=getInitials(nickname);
+  var colorIndex=editingProfileId?allProfiles.findIndex(function(p){return p.id===editingProfileId;}):allProfiles.length;
+  var color=getProfileColor(colorIndex<0?0:colorIndex);
+  var preview=document.getElementById('profile-avatar-preview');
+  preview.textContent=initials||'?';
+  preview.style.background=color;
+}
+
+function saveProfile(){
+  var nickname=document.getElementById('profile-nickname-input').value.trim();
+  var ageGroup=document.getElementById('profile-age-input').value;
+  if(!nickname){showToast('Please enter a nickname.',true);return;}
+  var colorIndex=editingProfileId?allProfiles.findIndex(function(p){return p.id===editingProfileId;}):allProfiles.length;
+  var color=getProfileColor(colorIndex<0?0:colorIndex);
+  var initials=getInitials(nickname);
+  var data={nickname:nickname,initials:initials,color:color,ageGroup:ageGroup};
+  if(editingProfileId){
+    db.collection('users').doc(currentUser.uid).collection('profiles').doc(editingProfileId)
+    .update(data).then(function(){closeProfileModal();loadProfiles();})
+    .catch(function(e){showToast('Could not save. Please try again.',true);console.error(e);});
+  } else {
+    data.createdAt=firebase.firestore.FieldValue.serverTimestamp();
+    db.collection('users').doc(currentUser.uid).collection('profiles').add(data)
+    .then(function(){closeProfileModal();loadProfiles();})
+    .catch(function(e){showToast('Could not save. Please try again.',true);console.error(e);});
+  }
+}
+
+function deleteProfile(){
+  if(!editingProfileId)return;
+  var profile=allProfiles.find(function(p){return p.id===editingProfileId;});
+  var name=profile?profile.nickname:'this child';
+  showConfirm('Delete '+name+'?','This cannot be undone.','Delete',function(){
+    db.collection('users').doc(currentUser.uid).collection('profiles').doc(editingProfileId)
+    .delete().then(function(){
+      if(localStorage.getItem('et_active_profile')===editingProfileId){
+        localStorage.removeItem('et_active_profile');
+        localStorage.removeItem('et_profile_age');
+      }
+      closeProfileModal();loadProfiles();
+    }).catch(function(e){showToast('Could not delete. Please try again.',true);console.error(e);});
+  });
+}
+
+/* ── CHANGE PIN ── */
+function showChangePinModal(){
+  changePinBuffer='';changePinNewPin='';changePinStep=1;
+  updateChangePinDots();
+  document.getElementById('change-pin-step').textContent='Step 1 of 2';
+  document.getElementById('change-pin-title').textContent='Enter new PIN';
+  document.getElementById('change-pin-sub').textContent='Choose a 4-digit PIN';
+  document.getElementById('change-pin-error').textContent='';
+  document.getElementById('change-pin-modal').style.display='flex';
+}
+
+function closeChangePinModal(){
+  document.getElementById('change-pin-modal').style.display='none';
+  changePinBuffer='';changePinNewPin='';changePinStep=1;
+}
+
+function changePinPress(d){
+  if(changePinBuffer.length>=4)return;
+  changePinBuffer+=d;
+  updateChangePinDots();
+  if(changePinBuffer.length===4)setTimeout(processChangePinStep,120);
+}
+
+function changePinClear(){
+  changePinBuffer=changePinBuffer.slice(0,-1);
+  updateChangePinDots();
+}
+
+function updateChangePinDots(){
+  for(var i=0;i<4;i++){
+    document.getElementById('cd'+i).className='dot'+(i<changePinBuffer.length?' filled':'');
+  }
+}
+
+function processChangePinStep(){
+  if(changePinStep===1){
+    changePinNewPin=changePinBuffer;
+    changePinBuffer='';changePinStep=2;
+    updateChangePinDots();
+    document.getElementById('change-pin-step').textContent='Step 2 of 2';
+    document.getElementById('change-pin-title').textContent='Confirm new PIN';
+    document.getElementById('change-pin-sub').textContent='Enter the same PIN again';
+    document.getElementById('change-pin-error').textContent='';
+  } else {
+    if(changePinBuffer===changePinNewPin){
+      parentPin=changePinNewPin;
+      localStorage.setItem('et_pin',parentPin);
+      if(currentUser){
+        db.collection('users').doc(currentUser.uid).set({pin:parentPin},{merge:true}).catch(function(){});
+      }
+      closeChangePinModal();
+      showToast('PIN updated successfully.');
+    } else {
+      document.getElementById('change-pin-error').textContent='PINs don\'t match — try again';
+      changePinBuffer='';changePinStep=1;changePinNewPin='';
+      updateChangePinDots();
+      document.getElementById('change-pin-step').textContent='Step 1 of 2';
+      document.getElementById('change-pin-title').textContent='Enter new PIN';
+      document.getElementById('change-pin-sub').textContent='Choose a 4-digit PIN';
+    }
+  }
+}
+  function initExportDates(){
+  var now=new Date();
+  var today=now.toISOString().substring(0,10);
+  var ago30=new Date(now.getTime()-30*24*60*60*1000).toISOString().substring(0,10);
+  var created=currentUser.metadata.creationTime
+    ?new Date(currentUser.metadata.creationTime).toISOString().substring(0,10)
+    :'2024-01-01';
+  var fromEl=document.getElementById('export-from');
+  var toEl=document.getElementById('export-to');
+  if(!fromEl||!toEl)return;
+  fromEl.value=ago30;
+  fromEl.min=created;
+  fromEl.max=today;
+  toEl.value=today;
+  toEl.min=created;
+  toEl.max=today;
+}
+
+function exportSessions(){
+  var btn=event.target;
+  var fromVal=document.getElementById('export-from').value;
+  var toVal=document.getElementById('export-to').value;
+  if(!fromVal||!toVal){showToast('Please select a date range.',true);return;}
+  var fromDate=new Date(fromVal);
+  var toDate=new Date(toVal);
+  toDate.setHours(23,59,59,999);
+  if(fromDate>toDate){showToast('Start date must be before end date.',true);return;}
+  btn.textContent='Exporting...';btn.disabled=true;
+  db.collection('users').doc(currentUser.uid).collection('sessions')
+  .orderBy('watchedAt','desc').get()
+  .then(function(snap){
+    var rows=[['Date','Video Title','Video ID','Watch Time (mins)','Completion %','Source']];
+    snap.forEach(function(doc){
+      var d=doc.data();
+      var t=d.watchedAt?d.watchedAt.toDate():null;
+      if(!t||t<fromDate||t>toDate)return;
+      var dateStr=t.toISOString().substring(0,10);
+      var title=(d.title||d.videoId||'').replace(/"/g,"'");
+      var mins=d.watchTime?Math.round(d.watchTime/60*10)/10:0;
+      var completion=d.completionRate!=null?d.completionRate+'%':'—';
+      var source=d.source||'—';
+      rows.push([dateStr,title,d.videoId||'',mins,completion,source]);
+    });
+    if(rows.length<=1){showToast('No sessions found for this date range.',true);btn.textContent='Export CSV';btn.disabled=false;return;}
+    var csv=rows.map(function(r){return r.map(function(c){return'"'+c+'"';}).join(',');}).join('\n');
+    var blob=new Blob([csv],{type:'text/csv'});
+    var url=URL.createObjectURL(blob);
+    var a=document.createElement('a');
+    a.href=url;a.download='bloomplayer-watchlog-'+fromVal+'-to-'+toVal+'.csv';
+    document.body.appendChild(a);a.click();document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    showToast('Exported '+(rows.length-1)+' sessions.');
+    btn.textContent='Export CSV';btn.disabled=false;
+  }).catch(function(e){
+    console.error('exportSessions:',e);
+    showToast('Export failed. Please try again.',true);
+    btn.textContent='Export CSV';btn.disabled=false;
+  });
+}
+
+
+/* ── SIGN OUT ── */
+function signOut() {
+  showConfirm(
+    'Sign out of BloomPlayer?',
+    'You\'ll need to sign in again next visit.',
+    'Sign out',
+    function() {
+      auth.signOut().then(function() {
+        // Fully clear the device's local memory so the next user starts fresh
+        localStorage.removeItem('et_tier');
+        localStorage.removeItem('et_email');
+        localStorage.removeItem('et_pin');
+        localStorage.removeItem('et_active_profile');
+        localStorage.removeItem('et_profile_age');
+        localStorage.removeItem('et_hide_age');
+        localStorage.removeItem('et_device_id');
+        
+        window.location.href = 'index.html';
+      });
+    }
+  );
+}
+
+
+/* ── DELETE ACCOUNT ── */
+function deleteAccount() {
+  showConfirm(
+    'Delete your account?',
+    'This permanently deletes your account, PIN, video list and all data. This cannot be undone.',
+    'Delete everything',
+    function() {
+      showConfirm(
+        'Are you absolutely sure?',
+        'All your videos, PIN, and account data will be permanently deleted.',
+        'Yes, delete my account',
+        function() {
+          // Always grab the freshest auth object
+          var user = auth.currentUser;
+          if (!user) return;
+
+          // 1. Delete Subcollections first
+          Promise.all([
+            db.collection('users').doc(user.uid).collection('profiles').get(),
+            db.collection('users').doc(user.uid).collection('videos').get()
+          ]).then(function(results) {
+            var batch = db.batch();
+            results.forEach(function(snap) {
+              snap.forEach(function(doc) { batch.delete(doc.ref); });
+            });
+            return batch.commit();
+            
+          }).then(function() {
+            return db.collection('users').doc(user.uid).delete();
+          }).then(function() {
+            return user.delete();
+          }).then(function() {
+            localStorage.removeItem('et_pin');
+            localStorage.removeItem('et_tier');
+            localStorage.removeItem('et_email');
+            localStorage.removeItem('et_active_profile');
+            localStorage.removeItem('et_profile_age');
+            localStorage.removeItem('et_hide_age');
+            localStorage.removeItem('et_device_id');
+            window.location.href = 'index.html';
+            
+          }).catch(function(e) {
+            console.error('deleteAccount error:', e);
+            if (e.code === 'auth/requires-recent-login') {
+              alert('Security Check: Firebase requires a fresh login to delete your account. We will sign you out now—please log back in and try again.');
+              auth.signOut().then(function() {
+                window.location.href = 'index.html';
+              });
+            } else {
+              alert('Could not delete account: ' + e.message);
+            }
+          });
+        }
+      );
+    }
+  );
+}
+
+
+/* ── BACK ── */
+function goBack(){
+  window.location.href='app.html';
+}
+
+/* ── DASHBOARD ── */
+var dashTab='month';
+var dashData={month:{watchTime:0,videos:[]},year:{watchTime:0,videos:[]},all:{watchTime:0,videos:[]}};
+function loadDashboard(){
+  db.collection('users').doc(currentUser.uid).get()
+  .then(function(doc){
+    var stats=(doc.exists&&doc.data().stats)?doc.data().stats:{};
+    var now=new Date();
+    var month=now.toISOString().substring(0,7);
+    var year=String(now.getFullYear());
+    dashData={
+      month:{
+        watchTime:(stats[month]&&stats[month].watchTime)||0,
+        videos:(stats[month]&&stats[month].videos)||[]
+      },
+      year:{
+        watchTime:(stats[year]&&stats[year].watchTime)||0,
+        videos:(stats[year]&&stats[year].videos)||[]
+      },
+      all:{
+        watchTime:(stats.all&&stats.all.watchTime)||0,
+        videos:(stats.all&&stats.all.videos)||[]
+      }
+    };
+    renderDashboard();
+  }).catch(function(e){
+    console.error('loadDashboard:',e);
+    document.getElementById('dash-loading').textContent='Could not load stats.';
+  });
+}
 
 function getMilestone(totalVideos){
   if(totalVideos>=100)return{label:'Incredible progress',title:'You\'re doing amazing'};
